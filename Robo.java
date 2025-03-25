@@ -25,7 +25,7 @@ class Robo
     // identifica obstáculos ao redor do robô
     public void identificarObstaculo()
     {
-        // não implementado
+        System.out.println("O robô " + this.nome + "identificou um obstáculo ao redor.");
     }
 
 
