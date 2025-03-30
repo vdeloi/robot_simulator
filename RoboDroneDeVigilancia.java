@@ -22,7 +22,7 @@ class RoboDroneDeVigilancia extends RoboAereo
         return qualidadeDaCamera;
     }
 
-    // Getter para framesPorSegund
+    // Getter para framesPorSegundo
     public int getFramesPorSegundo() {
         return framesPorSegundo;
     }
@@ -38,7 +38,8 @@ class RoboDroneDeVigilancia extends RoboAereo
     }
 
     // Método para iniciar a gravação
-    public void iniciarGravacao() {
+    public void iniciarGravacao() 
+    {
         if (duracaoAtualVideo < duracaoMaximaVideo) {
             System.out.println("Iniciando gravação de vídeo com qualidade de " + qualidadeDaCamera + " MP e " + framesPorSegundo + " fps.");
         } else {
@@ -47,14 +48,12 @@ class RoboDroneDeVigilancia extends RoboAereo
     }
 
     // Método para parar a gravação
-    public void pararGravacao() {
+    public void pararGravacao() 
+    {
         System.out.println("Parando gravação. Duração total do vídeo: " + duracaoAtualVideo + " segundos.");
         duracaoAtualVideo = 0; // Reseta a duração atual do vídeo
     }
 
     
-
-
-
 
 }
