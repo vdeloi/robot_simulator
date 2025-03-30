@@ -29,7 +29,7 @@ class Robo
         return this.nome;
     }
 
-    // retorna a direção do robô
+    // Retorna a direção do robô
     public String getDirecao()
     {
         return this.direcao;
@@ -75,19 +75,23 @@ class Robo
 
     }
 
-    // Recebe um ambiente A, olha para o sul imediato, norte imediato, leste imediato e oeste imediato para 
-    // identificar se há obstáculos, por enquanto apenas robôs são obstáculos 
-    //
-    // Retorna uma lista de valores booleanos "haObstaculo"
-    // o primeiro item da lista de valores booleano é true se há um obstaculo no seu norte imediato
-    // o segundo no seu sul, o terceiro no seu oeste e o quarto no seu leste imeadiato
-    public boolean[] identificarObstaculo(Ambiente A) {
+    /* Recebe um ambiente A, olha para o sul imediato, norte imediato, leste imediato e oeste imediato para 
+       identificar se há obstáculos, por enquanto apenas robôs são obstáculos 
+    
+         Retorna uma lista de valores booleanos "haObstaculo"
+         o primeiro item da lista de valores booleano é true se há um obstaculo no seu norte imediato
+         o segundo no seu sul, o terceiro no seu oeste e o quarto no seu leste imeadiato */
+
+    
+    public boolean[] identificarObstaculo(Ambiente A) 
+    {
         // boolean[] haObstaculo = {false, false, false, false}; 
         // Ordem: [norte, sul, leste, oeste]
         boolean[] haObstaculo = {false, false, false, false};
     
         // Itera sobre todos os robôs do ambiente
-        for (Robo r : A.getListaDeRobos()) {
+        for (Robo r : A.getListaDeRobos()) 
+        {
             // Ignora a si mesmo
             if (r == this) continue;
     
