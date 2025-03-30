@@ -1,0 +1,6 @@
+Drone
+RoboPassaro
+RoboBalao
+RoboExterminador
+CarroAutonomo
+Rover
