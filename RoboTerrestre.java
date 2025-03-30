@@ -1,6 +1,6 @@
 /* RoboTerrestre.java */
 
-class RoboTerrestre extends RoboAereo // herda de Robo
+class RoboTerrestre extends Robo // herda de Robo
 {
     private int velocidadeMaxima; // "velocidade máxima do robo. Assumimos que o tempo para se deslocar é uniforme nos robôs"
 

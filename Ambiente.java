@@ -59,7 +59,7 @@ public class Ambiente
     // Este método é um overload para pontos no espaço, será útil para a subclasse RoboAereo e seus filhos
     public boolean dentroDosLimites(int x, int y, int elevacao)
     {
-        if (x < 0 || y < 0 || z < 0)
+        if (x < 0 || y < 0 || elevacao < 0)
         {
             return false;
         }
@@ -68,7 +68,7 @@ public class Ambiente
     }
 
     // Retorna a lista de robôs no ambiente
-    public ArrayList<Robot> getListaDeRobos()
+    public ArrayList<Robo> getListaDeRobos()
     {
         return listaDeRobos;
 

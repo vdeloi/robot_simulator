@@ -6,7 +6,7 @@ class RoboAereo extends Robo
     private int altitudeMaxima; // altitude máxima permitida
 
     // método construtor
-    RoboAereo(String nome, int posicaoX, int posicaoY, String direcao, int altidude, int altitudeMaxima)
+    RoboAereo(String nome, int posicaoX, int posicaoY, String direcao, int altitude, int altitudeMaxima)
     {
         super(nome, posicaoX, posicaoY, direcao);
         this.altitudeMaxima = altitudeMaxima;
@@ -24,7 +24,7 @@ class RoboAereo extends Robo
         }
         else // tudo Ok com a altitude
         {
-            this.altitude = altidude;
+            this.altitude = altitude;
 
         }
         
@@ -50,6 +50,11 @@ class RoboAereo extends Robo
             this.altitude = 0; // clipa no zero
         }
 
+    }
+
+    // Getter para altitude
+    public int getAltitude() {
+        return altitude;
     }
     
 }
