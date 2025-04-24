@@ -1,0 +1,1 @@
+// Enum Tipo Obstaculo
