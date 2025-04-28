@@ -77,7 +77,7 @@ public class Obstaculo {
                ", pos1=(" + posicaoX1 + "," + posicaoY1 + ")" +
                ", pos2=(" + posicaoX2 + "," + posicaoY2 + ")" +
                ", altura=" + altura +
-               ", bloqueia=" + isBloqueiaPassagem() + "]";
+               ", bloqueia=" + BloqueiaPassagem() + "]";
     }
 }
 
