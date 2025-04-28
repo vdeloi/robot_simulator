@@ -9,12 +9,13 @@ import java.util.ArrayList;
 public class Ambiente
 {
     // Assumindo que a região 3D do ambiente é (x, y, z) pertencente à [0, xmax] x [0, ymax] x [0, elevacao]
-    private int xmax;
-    private int ymax;
+    private int xmax; // largura
+    private int ymax; // altura
     private int elevacao;
 
     // Este atributo armazena os robôs ativos no ambiente
     private ArrayList<Robo> listaDeRobos = new ArrayList<>();
+    private ArrayList<Obstaculo> listaDeObstaculos = new ArrayList<>(); //talvez não...
 
     // Este é o método construtor da classe Ambiente
     // Ele recebe apenas dois argumentos (int xmax, int ymax) para que 
@@ -29,6 +30,11 @@ public class Ambiente
     public void adicionarRobo(Robo r)
     {
         listaDeRobos.add(r);
+    }
+    // Remove um objeto r da classe Robo da lista de robôs ativos no ambiente
+    public void removeRobo(Robo r)
+    {
+        listaDeRobos.remove(r);
     }
 
     // Retorna o número de robôs ativos no ambiente 
@@ -74,9 +80,34 @@ public class Ambiente
 
     }
 
-
+    public void adicionarObstaculo (Obstaculo o)
+    {
+        listaDeObstaculos.add(o);
+    {
+        
     
+     // Usa a informação dos obstáculos na lista
+    public boolean temObstaculoBloqueante(int x, int y) {
+        for (Obstaculo obs : listaDeObstaculos) { // Para cada obstáculo específico na lista...
+            // Verifica se ele bloqueia E se a posição (x,y) está na área dele
+            if (obs.isBloqueiaPassagem()) { // <-- Pergunta ao obstáculo se ele bloqueia
+                // ... (lógica para verificar se x,y está na área de obs) ...
+                if (/* x,y está na área de obs */) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
 
+     public void detectarColisoes() {
+         for (Robo robo : robos) {
+             // Verifica se a posição do robô coincide com um obstáculo bloqueante
+             if (temObstaculoBloqueante(robo.getPosicaoX(), robo.getPosicaoY())) { // <-- Usa o método auxiliar
+                  System.out.println("ALERTA: Robô '" + robo.getNome() + "' colidiu com um obstáculo!");
+             }
+         }
+     }  
 
 
 }
