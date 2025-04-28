@@ -20,10 +20,10 @@ public enum TipoObstaculo {
 
     // Atributos privados da enumeração
     private final int alturaPadrao;        // Armazena a altura do obstáculo
-    private final boolean bloqueiaPassagem; // Indica se o obstáculo bloqueia a passagem ou não
+    private final boolean bloqPassagem; // Indica se o obstáculo bloqueia a passagem ou não
 
 
-    TipoObstaculo(int alturaPadrao, boolean bloqueiaPassagem) {
+    TipoObstaculo(int alturaPadrao, boolean bloqPassagem) {
         this.alturaPadrao = alturaPadrao;
         this.bloqueiaPassagem = bloqueiaPassagem;
     }
@@ -33,8 +33,8 @@ public enum TipoObstaculo {
         return alturaPadrao;
     }
 
-    public boolean isBloqueiaPassagem() {
-        return bloqueiaPassagem;
+    public boolean BloqueiaPassagem() {
+        return bloqPassagem;
     }
 }
 
