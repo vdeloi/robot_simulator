@@ -63,8 +63,8 @@ public class Obstaculo {
         return tipo;
     }
 
-    public boolean isBloqueiaPassagem() {
-        return tipo.isBloqueiaPassagem(); // Delega a verificação para o enum TipoObstaculo
+    public boolean BloqueiaPassagem() {
+        return tipo.BloqueiaPassagem(); // Delega a verificação para o enum TipoObstaculo
     }
 
     // --- Outros Métodos (Exemplo) ---
