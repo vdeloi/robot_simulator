@@ -1,5 +1,8 @@
 /* Ambiente.java */
 
+// Este arquivo contém a classe Ambiente, que representa o ambiente onde os robôs operam.
+// A classe é responsável por armazenar informações sobre os robôs e obstáculos presentes no ambiente.
+
 
 // Faz a importação da classe ArrayList no pacote java.util
 // Essa clase é utilizada para armazenar objetos do tipo Robo me uma lista
