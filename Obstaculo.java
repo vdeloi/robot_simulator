@@ -8,7 +8,7 @@ public class Obstaculo {
     private int altura;
     private int posicaoX2;
     private int posicaoY2;
-    private TipoObstaculo tipo;
+    final TipoObstaculo tipo;
 
     public Obstaculo(int x1, int y1, int x2, int y2, int altura, TipoObstaculo tipo) {
         this.posicaoX1 = x1;
