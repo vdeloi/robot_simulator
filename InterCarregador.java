@@ -6,5 +6,5 @@ public interface InterCarregador {
 
     void descarregarItem() throws RoboDesligadoException, AcaoNaoPermitidaException;
 
-    String verItensCarregados();
+    String verItensCarregados() throws RoboDesligadoException;
 }

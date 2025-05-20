@@ -1,10 +1,10 @@
-// Interface Sensoriavel
+// Interface Comunicavel
 
-// REVER // Aqui falta terminar!!
 public interface Comunicavel {
 
-    void enviarMensagem(Comunicavel destinatario, String mensagem, CentralComunicacao central) throws RoboDesligadoException, ErroComunicacaoException; // [cite: 175]
-    void receberMensagem(String remetente, String mensagem) throws RoboDesligadoException; // [cite: 176]
+    void enviarMensagem(Comunicavel destinatario, String mensagem, CentralComunicacao central) throws RoboDesligadoException, ErroComunicacaoException;
+    
+    void receberMensagem(String remetenteIdComunicacao, String mensagem) throws RoboDesligadoException;
+    
     String getIdComunicacao(); // Para identificar o robô na comunicação
-
 }

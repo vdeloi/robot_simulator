@@ -3,8 +3,8 @@ public interface InterDefensiva {
 
     // Métodos para ativar e desativar a defesa
 
-    String ativarDefesa() throws RoboDesligadoException;
+    String ativarDefesa() throws RoboDesligadoException, AcaoNaoPermitidaException;
 
-    String desativarDefesa() throws RoboDesligadoException;
+    String desativarDefesa() throws RoboDesligadoException, AcaoNaoPermitidaException;
 
 }
