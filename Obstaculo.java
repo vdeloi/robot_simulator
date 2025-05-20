@@ -1,93 +1,77 @@
 // Classe Obstáculo
 
-public class Obstaculo {
-
-    // Atributos para armazenar as propriedades do obstáculo
+public class Obstaculo implements Entidade {
+    private final String nome; // Adicionado para conformidade com Entidade e melhor identificação
     private int posicaoX1;
     private int posicaoY1;
-    private int altura;
-    private int posicaoX2;
-    private int posicaoY2;
-    final TipoObstaculo tipo;
+    private int posicaoZ_base; // Coordenada Z da base do obstáculo
+    private final int alturaObstaculo; // Altura própria do obstáculo a partir da base
+    private int posicaoX2; // Usado para obstáculos que ocupam área
+    private int posicaoY2; // Usado para obstáculos que ocupam área
+    private final TipoObstaculo tipo;
+    private final char representacao = 'X'; // [cite: 157]
 
-    public Obstaculo(int x1, int y1, int x2, int y2, int altura, TipoObstaculo tipo) {
-        this.posicaoX1 = x1;
-        this.posicaoY1 = y1;
-        this.posicaoX2 = x2;
-        this.posicaoY2 = y2;
-        this.tipo = tipo;
-
-        if (altura >= 0) { // Usa a altura passada
-            this.altura = altura;
-        } else { // Usa a altura padrão
-            int alturaPadraoTipo = tipo.getAlturaPadrao();
-            if (alturaPadraoTipo >= 0) {
-                this.altura = alturaPadraoTipo;
-            } else {
-                // Se a altura padrão for negativa, define como 0
-                this.altura = 0;
-            }
-        }
-    }
-
-    public Obstaculo(int x, int y, TipoObstaculo tipo) {
+    // Construtor para obstáculos pontuais ou com base em um ponto
+    public Obstaculo(String nome, int x, int y, int z_base, TipoObstaculo tipo) {
+        this.nome = nome;
         this.posicaoX1 = x;
         this.posicaoY1 = y;
+        this.posicaoZ_base = z_base;
         this.posicaoX2 = x;
         this.posicaoY2 = y;
         this.tipo = tipo;
-
-        int alturaPadraoTipo = tipo.getAlturaPadrao();
-        if (alturaPadraoTipo >= 0) {
-            this.altura = alturaPadraoTipo;
-        } else {
-            this.altura = 0; // Ou alturaPadraoTipo
-        }
+        this.alturaObstaculo = (tipo.getAlturaPadrao() >= 0) ? tipo.getAlturaPadrao() : 1; // Altura mínima 1 se padrão for < 0
     }
 
-    // --- Métodos Getters ---
-
-    public int getPosicaoX1() {
-        return posicaoX1;
+    // Construtor para obstáculos que ocupam uma área retangular na base
+    public Obstaculo(String nome, int x1, int y1, int x2, int y2, int z_base, TipoObstaculo tipo) {
+        this.nome = nome;
+        this.posicaoX1 = Math.min(x1, x2);
+        this.posicaoY1 = Math.min(y1, y2);
+        this.posicaoZ_base = z_base;
+        this.posicaoX2 = Math.max(x1, x2);
+        this.posicaoY2 = Math.max(y1, y2);
+        this.tipo = tipo;
+        this.alturaObstaculo = (tipo.getAlturaPadrao() >= 0) ? tipo.getAlturaPadrao() : 1;
     }
 
-    public int getPosicaoY1() {
-        return posicaoY1;
-    }
-
-    public int getPosicaoX2() {
-        return posicaoX2;
-    }
-
-    public int getPosicaoY2() {
-        return posicaoY2;
-    }
-
-    public int getAltura() {
-        return altura;
-    }
-
-    public TipoObstaculo getTipo() {
-        return tipo;
-    }
-
-    public boolean BloqueiaPassagem() {
-        return tipo.BloqueiaPassagem(); // Delega a verificação para o enum TipoObstaculo
-    }
-
-    // --- Outros Métodos (Exemplo) ---
-    /**
-     * Retorna uma representação textual do obstáculo. Útil para debug ou
-     * visualização.
-     */
     @Override
-    public String toString() {
-        return "Obstaculo [tipo=" + tipo +
-                ", pos1=(" + posicaoX1 + "," + posicaoY1 + ")" +
-                ", pos2=(" + posicaoX2 + "," + posicaoY2 + ")" +
-                ", altura=" + altura +
-                ", bloqueia=" + BloqueiaPassagem() + "]";
+    public String getNome() { return this.nome; }
+
+    @Override
+    public int getX() { return this.posicaoX1; } // Ponto de referência X
+
+    @Override
+    public int getY() { return this.posicaoY1; } // Ponto de referência Y
+
+    @Override
+    public int getZ() { return this.posicaoZ_base; } // Ponto de referência Z (base)
+
+    public int getAlturaObstaculo() { return this.alturaObstaculo; }
+    public int getPosicaoX2() { return posicaoX2; }
+    public int getPosicaoY2() { return posicaoY2; }
+    public TipoObstaculo getTipo() { return tipo; }
+
+
+    @Override
+    public TipoEntidade getTipoEntidade() { return TipoEntidade.OBSTACULO; } // [cite: 156]
+
+    @Override
+    public String getDescricao() { // [cite: 156]
+        return "Obstáculo: " + nome + " do tipo " + tipo.name() + " em (" + posicaoX1 + "," + posicaoY1 + "," + posicaoZ_base + ")";
+    }
+
+    @Override
+    public char getRepresentacao() { return this.representacao; } // [cite: 157]
+    
+    public boolean bloqueiaPassagem() {
+        return tipo.bloqueiaPassagem();
+    }
+
+    // Método para verificar se uma coordenada (px, py, pz) está dentro dos limites deste obstáculo
+    public boolean contemPonto(int px, int py, int pz) {
+        return px >= this.posicaoX1 && px <= this.posicaoX2 &&
+               py >= this.posicaoY1 && py <= this.posicaoY2 &&
+               pz >= this.posicaoZ_base && pz < (this.posicaoZ_base + this.alturaObstaculo);
     }
 }
-
-// talvez adicionar uma saída para entender o que acontece ao debbugar

@@ -3,41 +3,35 @@
 // Enumeração que representa os diferentes tipos de obstáculos que podem ser encontrados em um ambiente
 
 
+/* TipoObstaculo.java */
 public enum TipoObstaculo {
-
-    // Define os tipos de obstáculos como constantes
-   
     PAREDE(3, true),      
     ARVORE(5, true),      
     ARBUSTO(1, true),
     CADEIRA(1, true),
     PREDIO(10, true),     
-    BURACO(0, true),      
+    BURACO(0, true),      // Profundidade, bloqueia passagem "por cima"
     ROCHA(1, true),       
     CARRO(1, true),
-    PEDESTRE(1, true),
-    AGUA(-1, false);      // Não bloqueia, tem altura variavel
+    PEDESTRE(1, true),    // Considerado um obstáculo dinâmico, mas aqui é estático
+    AGUA(-1, false);      // Não bloqueia passagem aérea, altura variável indica superfície
 
-    // Atributos privados da enumeração
-    private final int alturaPadrao;        // Armazena a altura do obstáculo
-    private final boolean bloqPassagem; // Indica se o obstáculo bloqueia a passagem ou não
+    private final int alturaPadrao;
+    private final boolean bloqueiaPassagem; // [cite: 114] Nome corrigido
 
-
-    TipoObstaculo(int alturaPadrao, boolean bloqPassagem) {
+    TipoObstaculo(int alturaPadrao, boolean bloqueiaPassagem) {
         this.alturaPadrao = alturaPadrao;
         this.bloqueiaPassagem = bloqueiaPassagem;
     }
 
-    // Métodos públicos para acessar os atributos privados
-    public int getAlturaPadrao() {
+    public int getAlturaPadrao() { // [cite: 113]
         return alturaPadrao;
     }
 
-    public boolean BloqueiaPassagem() {
-        return bloqPassagem;
+    public boolean bloqueiaPassagem() { // Nome corrigido [cite: 114]
+        return bloqueiaPassagem;
     }
 }
-
 
 
 

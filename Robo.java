@@ -3,127 +3,122 @@
 // Robo é a classe base, pai das classes RoboAereo e RoboTerrestre
 
 import java.util.ArrayList;
+import java.util.List;
 
-class Robo {
-    private String nome;
-    private String direcao; // norte, sul, leste, oeste
-    private int posicaoX;
-    private int posicaoY;
+public abstract class Robo implements Entidade { // [cite: 166, 187]
+    private final String id; // Identificador único [cite: 168]
+    protected String nome; // Nome amigável
+    protected int posicaoX; // [cite: 169]
+    protected int posicaoY; // [cite: 169]
+    protected int posicaoZ; // [cite: 169]
+    protected String direcao; // Norte, Sul, Leste, Oeste (ou graus)
+    protected EstadoRobo estado; // [cite: 168]
+    protected TipoEntidade tipoEntidadeRobo; // [cite: 169]
+    private ArrayList<Sensor> listaDeSensores;
 
-    // Método construtor
-
-    public Robo(String nome, int posicaoX, int posicaoY, String direcao) {
+    public Robo(String id, String nome, int posicaoX, int posicaoY, int posicaoZ, String direcao) {
+        this.id = id;
         this.nome = nome;
         this.posicaoX = posicaoX;
         this.posicaoY = posicaoY;
+        this.posicaoZ = posicaoZ;
         this.direcao = direcao;
-
+        this.estado = EstadoRobo.DESLIGADO; // Começa desligado [cite: 170]
+        this.tipoEntidadeRobo = TipoEntidade.ROBO;
+        this.listaDeSensores = new ArrayList<>();
     }
 
-    // Métodos get
+    // Métodos da interface Entidade
+    @Override
+    public String getNome() { return this.nome; }
+    
+    public String getId() { return this.id; }
 
-    // Retorna o nome do robô
-    public String getNome() {
-        return this.nome;
+    @Override
+    public int getX() { return this.posicaoX; } // [cite: 154]
+
+    @Override
+    public int getY() { return this.posicaoY; } // [cite: 155]
+
+    @Override
+    public int getZ() { return this.posicaoZ; } // [cite: 155]
+
+    @Override
+    public TipoEntidade getTipoEntidade() { return this.tipoEntidadeRobo; } // [cite: 156]
+
+    @Override
+    public String getDescricao() { // [cite: 156]
+        return "Robô ID: " + id + ", Nome: " + nome + ", Estado: " + estado.getDescricao() +
+               ", Posição: (" + posicaoX + "," + posicaoY + "," + posicaoZ + "), Direção: " + direcao;
     }
 
-    // Retorna a direção do robô
-    public String getDirecao() {
-        return this.direcao;
-    }
+    @Override
+    public char getRepresentacao() { return this.tipoEntidadeRobo.getRepresentacao(); } // [cite: 157]
 
-    // Retorna a posição x do robô
-    public int getPosicaoX() {
-        return this.posicaoX;
+    // Getters e Setters
+    public String getDirecao() { return direcao; }
+    public void setDirecao(String direcao) { this.direcao = direcao; }
+    public EstadoRobo getEstado() { return estado; }
+    public void setEstado(EstadoRobo estado) { this.estado = estado; }
 
-    }
+    // Setters de posição (usados pelo Ambiente ao mover)
+    public void setPosicaoX(int posicaoX) { this.posicaoX = posicaoX; }
+    public void setPosicaoY(int posicaoY) { this.posicaoY = posicaoY; }
+    public void setPosicaoZ(int posicaoZ) { this.posicaoZ = posicaoZ; }
+    
+    public List<Sensor> getListaDeSensores() { return listaDeSensores; }
 
-    // Retorna a posição y do robô
-    public int getPosicaoY() {
-        return this.posicaoY;
-    }
 
-    // Métodos set
-
-    public void setDirecao(String direcao) {
-        this.direcao = direcao;
-    }
-
-    public void setPosicaoX(int x) {
-        this.posicaoX = x;
-    }
-
-    public void setPosicaoY(int y) {
-        this.posicaoY = y;
-    }
-
-    // Move robo para o ponto (posicaoX + deltaX, posicaoY + deltaY)
-
-    public void mover(int deltaX, int deltaY) {
-        this.posicaoX += deltaX;
-        this.posicaoY += deltaY;
-
-    }
-
-    /*
-     * Recebe um ambiente A, olha para o sul imediato, norte imediato, leste
-     * imediato e oeste imediato para
-     * identificar se há obstáculos, por enquanto apenas robôs são obstáculos
-     * 
-     * Retorna uma lista de valores booleanos "haObstaculo"
-     * o primeiro item da lista de valores booleano é true se há um obstaculo no seu
-     * norte imediato
-     * o segundo no seu sul, o terceiro no seu oeste e o quarto no seu leste
-     * imeadiato
-     */
-
-    public boolean[] identificarObstaculo(Ambiente A) {
-        // boolean[] haObstaculo = {false, false, false, false};
-        // Ordem: [norte, sul, leste, oeste]
-        boolean[] haObstaculo = { false, false, false, false };
-
-        // Itera sobre todos os robôs do ambiente
-        for (Robo r : A.getListaDeRobos()) {
-            // Ignora a si mesmo
-            if (r == this)
-                continue;
-
-            // Verifica o obstáculo no norte imediato (y + 1)
-            if (this.posicaoY + 1 == r.getPosicaoY() && this.posicaoX == r.getPosicaoX()) {
-                haObstaculo[0] = true;
-            }
-            // Verifica o obstáculo no sul imediato (y - 1)
-            if (this.posicaoY - 1 == r.getPosicaoY() && this.posicaoX == r.getPosicaoX()) {
-                haObstaculo[1] = true;
-            }
-            // Verifica o obstáculo no leste imediato (x + 1)
-            if (this.posicaoX + 1 == r.getPosicaoX() && this.posicaoY == r.getPosicaoY()) {
-                haObstaculo[2] = true;
-            }
-            // Verifica o obstáculo no oeste imediato (x - 1)
-            if (this.posicaoX - 1 == r.getPosicaoX() && this.posicaoY == r.getPosicaoY()) {
-                haObstaculo[3] = true;
-            }
+    // Métodos de controle do robô
+    public void ligar() throws AcaoNaoPermitidaException { // [cite: 170]
+        if(this.estado == EstadoRobo.AVARIADO) {
+            throw new AcaoNaoPermitidaException("Robô " + nome + " está avariado e não pode ser ligado.");
         }
-        return haObstaculo;
+        this.estado = EstadoRobo.EM_ESPERA; // Ou LIGADO, dependendo da semântica desejada
+        System.out.println("Robô " + nome + " ligado.");
     }
 
-    // Retorna uma string que pode ser utilizada para exibir a posição do robo
-    public String exibirPosicao() {
-        return "( " + this.posicaoX + ", " + this.posicaoY + " )";
+    public void desligar() { // [cite: 170]
+        this.estado = EstadoRobo.DESLIGADO;
+        System.out.println("Robô " + nome + " desligado.");
     }
 
-    private ArrayList<Sensor> listaDeSensores = new ArrayList<>();
+    // Método abstrato para ações específicas de cada robô [cite: 170]
+    public abstract String executarTarefa(Ambiente ambiente, CentralComunicacao central, String[] args) throws RoboDesligadoException, AcaoNaoPermitidaException, ForaDosLimitesException, ColisaoException;
 
+    // Movimentação básica (será chamada por um método mais genérico no menu)
+    // O ambiente fará a validação e moverá a entidade
+    public void moverPara(int novoX, int novoY, int novoZ, Ambiente ambiente) throws RoboDesligadoException, ColisaoException, ForaDosLimitesException, AcaoNaoPermitidaException { // [cite: 169]
+        if (this.estado == EstadoRobo.DESLIGADO) {
+            throw new RoboDesligadoException("Robô " + nome + " está desligado. Não pode mover.");
+        }
+         if (this.estado == EstadoRobo.AVARIADO) {
+            throw new AcaoNaoPermitidaException("Robô " + nome + " está avariado. Não pode mover.");
+        }
+        // A lógica de verificação de velocidade máxima (se aplicável) deve ser aqui ou na subclasse
+        ambiente.moverEntidade(this, novoX, novoY, novoZ);
+    }
+    
+    // Adicionar e ativar sensores (Lab 03)
     public void adicionarSensor(Sensor s) {
         this.listaDeSensores.add(s);
     }
 
-    public void ativarSensores(Ambiente amb) { // Ativa os sensores do robô
-        System.out.println("Sensores do Robô " + getNome() + ":");
-        for (Sensor s : listaDeSensores) {
-            System.out.println(s.monitorar(amb, this));
+    public String ativarSensoresRobo(Ambiente amb) throws RoboDesligadoException { // Renomeado para não colidir com Sensoreavel
+        if (this.estado == EstadoRobo.DESLIGADO) {
+            throw new RoboDesligadoException("Robô " + nome + " está desligado. Não pode ativar sensores.");
         }
+        if (listaDeSensores.isEmpty()) {
+            return "Robô " + nome + " não possui sensores.";
+        }
+        StringBuilder leituras = new StringBuilder("Leituras dos sensores do Robô " + getNome() + ":\n");
+        for (Sensor s : listaDeSensores) {
+            leituras.append(" - ").append(s.monitorar(amb, this)).append("\n");
+        }
+        return leituras.toString();
     }
 
+    public String exibirPosicao() {
+        return "(" + this.posicaoX + ", " + this.posicaoY + ", " + this.posicaoZ + ")";
+    }
 }
