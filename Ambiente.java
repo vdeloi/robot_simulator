@@ -1,16 +1,14 @@
-/* Ambiente.java */
+// Clsse Ambiente
 
-// Faz a importação da classe ArrayList no pacote java.util
-// Essa clase é utilizada para armazenar objetos do tipo Robo me uma lista
-import java.util.ArrayList;
+import java.util.ArrayList; 
+import java.util.List; // 
 
 // Classe que guarda o ambiente da simulação dos robôs
 public class Ambiente {
-    // Assumindo que a região 3D do ambiente é (x, y, z) pertencente à [0, xmax] x
-    // [0, ymax] x [0, elevacao]
-    private int xmax; // largura
-    private int ymax; // altura
-    private int elevacao;
+    // Assumindo que a região 3D do ambiente é (x, y, z) pertencente à [0, xmax] x [0, ymax] x [0, elevacao]
+    private final int xmax; // largura
+    private final int ymax; // altura
+    private final int elevacao;
 
     // Este atributo armazena os robôs ativos no ambiente
     private ArrayList<Robo> listaDeRobos = new ArrayList<>();

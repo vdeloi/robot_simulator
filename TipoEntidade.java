@@ -1,4 +1,4 @@
-/* TipoEntidade.java */
+// Enumeração TipoEntidade
 
 public enum TipoEntidade {
 
