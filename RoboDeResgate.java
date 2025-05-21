@@ -130,25 +130,3 @@ class RoboDeResgate extends RoboTerrestre implements InterCarregador {
     }
 }
 
-
-    @Override
-    public String monitorar(Ambiente amb, Robo robo) {
-        // Lógica para detectar obstáculos próximos dentro do raio
-        // Aqui, uma simulação simples:
-        boolean obstaculoProximo = false;
-        for (Entidade e : amb.getEntidades()) {
-            if (e instanceof Obstaculo && e != robo) {
-                double distancia = Math.sqrt(
-                    Math.pow(e.getX() - robo.getX(), 2) + 
-                    Math.pow(e.getY() - robo.getY(), 2) +
-                    Math.pow(e.getZ() - robo.getZ(), 2)
-                );
-                if (distancia <= raio) {
-                    obstaculoProximo = true;
-                    break;
-                }
-            }
-        }
-        return String.format("Sensor Proximidade: Raio %.1fm. Obstáculo próximo: %s", raio, obstaculoProximo ? "SIM" : "NÃO");
-    }
-}

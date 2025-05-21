@@ -268,9 +268,23 @@ public class Main {
                 else if (acaoSelecionada.equals("Ligar Robô")) {
                     try { robo.ligar(); } catch (AcaoNaoPermitidaException e) { System.err.println("Erro ao ligar: " + e.getMessage());}
                 } else if (acaoSelecionada.equals("Desligar Robô")) robo.desligar();
+              
                 else if (acaoSelecionada.equals("Acionar Sensores do Robô")) {
-                     try { System.out.println(robo.ativarSensoresRobo(ambiente)); }
-                     catch (RoboDesligadoException e) { System.err.println("Erro ao acionar sensores: " + e.getMessage()); }
+                    try {
+                        if (robo instanceof Sensoreavel) {
+                            // Chama o método da interface Sensoreavel se implementado
+                            System.out.println("--- Leituras via Interface Sensoreavel ---");
+                            System.out.println(((Sensoreavel) robo).acionarSensores(ambiente));
+                        } else {
+                            // Se não implementa Sensoreavel, ou como um fallback,
+                            // chama o método genérico da classe Robo (se houver sensores básicos)
+                            System.out.println("--- Leituras via Método Genérico do Robô ---");
+                            System.out.println(robo.ativarSensoresRobo(ambiente));
+                        }
+                    } catch (RoboDesligadoException e) {
+                        System.err.println("Erro ao acionar sensores: " + e.getMessage());
+                    }
+                }
                 } else if (acaoSelecionada.equals("Executar Tarefa Específica do Robô")) {
                     System.out.print("Argumentos para a tarefa (opcional, separados por espaço, ex: 'arg1 arg2'): ");
                     String[] argsTarefa = scanner.nextLine().split(" ");
