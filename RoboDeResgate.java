@@ -130,12 +130,7 @@ class RoboDeResgate extends RoboTerrestre implements InterCarregador {
     }
 }
 
-// Você precisará criar esta classe SensorProximidadeObstaculos se ainda não existir
-// Exemplo básico:
-class SensorProximidadeObstaculos extends Sensor {
-    public SensorProximidadeObstaculos(double raio) {
-        super(raio);
-    }
+
     @Override
     public String monitorar(Ambiente amb, Robo robo) {
         // Lógica para detectar obstáculos próximos dentro do raio

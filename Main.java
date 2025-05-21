@@ -212,20 +212,20 @@ public class Main {
         menuInteracaoRobo(roboSelecionado);
     }
 
-    private static void menuInteracaoRobo(Robo robo) { // [cite: 195, 196, 197]
+    private static void menuInteracaoRobo(Robo robo) { 
         boolean voltar = false;
         while (!voltar) {
             System.out.println("\n--- Interagindo com: " + robo.getNome() + " (ID: " + robo.getId() + ", Tipo: " + robo.getClass().getSimpleName() + ") ---");
             System.out.println("Estado Atual: " + robo.getEstado().getDescricao() + " | Posição: " + robo.exibirPosicao() + " | Direção: " + robo.getDirecao()); // [cite: 193]
             
             List<String> opcoesMenu = new ArrayList<>();
-            opcoesMenu.add("Mover Robô"); // 1 [cite: 196]
-            opcoesMenu.add("Ligar Robô");   // 2 [cite: 197]
-            opcoesMenu.add("Desligar Robô"); // 3 [cite: 197]
-            opcoesMenu.add("Acionar Sensores do Robô"); // 4 [cite: 195]
+            opcoesMenu.add("Mover Robô"); // 1 
+            opcoesMenu.add("Ligar Robô");   // 2 
+            opcoesMenu.add("Desligar Robô"); // 3 
+            opcoesMenu.add("Acionar Sensores do Robô"); // 4 
             opcoesMenu.add("Executar Tarefa Específica do Robô"); // 5
             
-            if (robo instanceof Comunicavel) opcoesMenu.add("Enviar Mensagem"); // [cite: 195]
+            if (robo instanceof Comunicavel) opcoesMenu.add("Enviar Mensagem"); 
             if (robo instanceof InterExplorador) opcoesMenu.add("Iniciar Exploração de Área");
             if (robo instanceof RoboDroneDeVigilancia) {
                 opcoesMenu.add(((RoboDroneDeVigilancia) robo).isGravando() ? "Parar Gravação de Vídeo" : "Iniciar Gravação de Vídeo");
@@ -455,7 +455,7 @@ public class Main {
         }
     }
     
-    private static void comunicarComRobo(Comunicavel comunicador) { // [cite: 195]
+    private static void comunicarComRobo(Comunicavel comunicador) { // 
         if (!(comunicador instanceof Robo)) {
             System.out.println("A entidade selecionada não é um robô com capacidade de comunicação ativa.");
             return;
