@@ -1,7 +1,11 @@
-// Clsse Ambiente
+// Classe Ambiente
+
+/* ################################################################################################################################### */
 
 import java.util.ArrayList;
 import java.util.List; 
+
+/* ################################################################################################################################### */
 
 // Classe que guarda o ambiente da simulação dos robôs
 public class Ambiente {
@@ -17,6 +21,9 @@ public class Ambiente {
 
     private TipoEntidade[][][] mapa;
 
+    /* ################################################################################################################################### */
+    // Construtor da classe Ambiente
+
     public Ambiente(int largura, int profundidade, int alturaMaxAmbiente) {
 
         // Inicializa o ambiente com as dimensões especificadas
@@ -28,6 +35,7 @@ public class Ambiente {
         this.mapa = new TipoEntidade[largura][profundidade][alturaMaxAmbiente];
         inicializarMapa();
     }
+    /* ################################################################################################################################### */
 
     // Getters
     public int getLargura() {
@@ -50,6 +58,11 @@ public class Ambiente {
         return mapa;
     }
 
+    /* ################################################################################################################################### */
+
+    /*percorre todas as posições do mapa tridimensional do ambiente e inicializa cada célula com o tipo de entidade VAZIO. Isso garante que o mapa esteja limpo e pronto para receber entidades antes do início da simulação. */
+
+
     public void inicializarMapa() {
 
         // Inicializa o mapa com o tipo de entidade VAZIO
@@ -65,7 +78,13 @@ public class Ambiente {
         }
     }
 
-    public void adicionarEntidade(Entidade entidade) throws ColisaoException, ForaDosLimitesException { // [cite: 161]
+    /* ################################################################################################################################### */
+
+    /*adiciona uma entidade ao ambiente, verificando se está dentro dos limites e se não há colisões com outras entidades. Para obstáculos, realiza uma checagem detalhada de colisões em todas as posições ocupadas. Após a validação, atualiza o mapa tridimensional e a lista de entidades, garantindo que o ambiente reflita a nova adição. */
+
+
+
+    public void adicionarEntidade(Entidade entidade) throws ColisaoException, ForaDosLimitesException { 
         if (!dentroDosLimites(entidade.getX(), entidade.getY(), entidade.getZ())) {
             throw new ForaDosLimitesException("Entidade '" + entidade.getNome() + "' na posição ("+entidade.getX()+","+entidade.getY()+","+entidade.getZ()+") está fora dos limites do ambiente.");
         }
@@ -85,7 +104,7 @@ public class Ambiente {
                 }
             }
         } else { // Para entidades pontuais (como Robôs)
-             if (estaOcupado(entidade.getX(), entidade.getY(), entidade.getZ())) { // [cite: 162]
+             if (estaOcupado(entidade.getX(), entidade.getY(), entidade.getZ())) { 
                 throw new ColisaoException("Posição (" + entidade.getX() + "," + entidade.getY() + "," + entidade.getZ() + ") já está ocupada por " + mapa[entidade.getX()][entidade.getY()][entidade.getZ()].getDescricao());
             }
         }
@@ -110,7 +129,13 @@ public class Ambiente {
         System.out.println("Entidade '" + entidade.getNome() + "' ("+entidade.getTipoEntidade().getDescricao()+") adicionada ao ambiente em (" + entidade.getX() + "," + entidade.getY() + "," + entidade.getZ() + ")");
     }
 
-    public void removerEntidade(Entidade entidade) throws EntidadeNaoEncontradaException { // [cite: 161]
+
+    /* ################################################################################################################################### */
+
+    /* remove uma entidade do ambiente, atualizando o mapa tridimensional para marcar as posições ocupadas pela entidade como vazias. Ele verifica se a entidade existe no ambiente antes de removê-la e lança uma exceção caso não seja encontrada, garantindo a consistência do estado do ambiente.*/
+
+
+    public void removerEntidade(Entidade entidade) throws EntidadeNaoEncontradaException { 
         if (this.entidades.remove(entidade)) {
             // Limpa a(s) posição(ões) da entidade no mapa
             if (entidade instanceof Obstaculo) {
@@ -134,17 +159,29 @@ public class Ambiente {
         }
     }
 
+    /* ################################################################################################################################### */
+
+
     private void atualizarMapaPosicao(int x, int y, int z, TipoEntidade tipo) {
         if (dentroDosLimitesMapa(x, y, z)) {
             mapa[x][y][z] = tipo;
         }
     }
 
-    public boolean dentroDosLimites(int x, int y, int z) { // [cite: 161]
+    /* ################################################################################################################################### */
+
+    /*verifica se uma posição (x, y, z) está dentro dos limites do ambiente. Isso é importante para garantir que as operações de movimentação e adição de entidades não ultrapassem os limites definidos do ambiente. A função retorna verdadeiro se a posição estiver dentro dos limites e falso caso contrário.*/
+
+    public boolean dentroDosLimites(int x, int y, int z) { 
         return x >= 0 && x < this.largura &&
                y >= 0 && y < this.profundidade &&
                z >= 0 && z < this.alturaMaxAmbiente; // z deve ser MENOR que alturaMaxAmbiente
     }
+
+    /* ################################################################################################################################### */
+
+    /*verifica se uma posição (x, y, z) está dentro dos limites do mapa tridimensional. Isso é importante para garantir que as operações de movimentação e adição de entidades não ultrapassem os limites definidos do ambiente. A função retorna verdadeiro se a posição estiver dentro dos limites e falso caso contrário.*/
+
     
     private boolean dentroDosLimitesMapa(int x, int y, int z) {
         return x >= 0 && x < largura &&
@@ -152,12 +189,21 @@ public class Ambiente {
                z >= 0 && z < alturaMaxAmbiente;
     }
 
-    public boolean estaOcupado(int x, int y, int z) throws ForaDosLimitesException { // [cite: 162]
+    /* ################################################################################################################################### */
+
+    /*verifica se uma posição (x, y, z) está ocupada por outra entidade. Isso é importante para evitar colisões entre entidades no ambiente. A função retorna verdadeiro se a posição estiver ocupada e falso caso contrário.*/
+
+    public boolean estaOcupado(int x, int y, int z) throws ForaDosLimitesException {
         if (!dentroDosLimites(x, y, z)) {
             throw new ForaDosLimitesException("Tentativa de verificar ocupação fora dos limites do ambiente: (" + x + "," + y + "," + z + ")");
         }
         return mapa[x][y][z] != TipoEntidade.VAZIO;
     }
+
+    /* ################################################################################################################################### */
+
+    /*verifica se uma posição (x, y, z) está ocupada por outra entidade. Isso é importante para evitar colisões entre entidades no ambiente. A função retorna verdadeiro se a posição estiver ocupada e falso caso contrário.*/
+
     
     public Entidade getEntidadeNaPosicao(int x, int y, int z) throws ForaDosLimitesException {
         if (!dentroDosLimites(x,y,z)){
@@ -178,8 +224,12 @@ public class Ambiente {
         return null; // Nenhuma entidade objeto encontrada, mas o mapa pode ainda estar ocupado (ex: por parte de obstáculo)
     }
 
+    /* ################################################################################################################################### */
 
-    public void moverEntidade(Entidade entidade, int novoX, int novoY, int novoZ) throws ColisaoException, ForaDosLimitesException { // [cite: 163]
+    /*moverEntidade altera a posição de uma entidade no ambiente, verificando se a nova posição está dentro dos limites e se não há colisões com outras entidades. Se a movimentação for bem-sucedida, atualiza o mapa tridimensional e a posição da entidade. Caso contrário, lança exceções apropriadas para indicar problemas como colisões ou posições fora dos limites.*/
+
+
+    public void moverEntidade(Entidade entidade, int novoX, int novoY, int novoZ) throws ColisaoException, ForaDosLimitesException { 
         if (!entidades.contains(entidade)) {
             System.err.println("ERRO CRÍTICO: Tentativa de mover entidade '" + entidade.getNome() + "' que não está na lista de entidades do ambiente.");
             // Considerar lançar uma EntidadeNaoEncontradaException aqui
@@ -247,8 +297,11 @@ public class Ambiente {
                            ") para (" + novoX + "," + novoY + "," + novoZ + ")");
     }
     
+    /* ################################################################################################################################### */
 
-    public void visualizarAmbiente() { // [cite: 164, 194]
+    /*visualizarAmbiente exibe uma representação do ambiente tridimensional no console, mostrando a posição de cada entidade. A visualização é feita em uma grade 2D, onde cada célula representa uma posição no ambiente. A função percorre o mapa tridimensional e imprime a representação de cada entidade encontrada, permitindo uma visão clara do estado atual do ambiente.*/
+
+    public void visualizarAmbiente() { 
         System.out.println("\n--- Visualização do Ambiente (Vista de Cima - Z=0 ou primeira entidade encontrada) ---");
         System.out.print("Y\\X>"); // Ajuste para melhor leitura dos eixos
         for (int x_idx = 0; x_idx < largura; x_idx++) {
@@ -294,7 +347,12 @@ public class Ambiente {
         System.out.println("-------------------------------------------------------------------------------");
     }
 
-    public void verificarColisoes() { // [cite: 163]
+    /* ################################################################################################################################### */
+
+    /*verificaColisoes percorre todas as entidades no ambiente e verifica se há colisões entre elas ou com obstáculos. A função analisa as posições de cada entidade e determina se estão ocupando o mesmo espaço, emitindo alertas em caso de colisões detectadas. Isso é crucial para garantir a segurança e a integridade das operações no ambiente simulado.*/
+
+
+    public void verificarColisoes() { 
         // Esta verificação é mais sobre robôs colidindo entre si, ou robô com obstáculo APÓS um movimento mal sucedido
         // ou se duas entidades foram adicionadas no mesmo local por engano (o adicionarEntidade deve prevenir)
         List<Entidade> entidadesCopia = new ArrayList<>(entidades); 

@@ -413,7 +413,7 @@ public class Main {
     /* permite ao usuário comandar o movimento de um robô no ambiente, oferecendo opções como mover para frente, trás, esquerda, direita, mudar direção, ou definir coordenadas específicas. Ele também trata movimentos verticais para robôs aéreos. O método valida os comandos, verifica limites do ambiente e trata exceções como colisões, limites excedidos ou ações não permitidas, garantindo robustez na interação.*/
 
 
-    private static void moverRoboInterativo(Robo robo) { // [cite: 196]
+    private static void moverRoboInterativo(Robo robo) { 
         System.out.println("Posição Atual: " + robo.exibirPosicao() + " | Direção Atual: " + robo.getDirecao());
         System.out.println("Comandos de Movimento:");
         System.out.println("  (F)rente, (T)rás, (E)squerda, (D)ireita");
