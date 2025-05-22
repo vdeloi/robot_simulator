@@ -2,31 +2,42 @@
 
 // Robo é a classe base, pai das classes RoboAereo e RoboTerrestre
 
+/* ################################################################################################################################### */
+
 import java.util.ArrayList;
 import java.util.List;
 
-public abstract class Robo implements Entidade { // [cite: 166, 187]
-    private final String id; // Identificador único [cite: 168]
+/* ################################################################################################################################### */
+
+
+public abstract class Robo implements Entidade { 
+
+    private final String id; // Identificador único
     protected String nome; // Nome amigável
-    protected int posicaoX; // [cite: 169]
-    protected int posicaoY; // [cite: 169]
-    protected int posicaoZ; // [cite: 169]
+    protected int posicaoX; 
+    protected int posicaoY; 
+    protected int posicaoZ; 
     protected String direcao; // Norte, Sul, Leste, Oeste (ou graus)
-    protected EstadoRobo estado; // [cite: 168]
-    protected TipoEntidade tipoEntidadeRobo; // [cite: 169]
+    protected EstadoRobo estado; 
+    protected TipoEntidade tipoEntidadeRobo; 
     private ArrayList<Sensor> listaDeSensores;
 
+    /* ################################################################################################################################### */
+
     public Robo(String id, String nome, int posicaoX, int posicaoY, int posicaoZ, String direcao) {
+
         this.id = id;
         this.nome = nome;
         this.posicaoX = posicaoX;
         this.posicaoY = posicaoY;
         this.posicaoZ = posicaoZ;
         this.direcao = direcao;
-        this.estado = EstadoRobo.DESLIGADO; // Começa desligado [cite: 170]
+        this.estado = EstadoRobo.DESLIGADO; // Começa desliga
         this.tipoEntidadeRobo = TipoEntidade.ROBO;
         this.listaDeSensores = new ArrayList<>();
     }
+
+    /* ################################################################################################################################### */
 
     // Métodos da interface Entidade
     @Override
@@ -35,25 +46,26 @@ public abstract class Robo implements Entidade { // [cite: 166, 187]
     public String getId() { return this.id; }
 
     @Override
-    public int getX() { return this.posicaoX; } // [cite: 154]
+    public int getX() { return this.posicaoX; } 
 
     @Override
-    public int getY() { return this.posicaoY; } // [cite: 155]
+    public int getY() { return this.posicaoY; }
 
     @Override
-    public int getZ() { return this.posicaoZ; } // [cite: 155]
+    public int getZ() { return this.posicaoZ; }
 
     @Override
-    public TipoEntidade getTipoEntidade() { return this.tipoEntidadeRobo; } // [cite: 156]
+    public TipoEntidade getTipoEntidade() { return this.tipoEntidadeRobo; }
 
     @Override
-    public String getDescricao() { // [cite: 156]
-        return "Robô ID: " + id + ", Nome: " + nome + ", Estado: " + estado.getDescricao() +
-               ", Posição: (" + posicaoX + "," + posicaoY + "," + posicaoZ + "), Direção: " + direcao;
+    public String getDescricao() {
+        return "Robô ID: " + id + ", Nome: " + nome + ", Estado: " + estado.getDescricao() +", Posição: (" + posicaoX + "," + posicaoY + "," + posicaoZ + "), Direção: " + direcao;
     }
 
     @Override
-    public char getRepresentacao() { return this.tipoEntidadeRobo.getRepresentacao(); } // [cite: 157]
+    public char getRepresentacao() { return this.tipoEntidadeRobo.getRepresentacao(); }
+
+    /* ################################################################################################################################### */
 
     // Getters e Setters
     public String getDirecao() { return direcao; }
@@ -68,27 +80,35 @@ public abstract class Robo implements Entidade { // [cite: 166, 187]
     
     public List<Sensor> getListaDeSensores() { return listaDeSensores; }
 
+    /* ################################################################################################################################### */
+
 
     // Métodos de controle do robô
-    public void ligar() throws AcaoNaoPermitidaException { // [cite: 170]
+    public void ligar() throws AcaoNaoPermitidaException { 
         if(this.estado == EstadoRobo.AVARIADO) {
             throw new AcaoNaoPermitidaException("Robô " + nome + " está avariado e não pode ser ligado.");
         }
         this.estado = EstadoRobo.EM_ESPERA; // Ou LIGADO, dependendo da semântica desejada
         System.out.println("Robô " + nome + " ligado.");
     }
+    /* ################################################################################################################################### */
 
-    public void desligar() { // [cite: 170]
+    public void desligar() { 
         this.estado = EstadoRobo.DESLIGADO;
         System.out.println("Robô " + nome + " desligado.");
     }
+    /* ################################################################################################################################### */
 
-    // Método abstrato para ações específicas de cada robô [cite: 170]
+    // Método abstrato para ações específicas de cada robô 
     public abstract String executarTarefa(Ambiente ambiente, CentralComunicacao central, String[] args) throws RoboDesligadoException, AcaoNaoPermitidaException, ForaDosLimitesException, ColisaoException;
+
+
+    /* ################################################################################################################################### */
+
 
     // Movimentação básica (será chamada por um método mais genérico no menu)
     // O ambiente fará a validação e moverá a entidade
-    public void moverPara(int novoX, int novoY, int novoZ, Ambiente ambiente) throws RoboDesligadoException, ColisaoException, ForaDosLimitesException, AcaoNaoPermitidaException { // [cite: 169]
+    public void moverPara(int novoX, int novoY, int novoZ, Ambiente ambiente) throws RoboDesligadoException, ColisaoException, ForaDosLimitesException, AcaoNaoPermitidaException { 
         if (this.estado == EstadoRobo.DESLIGADO) {
             throw new RoboDesligadoException("Robô " + nome + " está desligado. Não pode mover.");
         }
@@ -98,11 +118,14 @@ public abstract class Robo implements Entidade { // [cite: 166, 187]
         // A lógica de verificação de velocidade máxima (se aplicável) deve ser aqui ou na subclasse
         ambiente.moverEntidade(this, novoX, novoY, novoZ);
     }
+    /* ################################################################################################################################### */
     
     // Adicionar e ativar sensores (Lab 03)
     public void adicionarSensor(Sensor s) {
         this.listaDeSensores.add(s);
     }
+
+    /* ################################################################################################################################### */
 
     public String ativarSensoresRobo(Ambiente amb) throws RoboDesligadoException { // Renomeado para não colidir com Sensoreavel
         if (this.estado == EstadoRobo.DESLIGADO) {

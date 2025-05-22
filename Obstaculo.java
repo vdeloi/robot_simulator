@@ -1,6 +1,7 @@
 // Classe Obstáculo
 
 public class Obstaculo implements Entidade {
+
     private final String nome; // Adicionado para conformidade com Entidade e melhor identificação
     private int posicaoX1;
     private int posicaoY1;
@@ -9,7 +10,9 @@ public class Obstaculo implements Entidade {
     private int posicaoX2; // Usado para obstáculos que ocupam área
     private int posicaoY2; // Usado para obstáculos que ocupam área
     private final TipoObstaculo tipo;
-    private final char representacao = 'X'; // [cite: 157]
+    private final char representacao = 'X'; 
+
+    /* ################################################################################################################################### */
 
     // Construtor para obstáculos pontuais ou com base em um ponto
     public Obstaculo(String nome, int x, int y, int z_base, TipoObstaculo tipo) {
@@ -23,6 +26,8 @@ public class Obstaculo implements Entidade {
         this.alturaObstaculo = (tipo.getAlturaPadrao() >= 0) ? tipo.getAlturaPadrao() : 1; // Altura mínima 1 se padrão for < 0
     }
 
+    /* ################################################################################################################################### */
+
     // Construtor para obstáculos que ocupam uma área retangular na base
     public Obstaculo(String nome, int x1, int y1, int x2, int y2, int z_base, TipoObstaculo tipo) {
         this.nome = nome;
@@ -34,6 +39,9 @@ public class Obstaculo implements Entidade {
         this.tipo = tipo;
         this.alturaObstaculo = (tipo.getAlturaPadrao() >= 0) ? tipo.getAlturaPadrao() : 1;
     }
+
+    /* ################################################################################################################################### */
+    // getters
 
     @Override
     public String getNome() { return this.nome; }
@@ -54,19 +62,23 @@ public class Obstaculo implements Entidade {
 
 
     @Override
-    public TipoEntidade getTipoEntidade() { return TipoEntidade.OBSTACULO; } // [cite: 156]
+    public TipoEntidade getTipoEntidade() { return TipoEntidade.OBSTACULO; }
 
     @Override
-    public String getDescricao() { // [cite: 156]
+    public String getDescricao() { 
         return "Obstáculo: " + nome + " do tipo " + tipo.name() + " em (" + posicaoX1 + "," + posicaoY1 + "," + posicaoZ_base + ")";
     }
 
     @Override
-    public char getRepresentacao() { return this.representacao; } // [cite: 157]
+    public char getRepresentacao() { return this.representacao; } 
+
+    /* ################################################################################################################################### */
     
     public boolean bloqueiaPassagem() {
         return tipo.bloqueiaPassagem();
     }
+
+    /* ################################################################################################################################### */
 
     // Método para verificar se uma coordenada (px, py, pz) está dentro dos limites deste obstáculo
     public boolean contemPonto(int px, int py, int pz) {
