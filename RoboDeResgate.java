@@ -1,6 +1,9 @@
 /* RoboDeResgate.java */
+
 import java.util.ArrayList;
 import java.util.List;
+
+/* ################################################################################################################################### */
 
 class RoboDeResgate extends RoboTerrestre implements InterCarregador {
     private final int capacidadeDeCargaKg; // Carga em Kg que pode transportar (simulando resgatados)
@@ -8,6 +11,9 @@ class RoboDeResgate extends RoboTerrestre implements InterCarregador {
     private List<String> itensResgatados; // Descrição dos "itens" ou "vítimas" resgatadas
     private final boolean possuiSensorTermico;
     private final boolean possuiSensorRadar;
+
+    /* ################################################################################################################################### */
+
 
     public RoboDeResgate(String id, String nome, int posicaoX, int posicaoY, String direcao, 
                          int velocidadeMaxima, int capacidadeDeCargaKg, boolean sensorTermico, boolean sensorRadar) {
@@ -22,10 +28,17 @@ class RoboDeResgate extends RoboTerrestre implements InterCarregador {
         if(sensorRadar) adicionarSensor(new SensorProximidadeObstaculos(10.0)); // Exemplo de outro sensor
     }
 
+
+    /* ################################################################################################################################### */
+
     public int getCapacidadeDeCargaKg() { return capacidadeDeCargaKg; }
     public int getCargaAtualKg() { return cargaAtualKg; }
     public boolean hasSensorTermico() { return possuiSensorTermico; }
     public boolean hasSensorRadar() { return possuiSensorRadar; }
+    
+    /* ################################################################################################################################### */
+
+    /*permite que o robô de resgate simule o resgate de um item ou pessoa, verificando se o robô está ligado e em bom estado. Ele também valida se a carga atual não excede a capacidade máxima permitida. Caso o resgate seja bem-sucedido, o item é adicionado à lista de resgatados, e a carga atual é atualizada. */
 
     // Implementação de InterCarregador (adaptada para "resgatados")
     @Override
@@ -43,6 +56,11 @@ class RoboDeResgate extends RoboTerrestre implements InterCarregador {
         System.out.println(nome + " resgatou: " + descricaoItemResgatado + ". Carga atual: " + cargaAtualKg + "/" + capacidadeDeCargaKg + "kg.");
     }
 
+    /* ################################################################################################################################### */
+
+
+    /*permite que o robô de resgate descarregue o último item resgatado, verificando se o robô está ligado e em bom estado. Ele também valida se há itens a serem descarregados. Caso o descarregamento seja bem-sucedido, o item é removido da lista de resgatados, e a carga atual é atualizada. */
+
     @Override
     public void descarregarItem() throws RoboDesligadoException, AcaoNaoPermitidaException { // Descarrega o último "resgatado"
         if (this.estado == EstadoRobo.DESLIGADO) throw new RoboDesligadoException(nome + " está desligado.");
@@ -58,6 +76,10 @@ class RoboDeResgate extends RoboTerrestre implements InterCarregador {
         System.out.println(nome + " entregou/descarregou o resgatado: " + itemDescarregado + ". Carga restante: " + cargaAtualKg + "kg.");
     }
 
+    /* ################################################################################################################################### */
+
+    /*permite que o robô de resgate verifique os itens atualmente carregados, verificando se o robô está ligado. Ele retorna uma mensagem indicando os itens resgatados e a carga atual. Se não houver itens, informa que não há resgatados a bordo. */
+
     @Override
     public String verItensCarregados() throws RoboDesligadoException {
         if (this.estado == EstadoRobo.DESLIGADO) throw new RoboDesligadoException(nome + " está desligado.");
@@ -66,6 +88,11 @@ class RoboDeResgate extends RoboTerrestre implements InterCarregador {
         }
         return nome + " (Resgate) transportando (" + cargaAtualKg + "/" + capacidadeDeCargaKg + "kg): " + String.join(", ", itensResgatados);
     }
+
+    /* ################################################################################################################################### */
+
+    /*permite que o robô de resgate ergue uma carga externa no local, verificando se o robô está ligado e em bom estado. Ele também valida se a carga externa é positiva e não excede 50% da capacidade de carga do robô. Caso o içamento seja bem-sucedido, retorna uma mensagem indicando a carga erguida e a posição do robô. */
+
 
     // Método específico de erguer carga (diferente de transportar)
     public String erguerCargaLocal(int cargaExternaKg) throws RoboDesligadoException, AcaoNaoPermitidaException {
@@ -77,6 +104,11 @@ class RoboDeResgate extends RoboTerrestre implements InterCarregador {
         }
         return nome + " está erguendo uma carga externa de " + cargaExternaKg + " kg no local " + exibirPosicao();
     }
+
+    /* ################################################################################################################################### */
+
+    /*permite que o robô de resgate execute uma tarefa específica, verificando se o robô está ligado e em bom estado. Ele processa comandos como "buscar_vitima" e "erguer_obstaculo", realizando as ações correspondentes. Caso a tarefa seja bem-sucedida, retorna uma mensagem indicando o resultado da execução. Se não houver tarefas específicas, exibe o status dos sensores e itens carregados. */
+
 
     @Override
     public String executarTarefa(Ambiente ambiente, CentralComunicacao central, String[] args) throws RoboDesligadoException, AcaoNaoPermitidaException, ForaDosLimitesException, ColisaoException {

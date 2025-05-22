@@ -1,13 +1,18 @@
 /* RoboDroneDeCarga.java */
+
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
+/* ################################################################################################################################### */
+
 
 class RoboDroneDeCarga extends RoboAereo implements InterCarregador {
     private List<String> itensCarregados;
-    private int capacidadeMaximaItens; // Quantidade de itens, não peso. Para simplificar.
-                                     // Poderia ser peso, volume, etc.
+    private int capacidadeMaximaItens; 
+
+    /* ################################################################################################################################### */
 
     // Construtor ajustado
     public RoboDroneDeCarga(String id, String nome, int posicaoX, int posicaoY, int altitudeInicial, String direcao, 
@@ -17,6 +22,10 @@ class RoboDroneDeCarga extends RoboAereo implements InterCarregador {
         this.capacidadeMaximaItens = capacidadeMaximaItens;
         this.tipoEntidadeRobo = TipoEntidade.ROBO;
     }
+
+    /* ################################################################################################################################### */
+
+    /*permite que o drone de carga adicione um item à sua lista de itens carregados, verificando se o robô está ligado, em bom estado e se ainda há capacidade disponível. Caso o item seja carregado com sucesso, uma mensagem é exibida indicando o progresso da carga. */
 
     // Implementação de InterCarregador
     @Override
@@ -30,6 +39,11 @@ class RoboDroneDeCarga extends RoboAereo implements InterCarregador {
         System.out.println(nome + " carregou o item: " + item + ". Itens a bordo: " + itensCarregados.size() + "/" + capacidadeMaximaItens);
     }
 
+    /* ################################################################################################################################### */
+
+    /*permite que o drone de carga descarregue o último item da lista de itens carregados, verificando se o robô está ligado e em bom estado. Caso o item seja descarregado com sucesso, uma mensagem é exibida indicando o progresso da descarga. */
+
+
     @Override
     public void descarregarItem() throws RoboDesligadoException, AcaoNaoPermitidaException { // Descarrega o último item
         if (this.estado == EstadoRobo.DESLIGADO) throw new RoboDesligadoException(nome + " está desligado.");
@@ -41,6 +55,11 @@ class RoboDroneDeCarga extends RoboAereo implements InterCarregador {
         String itemDescarregado = itensCarregados.remove(itensCarregados.size() - 1);
         System.out.println(nome + " descarregou o item: " + itemDescarregado + ". Itens restantes: " + itensCarregados.size());
     }
+
+    /* ################################################################################################################################### */
+
+    /*permite que o drone de carga descarregue um item específico da lista de itens carregados, verificando se o robô está ligado e em bom estado. Caso o item seja encontrado e descarregado com sucesso, uma mensagem é exibida indicando o progresso da descarga. */
+
     
     public void descarregarItemEspecifico(String item) throws RoboDesligadoException, AcaoNaoPermitidaException {
         if (this.estado == EstadoRobo.DESLIGADO) throw new RoboDesligadoException(nome + " está desligado.");
@@ -56,6 +75,11 @@ class RoboDroneDeCarga extends RoboAereo implements InterCarregador {
         }
     }
 
+    /* ################################################################################################################################### */
+
+    /*permite que o drone de carga verifique os itens atualmente carregados, verificando se o robô está ligado. Caso não haja itens carregados, uma mensagem é exibida indicando que o robô não está carregando nada. */
+
+
 
     @Override
     public String verItensCarregados() throws RoboDesligadoException {
@@ -65,6 +89,12 @@ class RoboDroneDeCarga extends RoboAereo implements InterCarregador {
         }
         return nome + " está carregando ("+itensCarregados.size()+"/"+capacidadeMaximaItens+"): " + String.join(", ", itensCarregados);
     }
+
+
+    /* ################################################################################################################################### */
+
+    /*permite que o drone de carga execute uma tarefa, verificando se o robô está ligado e em bom estado. Caso a tarefa seja executada com sucesso, uma mensagem é exibida indicando o progresso da tarefa. */
+
 
     // Implementação de executarTarefa
     @Override
