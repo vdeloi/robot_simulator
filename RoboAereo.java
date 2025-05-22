@@ -1,7 +1,11 @@
 /* RoboAereo.java */
 
 public class RoboAereo extends Robo {
+
     protected int altitudeMaximaVoo;
+
+    /* ################################################################################################################################### */
+    // Construtor
 
     public RoboAereo(String id, String nome, int posicaoX, int posicaoY, int altitudeInicial, String direcao, int altitudeMaximaVoo) {
         super(id, nome, posicaoX, posicaoY, altitudeInicial, direcao);
@@ -16,9 +20,14 @@ public class RoboAereo extends Robo {
             this.posicaoZ = 0;
         }
     }
+    /* ################################################################################################################################### */
     
     public int getAltitudeAtual() { return this.posicaoZ; }
     public int getAltitudeMaximaVoo() { return altitudeMaximaVoo; }
+
+    /* ################################################################################################################################### */
+
+    /* permite que o robô aéreo aumente sua altitude em uma quantidade especificada, verificando se o robô está ligado e em bom estado. Ele ajusta a altitude para respeitar os limites do ambiente e a altitude máxima de voo, tratando exceções como colisões, limites excedidos ou ações não permitidas. */
 
     public void subir(int metros, Ambiente ambiente) throws RoboDesligadoException, ForaDosLimitesException, ColisaoException, AcaoNaoPermitidaException {
         if (this.estado == EstadoRobo.DESLIGADO) throw new RoboDesligadoException(nome + " está desligado.");
@@ -27,6 +36,7 @@ public class RoboAereo extends Robo {
             System.out.println(nome + ": valor para subir deve ser positivo.");
             return;
         }
+        
         
         int novaAltitude = this.posicaoZ + metros;
         if (novaAltitude > this.altitudeMaximaVoo) {
@@ -41,6 +51,10 @@ public class RoboAereo extends Robo {
         super.moverPara(this.posicaoX, this.posicaoY, novaAltitude, ambiente);
         System.out.println(nome + " subiu para a altitude " + this.posicaoZ + "m.");
     }
+
+    /* ################################################################################################################################### */
+
+    /* permite que o robô aéreo diminua sua altitude em uma quantidade especificada, verificando se o robô está ligado e em bom estado. Ele ajusta a altitude para não ficar abaixo de zero, tratando exceções como colisões, limites excedidos ou ações não permitidas. */
 
     public void descer(int metros, Ambiente ambiente) throws RoboDesligadoException, ForaDosLimitesException, ColisaoException, AcaoNaoPermitidaException {
         if (this.estado == EstadoRobo.DESLIGADO) throw new RoboDesligadoException(nome + " está desligado.");
@@ -58,6 +72,10 @@ public class RoboAereo extends Robo {
         super.moverPara(this.posicaoX, this.posicaoY, novaAltitude, ambiente);
         System.out.println(nome + " desceu para a altitude " + this.posicaoZ + "m.");
     }
+
+    /* ################################################################################################################################### */
+
+    /* permite que o robô aéreo mude sua posição em um ambiente tridimensional, verificando se o robô está ligado e em bom estado. Ele ajusta a altitude para respeitar os limites do ambiente e a altitude máxima de voo, tratando exceções como colisões, limites excedidos ou ações não permitidas. */
     
     @Override
     public void moverPara(int novoX, int novoY, int novoZ, Ambiente ambiente) throws RoboDesligadoException, ColisaoException, ForaDosLimitesException, AcaoNaoPermitidaException {
@@ -79,6 +97,10 @@ public class RoboAereo extends Robo {
         
         super.moverPara(novoX, novoY, novoZ, ambiente);
     }
+
+    /* ################################################################################################################################### */
+
+    /* permite que o robô aéreo execute uma tarefa de sobrevoo, verificando se o robô está ligado e em bom estado. Ele simula o sobrevoo com mensagens de status e atualiza o estado do robô após a conclusão. */
 
     @Override
     public String executarTarefa(Ambiente ambiente, CentralComunicacao central, String[] args) throws RoboDesligadoException, AcaoNaoPermitidaException {
