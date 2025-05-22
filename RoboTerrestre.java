@@ -37,12 +37,7 @@ public class RoboTerrestre extends Robo {
             throw new AcaoNaoPermitidaException("Robô terrestre " + nome + " não pode alterar altitude Z.");
         }
 
-        double distancia = Math.sqrt(Math.pow(novoX - this.posicaoX, 2) + Math.pow(novoY - this.posicaoY, 2));
-        // Assumindo que o movimento é em 1 unidade de tempo.
-        // Se a distância for maior que a velocidade máxima, não permite.
-        // Para movimentos incrementais (passo a passo), essa lógica seria diferente.
-        // No contexto do lab, onde se move para uma coordenada, o "passo" é o delta.
-        // Se a intenção do lab é mover um 'deltaX' e 'deltaY' por vez:
+        // Verifica se o novo ponto está dentro dos limites do ambiente
         int deltaX = novoX - this.posicaoX;
         int deltaY = novoY - this.posicaoY;
         double velocidadeDoMovimento = Math.sqrt(deltaX * deltaX + deltaY * deltaY);
