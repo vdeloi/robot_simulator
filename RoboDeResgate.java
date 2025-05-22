@@ -6,6 +6,8 @@ import java.util.List;
 /* ################################################################################################################################### */
 
 class RoboDeResgate extends RoboTerrestre implements InterCarregador {
+
+
     private final int capacidadeDeCargaKg; // Carga em Kg que pode transportar (simulando resgatados)
     private int cargaAtualKg;
     private List<String> itensResgatados; // Descrição dos "itens" ou "vítimas" resgatadas
@@ -14,7 +16,9 @@ class RoboDeResgate extends RoboTerrestre implements InterCarregador {
 
     /* ################################################################################################################################### */
 
-
+    /*inicializa um robô de resgate com atributos como capacidade de carga, sensores térmicos e de radar, além de configurar os parâmetros herdados da classe base. Ele também adiciona sensores ao robô, caso estejam habilitados, e define o tipo da entidade como robô. */
+    
+    
     public RoboDeResgate(String id, String nome, int posicaoX, int posicaoY, String direcao, 
                          int velocidadeMaxima, int capacidadeDeCargaKg, boolean sensorTermico, boolean sensorRadar) {
         super(id, nome, posicaoX, posicaoY, direcao, velocidadeMaxima);

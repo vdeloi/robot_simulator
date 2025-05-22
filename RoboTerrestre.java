@@ -5,6 +5,8 @@ public class RoboTerrestre extends Robo {
 
     /* ################################################################################################################################### */
 
+    // Construtor
+
     public RoboTerrestre(String id, String nome, int posicaoX, int posicaoY, String direcao, int velocidadeMaxima) {
         super(id, nome, posicaoX, posicaoY, 0, direcao); // Robo terrestre sempre em Z=0 inicialmente
         this.velocidadeMaxima = velocidadeMaxima;
@@ -19,6 +21,8 @@ public class RoboTerrestre extends Robo {
     }
 
     /* ################################################################################################################################### */
+
+    /* adiciona verificações específicas para robôs terrestres, garantindo que eles não alterem a altitude (Z) e que o movimento não exceda a velocidade máxima permitida. Caso as condições sejam violadas, exceções apropriadas são lançadas. */
 
     // Sobrescrita do moverPara para incluir verificação de velocidade
     @Override
@@ -50,7 +54,11 @@ public class RoboTerrestre extends Robo {
         
         super.moverPara(novoX, novoY, novoZ, ambiente);
     }
+
+
     /* ################################################################################################################################### */
+
+    /* permite que o robô terrestre execute uma tarefa específica, como patrulhar uma área ou realizar uma inspeção, verificando se o robô está ligado e em bom estado. Ele altera o estado do robô para "executando tarefa" durante a execução e retorna uma mensagem indicando o progresso da tarefa. */
 
     @Override
     public String executarTarefa(Ambiente ambiente, CentralComunicacao central, String[] args) throws RoboDesligadoException, AcaoNaoPermitidaException {

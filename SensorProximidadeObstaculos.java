@@ -16,6 +16,8 @@ public class SensorProximidadeObstaculos extends Sensor {
 
      /* ################################################################################################################################### */
 
+     /*verifica obstáculos próximos ao robô dentro do raio de alcance do sensor. Ele calcula a distância entre o robô e cada obstáculo no ambiente, retornando uma mensagem detalhada com os obstáculos detectados ou indicando que nenhum foi encontrado. */
+
     @Override
     public String monitorar(Ambiente amb, Robo robo) {
         if (amb == null || robo == null) {
@@ -58,6 +60,11 @@ public class SensorProximidadeObstaculos extends Sensor {
         }
     }
     /* ################################################################################################################################### */
+
+    /**
+     * Retorna uma representação em string do sensor de proximidade de obstáculos.
+     * @return String representando o sensor.
+     */
 
     @Override
     public String toString() {

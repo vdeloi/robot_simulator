@@ -13,6 +13,7 @@ public class RoboDroneDeVigilancia extends RoboAereo implements Sensoreavel, Com
 
     /* ################################################################################################################################### */
 
+    /* inicializa um drone de vigilância com atributos específicos, como qualidade da câmera, frames por segundo e duração máxima de vídeo, além de configurar os parâmetros herdados da classe base. Ele também permite especializar o tipo de entidade, se necessário. */
 
     public RoboDroneDeVigilancia(String id, String nome, int posicaoX, int posicaoY, int altitude, String direcao, int altitudeMaximaVoo,
                                  int qualidadeDaCamera, int framesPorSegundo, int duracaoMaximaVideo) {
@@ -35,6 +36,8 @@ public class RoboDroneDeVigilancia extends RoboAereo implements Sensoreavel, Com
 
     /* ################################################################################################################################### */
 
+    /* permite que o drone de vigilância inicie uma gravação, verificando se está ligado, em bom estado e se ainda há tempo disponível para gravação. Caso as condições sejam atendidas, o estado do drone é atualizado, e uma mensagem informativa é retornada.*/
+
 
     public String iniciarGravacao() throws RoboDesligadoException, AcaoNaoPermitidaException {
         if (this.estado == EstadoRobo.DESLIGADO) throw new RoboDesligadoException(nome + " está desligado e não pode iniciar gravação.");
@@ -49,6 +52,7 @@ public class RoboDroneDeVigilancia extends RoboAereo implements Sensoreavel, Com
 
     /* ################################################################################################################################### */
 
+    /* permite que o drone de vigilância pare a gravação, verificando se está ligado e em bom estado. Caso as condições sejam atendidas, o estado do drone é atualizado, e uma mensagem informativa é retornada.*/
 
     public String pararGravacao() throws RoboDesligadoException {
         // Permitir parar gravação mesmo se desligado ou avariado, caso a gravação tenha sido iniciada antes.
@@ -66,6 +70,7 @@ public class RoboDroneDeVigilancia extends RoboAereo implements Sensoreavel, Com
 
     /* ################################################################################################################################### */
 
+    /* simula o tempo de gravação, atualizando a duração atual do vídeo e verificando se o tempo máximo foi atingido. Caso o tempo máximo seja atingido, a gravação é parada automaticamente.*/
     
     public void simularTempoGravacao(int segundos) {
         if (gravando && this.estado != EstadoRobo.DESLIGADO && this.estado != EstadoRobo.AVARIADO) {
@@ -88,6 +93,8 @@ public class RoboDroneDeVigilancia extends RoboAereo implements Sensoreavel, Com
     }
 
     /* ################################################################################################################################### */
+
+    /* permite que o robô drone de vigilância execute uma tarefa específica, como gravar vídeo, parar a gravação ou explorar uma área, verificando se o robô está ligado e em bom estado. Ele altera o estado do robô para "executando tarefa" durante a execução e retorna uma mensagem indicando o progresso da tarefa.*/
 
     @Override
     public String executarTarefa(Ambiente ambiente, CentralComunicacao central, String[] args) throws RoboDesligadoException, AcaoNaoPermitidaException, ForaDosLimitesException, ColisaoException {
@@ -115,6 +122,8 @@ public class RoboDroneDeVigilancia extends RoboAereo implements Sensoreavel, Com
 
     /* ################################################################################################################################### */
 
+    /* permite que o robô drone de vigilância exiba informações sobre seu estado atual, incluindo a qualidade da câmera, frames por segundo e status de gravação.*/
+
     // Implementação de Sensoreavel
     @Override
     public String acionarSensores(Ambiente ambiente) throws RoboDesligadoException {
@@ -126,6 +135,8 @@ public class RoboDroneDeVigilancia extends RoboAereo implements Sensoreavel, Com
     }
 
     /* ################################################################################################################################### */
+
+    /* permite que o robô drone de vigilância envie mensagens para outros robôs ou para a central de comunicação, verificando se está ligado e em bom estado. Ele registra a mensagem na central e tenta enviar para o destinatário, tratando exceções caso o destinatário esteja desligado ou avariado.*/
 
     // Implementação de Comunicavel
     @Override
@@ -147,6 +158,8 @@ public class RoboDroneDeVigilancia extends RoboAereo implements Sensoreavel, Com
 
     /* ################################################################################################################################### */
 
+    /* permite que o robô drone de vigilância receba mensagens de outros robôs ou da central de comunicação, verificando se está ligado e em bom estado. Ele registra a mensagem recebida e pode realizar ações adicionais, como alertar sobre anomalias detectadas.*/
+
     @Override
     public void receberMensagem(String remetenteIdComunicacao, String mensagem) throws RoboDesligadoException {
          if (this.estado == EstadoRobo.DESLIGADO && this.estado != EstadoRobo.AVARIADO) { // Avariado pode estar funcional para receber
@@ -159,11 +172,14 @@ public class RoboDroneDeVigilancia extends RoboAereo implements Sensoreavel, Com
 
     /* ################################################################################################################################### */
 
+    /* permite que o robô drone de vigilância exiba seu ID de comunicação, que é uma combinação do tipo de robô e seu ID único.*/
 
     @Override
     public String getIdComunicacao() { return "DroneV-" + this.getId(); }
 
     /* ################################################################################################################################### */
+
+    /* permite que o robô drone de vigilância explore uma área, verificando se está ligado e em bom estado. Ele altera o estado do robô para "executando tarefa" durante a exploração e retorna uma mensagem indicando o progresso da exploração.*/
 
     // Implementação de InterExplorador
     @Override
