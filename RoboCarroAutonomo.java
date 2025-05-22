@@ -1,14 +1,18 @@
 /* RoboCarroAutonomo.java */
 
 // Adicionamos InterDefensiva à lista de interfaces implementadas
+
 class RoboCarroAutonomo extends RoboTerrestre implements InterDefensiva {
+
     private int numDePassageiros;
     private final int numMaximoDePassageiros;
     private double nivelDaBateria; // Percentual (0.0 a 1.0)
     private int kilometrosRodados;
     private boolean modoDefesaAtivo; // Novo atributo para InterDefensiva
 
-    // Construtor ajustado
+    /* ################################################################################################################################### */
+
+    // Construtor 
     public RoboCarroAutonomo(String id, String nome, int posicaoX, int posicaoY, String direcao,
                              int velocidadeMaxima, int numMaximoDePassageiros, double nivelDaBateriaInicial) {
         super(id, nome, posicaoX, posicaoY, direcao, velocidadeMaxima);
@@ -20,6 +24,8 @@ class RoboCarroAutonomo extends RoboTerrestre implements InterDefensiva {
         this.modoDefesaAtivo = false; // Inicializa o modo de defesa como desativado
     }
 
+    /* ################################################################################################################################### */
+
     // Getters
     public int getNumDePassageiros() { return numDePassageiros; }
     public int getNumMaximoDePassageiros() { return numMaximoDePassageiros; }
@@ -27,7 +33,10 @@ class RoboCarroAutonomo extends RoboTerrestre implements InterDefensiva {
     public int getKilometrosRodados() { return kilometrosRodados; }
     public boolean isModoDefesaAtivo() { return modoDefesaAtivo; } // Getter para o estado de defesa
 
-    // Setters com validação
+    /* ################################################################################################################################### */
+
+    /*define o número de passageiros no robô carro autônomo, garantindo que o valor seja não negativo e não exceda o limite máximo permitido. Caso o valor exceda o limite, ele é ajustado automaticamente para o máximo, e uma mensagem de aviso é exibida. */
+
     public void setNumDePassageiros(int numDePassageiros) throws AcaoNaoPermitidaException {
         if (numDePassageiros < 0) {
             throw new AcaoNaoPermitidaException("Número de passageiros não pode ser negativo.");
@@ -41,6 +50,10 @@ class RoboCarroAutonomo extends RoboTerrestre implements InterDefensiva {
         System.out.println(nome + " agora com " + this.numDePassageiros + " passageiros.");
     }
 
+    /* ################################################################################################################################### */
+
+    /* define o nível da bateria do robô carro autônomo, garantindo que o valor esteja entre 0.0 e 1.0. Caso o valor exceda esses limites, ele é ajustado automaticamente para o máximo ou mínimo permitido. */
+
     public void setNivelDaBateria(double nivelDaBateria) { // nivel 0.0 a 1.0
         if (nivelDaBateria > 1.0) {
             this.nivelDaBateria = 1.0;
@@ -51,7 +64,12 @@ class RoboCarroAutonomo extends RoboTerrestre implements InterDefensiva {
         }
     }
 
+
+    /* ################################################################################################################################### */
+
+
     // Consome bateria ao mover e registra km
+
     @Override
     public void moverPara(int novoX, int novoY, int novoZ, Ambiente ambiente) throws RoboDesligadoException, ColisaoException, ForaDosLimitesException, AcaoNaoPermitidaException {
         if (nivelDaBateria <= 0.05 && (novoX != this.posicaoX || novoY != this.posicaoY) ) { // 5% de bateria
@@ -75,6 +93,10 @@ class RoboCarroAutonomo extends RoboTerrestre implements InterDefensiva {
         }
     }
 
+    /* ################################################################################################################################### */
+
+    /* permite que o robô carro autônomo recarregue sua bateria em uma quantidade especificada, verificando se o robô está ligado e em bom estado. Ele ajusta o nível da bateria para não exceder 100%, tratando exceções como desligamento ou avaria. */
+
     public String recarregarBateria(double quantidade) throws RoboDesligadoException, AcaoNaoPermitidaException {
         if (this.estado == EstadoRobo.DESLIGADO) throw new RoboDesligadoException(nome + " está desligado.");
         if (this.estado == EstadoRobo.AVARIADO) throw new AcaoNaoPermitidaException(nome + " está avariado.");
@@ -85,6 +107,9 @@ class RoboCarroAutonomo extends RoboTerrestre implements InterDefensiva {
         return nome + " recarregado. Nível da bateria: " + String.format("%.1f%%", nivelDaBateria*100);
     }
 
+    /* ################################################################################################################################### */
+
+    /* permite que o robô carro autônomo execute tarefas específicas, como transportar passageiros ou recarregar a bateria, verificando se o robô está ligado e em bom estado. Ele trata exceções como desligamento, avaria, colisões e limites excedidos. */
 
     @Override
     public String executarTarefa(Ambiente ambiente, CentralComunicacao central, String[] args) throws RoboDesligadoException, AcaoNaoPermitidaException, ForaDosLimitesException, ColisaoException {
@@ -139,6 +164,9 @@ class RoboCarroAutonomo extends RoboTerrestre implements InterDefensiva {
         return log.toString();
     }
 
+    /* ################################################################################################################################### */
+    /* permite que o robô carro autônomo exiba sua posição atual em um formato específico, incluindo a altitude (que é 0 para carros) e o estado do robô. */
+
     // Implementação dos métodos da interface InterDefensiva
     @Override
     public String ativarDefesa() throws RoboDesligadoException, AcaoNaoPermitidaException {
@@ -163,6 +191,10 @@ class RoboCarroAutonomo extends RoboTerrestre implements InterDefensiva {
         // Para este simulador, vamos assumir que ele para e fica mais resistente ou em alerta.
         return nome + " (Carro Autônomo) ativou o modo de defesa. O veículo está parado e em alerta.";
     }
+
+    /* ################################################################################################################################### */
+    
+    /* permite que o robô carro autônomo desative o modo de defesa, verificando se o robô está ligado e em bom estado. Ele trata exceções como desligamento, avaria e ações não permitidas. */
 
     @Override
     public String desativarDefesa() throws RoboDesligadoException, AcaoNaoPermitidaException {
