@@ -1,56 +1,57 @@
+// Main 
 
-/* Main.java */
+
+/* ################################################################################################################################### */
+
 import java.util.ArrayList;
 import java.util.InputMismatchException;
 import java.util.List;
 import java.util.Scanner;
 import java.util.stream.Collectors;
 
+/* ################################################################################################################################### */
+
 public class Main {
+
     private static Ambiente ambiente;
     private static CentralComunicacao centralComunicacao;
     private static Scanner scanner = new Scanner(System.in);
 
+
+    /* ################################################################################################################################### */
     public static void main(String[] args) {
-        inicializarSimulacao(); // [cite: 200, 201]
+        inicializarSimulacao(); 
         rodarMenuInterativo();
         scanner.close();
         System.out.println("Simulação encerrada. Obrigado!");
     }
 
-    private static void inicializarSimulacao() { // [cite: 200, 201]
+
+    /* ################################################################################################################################### */
+
+    /**Inicializa o ambiente e os robôs para a simulação.*/
+
+     /*configura o ambiente inicial da simulação, criando um ambiente tridimensional e adicionando entidades como obstáculos e robôs com diferentes características e funcionalidades. Ele também trata possíveis exceções relacionadas a colisões ou limites do ambiente, garantindo que a simulação seja inicializada corretamente. Ao final, exibe o estado inicial do ambiente. */
+
+
+    private static void inicializarSimulacao() {
         System.out.println("Inicializando Simulador de Robôs MC322 - Lab 04...");
         ambiente = new Ambiente(15, 15, 5); // Largura, Profundidade, Altura do Ambiente (ex: 0 a 4)
         centralComunicacao = new CentralComunicacao();
 
         try {
             // Adicionar Obstáculos
-            ambiente.adicionarEntidade(new Obstaculo("Muro Leste", 14, 0, 14, 14, 0, TipoObstaculo.PAREDE)); // Parede
-                                                                                                             // ao longo
-                                                                                                             // da borda
-                                                                                                             // X=14
-            ambiente.adicionarEntidade(new Obstaculo("Plataforma Central", 5, 5, 8, 8, 0, TipoObstaculo.PREDIO)); // Obstáculo
-                                                                                                                  // base
-                                                                                                                  // 5,5
-                                                                                                                  // a
-                                                                                                                  // 8,8
-                                                                                                                  // no
-                                                                                                                  // chao,
-                                                                                                                  // altura
-                                                                                                                  // do
-                                                                                                                  // predio
-            ambiente.adicionarEntidade(new Obstaculo("Rocha Alta", 2, 8, 0, TipoObstaculo.ROCHA)); // Rocha pontual alta
-            ambiente.adicionarEntidade(new Obstaculo("Lagoa", 1, 1, 3, 3, 0, TipoObstaculo.AGUA)); // Tipo AGUA pode não
-                                                                                                   // bloquear a
-                                                                                                   // passagem no mapa.
+            ambiente.adicionarEntidade(new Obstaculo("Muro Leste", 14, 0, 14, 14, 0, TipoObstaculo.PAREDE)); 
+            ambiente.adicionarEntidade(new Obstaculo("Plataforma Central", 5, 5, 8, 8, 0, TipoObstaculo.PREDIO)); 
+            ambiente.adicionarEntidade(new Obstaculo("Rocha Alta", 2, 8, 0, TipoObstaculo.ROCHA)); 
+            ambiente.adicionarEntidade(new Obstaculo("Lagoa", 1, 1, 3, 3, 0, TipoObstaculo.AGUA)); 
 
             // Adicionar Robôs
             RoboTerrestre terrestre1 = new RoboTerrestre("RT001", "T-800", 1, 1, "Norte", 3);
             terrestre1.adicionarSensor(new SensorTemperatura(2.0));
             ambiente.adicionarEntidade(terrestre1);
 
-            RoboDroneDeVigilancia drone1 = new RoboDroneDeVigilancia("DV001", "SkyEye", 3, 3, 2, "Leste", 4, 12, 30,
-                    300);
+            RoboDroneDeVigilancia drone1 = new RoboDroneDeVigilancia("DV001", "SkyEye", 3, 3, 2, "Leste", 4, 12, 30,300);
             drone1.adicionarSensor(new SensorUmidade(10.0));
             drone1.adicionarSensor(new SensorTemperatura(10.0));
             ambiente.adicionarEntidade(drone1);
@@ -76,14 +77,22 @@ public class Main {
         ambiente.visualizarAmbiente();
     }
 
-    private static void rodarMenuInterativo() { // [cite: 192, 193, 194, 195, 196, 197]
+
+    /* ################################################################################################################################### */
+
+    /*Executa o menu interativo principal da simulação, permitindo ao usuário interagir com os robôs, visualizar o ambiente e gerenciar a simulação.*/
+
+    /*implementa o menu principal da simulação, permitindo ao usuário interagir com o sistema. Ele apresenta opções como listar robôs, selecionar um robô para interação, visualizar o mapa do ambiente, verificar colisões, avançar o tempo da simulação e sair. O método utiliza um loop para manter o menu ativo até que o usuário escolha sair, tratando entradas inválidas e exceções para garantir a robustez da interação. */
+
+
+    private static void rodarMenuInterativo() { 
         boolean sair = false;
         while (!sair) {
             System.out.println("\n========= Menu Principal Simulador =========");
             System.out.println("1. Listar Robôs (com filtros)");
             System.out.println("2. Selecionar Robô para Interagir");
-            System.out.println("3. Visualizar Mapa do Ambiente"); // [cite: 194]
-            System.out.println("4. Visualizar Histórico de Comunicações"); // [cite: 197]
+            System.out.println("3. Visualizar Mapa do Ambiente"); 
+            System.out.println("4. Visualizar Histórico de Comunicações"); 
             System.out.println("5. Avançar tempo (simular gravação de drones, etc.)");
             System.out.println("6. Verificar Colisões Gerais no Ambiente");
             System.out.println("0. Sair da Simulação");
@@ -128,7 +137,14 @@ public class Main {
         }
     }
 
-    private static void listarRobos() { // [cite: 192]
+    /* ################################################################################################################################### */
+
+    /*Lista os robôs no ambiente, permitindo ao usuário filtrar por tipo ou estado.*/
+
+    /* exibe uma lista de robôs presentes no ambiente, permitindo ao usuário aplicar filtros opcionais por tipo de robô ou estado. Ele utiliza um loop para verificar os critérios de exibição e apresenta informações detalhadas sobre cada robô, como ID, nome, tipo, estado e posição. Caso nenhum robô atenda aos filtros, uma mensagem informativa é exibida.*/
+
+
+    private static void listarRobos() { 
         System.out.println("\n--- Lista de Robôs no Ambiente ---");
         List<Robo> robos = new ArrayList<>();
         for (Entidade e : ambiente.getEntidades()) {
@@ -204,6 +220,10 @@ public class Main {
         System.out.println("------------------------------------");
     }
 
+    /* ################################################################################################################################### */
+
+    /*busca um robô no ambiente com base em seu ID ou nome. Ele percorre a lista de entidades do ambiente, verifica se a entidade é um robô e compara o identificador fornecido com o ID ou nome do robô. Caso encontre uma correspondência, retorna o robô; caso contrário, retorna null. */
+
     private static Robo encontrarRoboPorIdOuNome(String identificador) {
         for (Entidade e : ambiente.getEntidades()) {
             if (e instanceof Robo) {
@@ -216,7 +236,11 @@ public class Main {
         return null; // Não encontrado
     }
 
-    private static void selecionarRoboParaInteragir() { // [cite: 193]
+    /* ################################################################################################################################### */
+
+    /* permite ao usuário selecionar um robô para interação, utilizando o ID ou nome do robô. Caso o usuário não saiba o identificador, ele pode listar os robôs disponíveis. Se o robô correspondente for encontrado, o método encaminha para o menu de interação com o robô; caso contrário, exibe uma mensagem informando que o robô não foi encontrado.*/
+
+    private static void selecionarRoboParaInteragir() { 
         System.out.print("Digite o ID ou Nome do robô para interagir (ou 'listar' para ver os robôs): ");
         String idRobo = scanner.nextLine().trim();
         if ("listar".equalsIgnoreCase(idRobo)) {
@@ -234,11 +258,17 @@ public class Main {
         menuInteracaoRobo(roboSelecionado);
     }
 
+
+    /* ################################################################################################################################### */
+
+    /*permite ao usuário interagir diretamente com um robô selecionado, exibindo um menu de ações disponíveis com base nas capacidades do robô (como mover, ligar/desligar, acionar sensores, executar tarefas específicas, entre outras). Ele trata entradas inválidas e exceções para garantir a robustez da interação, além de adaptar as opções dinamicamente conforme as interfaces implementadas pelo robô. */
+
+    
     private static void menuInteracaoRobo(Robo robo) { 
         boolean voltar = false;
         while (!voltar) {
             System.out.println("\n--- Interagindo com: " + robo.getNome() + " (ID: " + robo.getId() + ", Tipo: " + robo.getClass().getSimpleName() + ") ---");
-            System.out.println("Estado Atual: " + robo.getEstado().getDescricao() + " | Posição: " + robo.exibirPosicao() + " | Direção: " + robo.getDirecao()); // [cite: 193]
+            System.out.println("Estado Atual: " + robo.getEstado().getDescricao() + " | Posição: " + robo.exibirPosicao() + " | Direção: " + robo.getDirecao());
             
             List<String> opcoesMenu = new ArrayList<>();
             opcoesMenu.add("Mover Robô"); // 1 
@@ -377,6 +407,12 @@ public class Main {
 
     }
 
+
+    /* ################################################################################################################################### */
+
+    /* permite ao usuário comandar o movimento de um robô no ambiente, oferecendo opções como mover para frente, trás, esquerda, direita, mudar direção, ou definir coordenadas específicas. Ele também trata movimentos verticais para robôs aéreos. O método valida os comandos, verifica limites do ambiente e trata exceções como colisões, limites excedidos ou ações não permitidas, garantindo robustez na interação.*/
+
+
     private static void moverRoboInterativo(Robo robo) { // [cite: 196]
         System.out.println("Posição Atual: " + robo.exibirPosicao() + " | Direção Atual: " + robo.getDirecao());
         System.out.println("Comandos de Movimento:");
@@ -495,10 +531,7 @@ public class Main {
                     // Validar novaDir aqui se necessário (ex: garantir que é uma das 4 válidas)
                     if (novaDir.equalsIgnoreCase("Norte") || novaDir.equalsIgnoreCase("Sul") ||
                             novaDir.equalsIgnoreCase("Leste") || novaDir.equalsIgnoreCase("Oeste")) {
-                        robo.setDirecao(novaDir.substring(0, 1).toUpperCase() + novaDir.substring(1).toLowerCase()); // Padroniza
-                                                                                                                     // para
-                                                                                                                     // ex:
-                                                                                                                     // "Norte"
+                        robo.setDirecao(novaDir.substring(0, 1).toUpperCase() + novaDir.substring(1).toLowerCase()); 
                         System.out.println(robo.getNome() + " agora está virado para " + robo.getDirecao());
                     } else {
                         System.out.println("Direção inválida. Escolha entre Norte, Sul, Leste, Oeste.");
@@ -510,8 +543,7 @@ public class Main {
                             novoX = Integer.parseInt(partesComando[0]);
                             novoY = Integer.parseInt(partesComando[1]);
                             novoZ = Integer.parseInt(partesComando[2]);
-                        } else if (partesComando.length == 2 && !(robo instanceof RoboAereo)) { // X Y para terrestre
-                                                                                                // (Z=0)
+                        } else if (partesComando.length == 2 && !(robo instanceof RoboAereo)) { 
                             novoX = Integer.parseInt(partesComando[0]);
                             novoY = Integer.parseInt(partesComando[1]);
                             novoZ = 0; // Robôs terrestres ficam em Z=0
@@ -526,9 +558,8 @@ public class Main {
                     }
             }
 
-            // Validação de altitude para RoboAereo antes de chamar moverPara (se não foi C
-            // ou B)
-            // C e B já tratam isso em seus próprios métodos subir/descer.
+            // Validação de altitude para RoboAereo antes de chamar moverPara (se não foi C ou B)
+            //C e B já tratam isso em seus próprios métodos subir/descer.
             if (!comandoPrincipal.equals("C") && !comandoPrincipal.equals("B")) {
                 if (robo instanceof RoboAereo) {
                     RoboAereo ra = (RoboAereo) robo;
@@ -554,14 +585,17 @@ public class Main {
 
         } catch (RoboDesligadoException | ColisaoException | ForaDosLimitesException | AcaoNaoPermitidaException e) {
             System.err.println("Erro ao mover " + robo.getNome() + ": " + e.getMessage());
-        } catch (InputMismatchException e) { // Embora o scanner principal seja tratado, um scanner local poderia dar
-                                             // erro
+        } catch (InputMismatchException e) { // Embora o scanner principal seja tratado, um scanner local poderia dar erro
             System.out.println("Entrada de movimento inválida.");
         } catch (Exception e) { // Captura geral para erros inesperados no movimento
             System.err.println("Erro inesperado durante o comando de movimento: " + e.getMessage());
             e.printStackTrace();
         }
     }
+
+    /* ################################################################################################################################### */
+
+    /* permite que um robô com capacidade de comunicação envie mensagens para outros robôs comunicáveis no ambiente. Ele exibe uma lista de robôs disponíveis para comunicação, valida a seleção do destinatário e envia a mensagem, tratando possíveis erros como entrada inválida, robô desligado ou falhas de comunicação.*/
 
     private static void comunicarComRobo(Comunicavel comunicador) { //
         if (!(comunicador instanceof Robo)) {
@@ -616,6 +650,9 @@ public class Main {
             e.printStackTrace();
         }
     }
+    /* ################################################################################################################################### */
+
+    /* permite avançar o tempo da simulação em segundos, afetando funcionalidades dependentes do tempo, como gravação de drones ou consumo de bateria. Ele valida a entrada do usuário, aplica as mudanças às entidades do ambiente e trata possíveis erros, garantindo robustez na execução. */
 
     private static void avancarTempoSimulacao() {
         System.out.print("Quantos segundos de simulação avançar (para gravação de drones, consumo de bateria, etc.)? ");
