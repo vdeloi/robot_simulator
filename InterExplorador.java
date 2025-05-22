@@ -2,5 +2,5 @@
 
 public interface InterExplorador {
     
-    void explorarArea(Ambiente ambiente) throws RoboDesligadoException, AcaoNaoPermitidaException;
+    String explorarArea(Ambiente ambiente) throws RoboDesligadoException, AcaoNaoPermitidaException;
 }
