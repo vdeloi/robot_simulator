@@ -1,13 +1,15 @@
-/* RoboCarroAutonomo.java */ 
+/* RoboCarroAutonomo.java */
 
-class RoboCarroAutonomo extends RoboTerrestre {
+// Adicionamos InterDefensiva à lista de interfaces implementadas
+class RoboCarroAutonomo extends RoboTerrestre implements InterDefensiva {
     private int numDePassageiros;
     private final int numMaximoDePassageiros;
     private double nivelDaBateria; // Percentual (0.0 a 1.0)
     private int kilometrosRodados;
+    private boolean modoDefesaAtivo; // Novo atributo para InterDefensiva
 
     // Construtor ajustado
-    public RoboCarroAutonomo(String id, String nome, int posicaoX, int posicaoY, String direcao, 
+    public RoboCarroAutonomo(String id, String nome, int posicaoX, int posicaoY, String direcao,
                              int velocidadeMaxima, int numMaximoDePassageiros, double nivelDaBateriaInicial) {
         super(id, nome, posicaoX, posicaoY, direcao, velocidadeMaxima);
         this.numMaximoDePassageiros = numMaximoDePassageiros;
@@ -15,6 +17,7 @@ class RoboCarroAutonomo extends RoboTerrestre {
         this.numDePassageiros = 0;
         this.kilometrosRodados = 0;
         this.tipoEntidadeRobo = TipoEntidade.ROBO;
+        this.modoDefesaAtivo = false; // Inicializa o modo de defesa como desativado
     }
 
     // Getters
@@ -22,6 +25,7 @@ class RoboCarroAutonomo extends RoboTerrestre {
     public int getNumMaximoDePassageiros() { return numMaximoDePassageiros; }
     public double getNivelDaBateria() { return nivelDaBateria; }
     public int getKilometrosRodados() { return kilometrosRodados; }
+    public boolean isModoDefesaAtivo() { return modoDefesaAtivo; } // Getter para o estado de defesa
 
     // Setters com validação
     public void setNumDePassageiros(int numDePassageiros) throws AcaoNaoPermitidaException {
@@ -46,18 +50,21 @@ class RoboCarroAutonomo extends RoboTerrestre {
             this.nivelDaBateria = nivelDaBateria;
         }
     }
-    
+
     // Consome bateria ao mover e registra km
     @Override
     public void moverPara(int novoX, int novoY, int novoZ, Ambiente ambiente) throws RoboDesligadoException, ColisaoException, ForaDosLimitesException, AcaoNaoPermitidaException {
         if (nivelDaBateria <= 0.05 && (novoX != this.posicaoX || novoY != this.posicaoY) ) { // 5% de bateria
             throw new AcaoNaoPermitidaException(nome + " com bateria muito baixa (" + String.format("%.1f%%", nivelDaBateria*100) + ") para mover.");
         }
+        if (modoDefesaAtivo) {
+            throw new AcaoNaoPermitidaException(nome + " está com modo de defesa ativo e não pode se mover.");
+        }
         int oldX = this.posicaoX;
         int oldY = this.posicaoY;
-        
+
         super.moverPara(novoX, novoY, novoZ, ambiente); // Chama o mover da superclasse (RoboTerrestre) que valida velocidade
-        
+
         // Se moveu, gasta bateria e conta km
         if (this.posicaoX != oldX || this.posicaoY != oldY) {
             double distancia = Math.sqrt(Math.pow(this.posicaoX - oldX, 2) + Math.pow(this.posicaoY - oldY, 2));
@@ -83,6 +90,8 @@ class RoboCarroAutonomo extends RoboTerrestre {
     public String executarTarefa(Ambiente ambiente, CentralComunicacao central, String[] args) throws RoboDesligadoException, AcaoNaoPermitidaException, ForaDosLimitesException, ColisaoException {
         if (this.estado == EstadoRobo.DESLIGADO) throw new RoboDesligadoException(nome + " está desligado.");
         if (this.estado == EstadoRobo.AVARIADO) throw new AcaoNaoPermitidaException(nome + " está avariado.");
+        if (modoDefesaAtivo) throw new AcaoNaoPermitidaException(nome + " está com modo de defesa ativo e não pode executar tarefas de transporte ou recarga no momento.");
+
 
         this.estado = EstadoRobo.EXECUTANDO_TAREFA;
         StringBuilder log = new StringBuilder(nome + " (Carro Autônomo) executando tarefa: ");
@@ -122,10 +131,56 @@ class RoboCarroAutonomo extends RoboTerrestre {
             log.append("Nenhuma tarefa específica fornecida. Verificando status:\n");
             log.append(" - Passageiros: ").append(numDePassageiros).append("/").append(numMaximoDePassageiros).append("\n");
             log.append(" - Bateria: ").append(String.format("%.1f%%", nivelDaBateria*100)).append("\n");
-            log.append(" - Km Rodados: ").append(kilometrosRodados);
+            log.append(" - Km Rodados: ").append(kilometrosRodados).append("\n");
+            log.append(" - Modo Defesa: ").append(modoDefesaAtivo ? "ATIVO" : "INATIVO");
         }
-        
+
         this.estado = EstadoRobo.EM_ESPERA;
         return log.toString();
+    }
+
+    // Implementação dos métodos da interface InterDefensiva
+    @Override
+    public String ativarDefesa() throws RoboDesligadoException, AcaoNaoPermitidaException {
+        if (this.estado == EstadoRobo.DESLIGADO) {
+            throw new RoboDesligadoException(nome + " está desligado e não pode ativar o modo de defesa.");
+        }
+        if (this.estado == EstadoRobo.AVARIADO) {
+            throw new AcaoNaoPermitidaException(nome + " está avariado e não pode ativar o modo de defesa.");
+        }
+        if (this.numDePassageiros > 0) {
+            throw new AcaoNaoPermitidaException(nome + " não pode ativar o modo de defesa com passageiros a bordo.");
+        }
+        if (modoDefesaAtivo) {
+            return nome + " já está com o modo de defesa ativo.";
+        }
+        this.modoDefesaAtivo = true;
+        // Poderia adicionar lógica aqui, como parar o robô se ele estivesse em movimento,
+        // ou mudar o estado para algo como "DEFENDENDO".
+        // Por simplicidade, apenas ativamos o modo.
+        // Um carro autônomo poderia, por exemplo, trancar as portas, soar um alarme silencioso,
+        // ou ativar escudos de energia (se fosse um carro futurista!).
+        // Para este simulador, vamos assumir que ele para e fica mais resistente ou em alerta.
+        return nome + " (Carro Autônomo) ativou o modo de defesa. O veículo está parado e em alerta.";
+    }
+
+    @Override
+    public String desativarDefesa() throws RoboDesligadoException, AcaoNaoPermitidaException {
+        if (this.estado == EstadoRobo.DESLIGADO) {
+            // Permitir desativar mesmo desligado, caso tenha sido ativado e o robô desligado depois?
+            // Por consistência, vamos exigir que esteja ligado para interagir com sistemas.
+            throw new RoboDesligadoException(nome + " está desligado e não pode desativar o modo de defesa.");
+        }
+         if (this.estado == EstadoRobo.AVARIADO && modoDefesaAtivo) {
+            // Se estiver avariado MAS o modo de defesa estiver ativo, pode ser importante desativá-lo
+            // para permitir conserto ou reboque. Mas por segurança, talvez não?
+            // Vamos manter a restrição de avariado por enquanto.
+            throw new AcaoNaoPermitidaException(nome + " está avariado e não pode desativar o modo de defesa (consulte manutenção).");
+        }
+        if (!modoDefesaAtivo) {
+            return nome + " já está com o modo de defesa desativado.";
+        }
+        this.modoDefesaAtivo = false;
+        return nome + " (Carro Autônomo) desativou o modo de defesa. Operações normais retomadas.";
     }
 }

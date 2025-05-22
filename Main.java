@@ -346,6 +346,24 @@ public class Main {
                         catch (RoboDesligadoException e) { System.err.println("Erro: " + e.getMessage());}
                     }
                 }
+
+                else if (robo instanceof InterDefensiva) {
+                    InterDefensiva defensivel = (InterDefensiva) robo;
+                    // Verifica se a ação selecionada corresponde à ativação ou desativação
+                    if (acaoSelecionada.equals("Ativar Defesa")) {
+                        try {
+                            System.out.println(defensivel.ativarDefesa());
+                        } catch (RoboDesligadoException | AcaoNaoPermitidaException e) {
+                            System.err.println("Erro ao ativar defesa: " + e.getMessage());
+                        }
+                    } else if (acaoSelecionada.equals("Desativar Defesa")) {
+                        try {
+                            System.out.println(defensivel.desativarDefesa());
+                        } catch (RoboDesligadoException | AcaoNaoPermitidaException e) {
+                            System.err.println("Erro ao desativar defesa: " + e.getMessage());
+                        }
+                    }
+                }
                 // Adicionar mais 'else if' para outras interfaces e suas ações aqui
 
             } catch (InputMismatchException e) {
