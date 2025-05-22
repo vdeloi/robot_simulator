@@ -24,11 +24,11 @@ public enum TipoObstaculo {
         this.bloqueiaPassagem = bloqueiaPassagem;
     }
 
-    public int getAlturaPadrao() { // [cite: 113]
+    public int getAlturaPadrao() { 
         return alturaPadrao;
     }
 
-    public boolean bloqueiaPassagem() { // Nome corrigido [cite: 114]
+    public boolean bloqueiaPassagem() { 
         return bloqueiaPassagem;
     }
 }

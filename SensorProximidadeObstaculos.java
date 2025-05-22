@@ -5,6 +5,7 @@ public class SensorProximidadeObstaculos extends Sensor {
     public SensorProximidadeObstaculos(double raio) {
         super(raio); // Chama o construtor da classe Sensor
     }
+    /* ################################################################################################################################### */
 
     /**
      * Monitora o ambiente em busca de obstáculos próximos ao robô, dentro do raio de alcance do sensor.
@@ -12,6 +13,9 @@ public class SensorProximidadeObstaculos extends Sensor {
      * @param robo O robô que está utilizando o sensor.
      * @return Uma string formatada indicando se obstáculos foram detectados e o raio de alcance.
      */
+
+     /* ################################################################################################################################### */
+
     @Override
     public String monitorar(Ambiente amb, Robo robo) {
         if (amb == null || robo == null) {
@@ -53,6 +57,7 @@ public class SensorProximidadeObstaculos extends Sensor {
             return "Sensor Proximidade: " + detectados.toString();
         }
     }
+    /* ################################################################################################################################### */
 
     @Override
     public String toString() {

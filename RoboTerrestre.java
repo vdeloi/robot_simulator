@@ -1,15 +1,24 @@
 /* RoboTerrestre.java */
 public class RoboTerrestre extends Robo {
+
     private int velocidadeMaxima;
+
+    /* ################################################################################################################################### */
 
     public RoboTerrestre(String id, String nome, int posicaoX, int posicaoY, String direcao, int velocidadeMaxima) {
         super(id, nome, posicaoX, posicaoY, 0, direcao); // Robo terrestre sempre em Z=0 inicialmente
         this.velocidadeMaxima = velocidadeMaxima;
     }
 
+
+    /* ################################################################################################################################### */
+
+
     public int getVelocidadeMaxima() {
         return velocidadeMaxima;
     }
+
+    /* ################################################################################################################################### */
 
     // Sobrescrita do moverPara para incluir verificação de velocidade
     @Override
@@ -41,6 +50,7 @@ public class RoboTerrestre extends Robo {
         
         super.moverPara(novoX, novoY, novoZ, ambiente);
     }
+    /* ################################################################################################################################### */
 
     @Override
     public String executarTarefa(Ambiente ambiente, CentralComunicacao central, String[] args) throws RoboDesligadoException, AcaoNaoPermitidaException {

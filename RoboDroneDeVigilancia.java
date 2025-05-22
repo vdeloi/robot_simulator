@@ -1,10 +1,18 @@
 /* RoboDroneDeVigilancia.java */
+
+
 public class RoboDroneDeVigilancia extends RoboAereo implements Sensoreavel, Comunicavel, InterExplorador {
+
+    /* ################################################################################################################################### */
+
     private int qualidadeDaCamera;
     private int framesPorSegundo;
     private int duracaoAtualVideo = 0;
     private final int duracaoMaximaVideo;
     private boolean gravando = false;
+
+    /* ################################################################################################################################### */
+
 
     public RoboDroneDeVigilancia(String id, String nome, int posicaoX, int posicaoY, int altitude, String direcao, int altitudeMaximaVoo,
                                  int qualidadeDaCamera, int framesPorSegundo, int duracaoMaximaVideo) {
@@ -15,12 +23,18 @@ public class RoboDroneDeVigilancia extends RoboAereo implements Sensoreavel, Com
         this.tipoEntidadeRobo = TipoEntidade.ROBO; // Já definido na superclasse, mas pode ser especializado se necessário
     }
 
+    /* ################################################################################################################################### */
+
+
     // Getters específicos
     public int getQualidadeDaCamera() { return qualidadeDaCamera; }
     public int getFramesPorSegundo() { return framesPorSegundo; }
     public int getDuracaoAtualVideo() { return duracaoAtualVideo; }
     public int getDuracaoMaximaVideo() { return duracaoMaximaVideo; }
     public boolean isGravando() { return gravando; }
+
+    /* ################################################################################################################################### */
+
 
     public String iniciarGravacao() throws RoboDesligadoException, AcaoNaoPermitidaException {
         if (this.estado == EstadoRobo.DESLIGADO) throw new RoboDesligadoException(nome + " está desligado e não pode iniciar gravação.");
@@ -32,6 +46,9 @@ public class RoboDroneDeVigilancia extends RoboAereo implements Sensoreavel, Com
         this.estado = EstadoRobo.EXECUTANDO_TAREFA;
         return nome + " iniciando gravação com " + qualidadeDaCamera + "MP, " + framesPorSegundo + "fps. Tempo restante: " + (duracaoMaximaVideo - duracaoAtualVideo) + "s.";
     }
+
+    /* ################################################################################################################################### */
+
 
     public String pararGravacao() throws RoboDesligadoException {
         // Permitir parar gravação mesmo se desligado ou avariado, caso a gravação tenha sido iniciada antes.
@@ -46,6 +63,9 @@ public class RoboDroneDeVigilancia extends RoboAereo implements Sensoreavel, Com
         }
         return msg;
     }
+
+    /* ################################################################################################################################### */
+
     
     public void simularTempoGravacao(int segundos) {
         if (gravando && this.estado != EstadoRobo.DESLIGADO && this.estado != EstadoRobo.AVARIADO) {
@@ -66,6 +86,8 @@ public class RoboDroneDeVigilancia extends RoboAereo implements Sensoreavel, Com
             }
         }
     }
+
+    /* ################################################################################################################################### */
 
     @Override
     public String executarTarefa(Ambiente ambiente, CentralComunicacao central, String[] args) throws RoboDesligadoException, AcaoNaoPermitidaException, ForaDosLimitesException, ColisaoException {
@@ -91,9 +113,11 @@ public class RoboDroneDeVigilancia extends RoboAereo implements Sensoreavel, Com
         return nome + " (Vigilância) aguardando comando específico de tarefa (ex: gravar, parar_gravar, explorar_area, reset_video).";
     }
 
+    /* ################################################################################################################################### */
+
     // Implementação de Sensoreavel
     @Override
-    public String acionarSensores(Ambiente ambiente) throws RoboDesligadoException { // [cite: 175]
+    public String acionarSensores(Ambiente ambiente) throws RoboDesligadoException {
         if (this.estado == EstadoRobo.DESLIGADO) throw new RoboDesligadoException(nome + " (Vigilância) está desligado e não pode acionar sensores.");
         String sensoresBase = super.ativarSensoresRobo(ambiente); 
         return sensoresBase + 
@@ -101,9 +125,11 @@ public class RoboDroneDeVigilancia extends RoboAereo implements Sensoreavel, Com
                " - Status Gravação: " + (gravando ? "GRAVANDO ("+duracaoAtualVideo+"/"+duracaoMaximaVideo+"s)" : "PARADO");
     }
 
+    /* ################################################################################################################################### */
+
     // Implementação de Comunicavel
     @Override
-    public void enviarMensagem(Comunicavel destinatario, String mensagem, CentralComunicacao central) throws RoboDesligadoException, ErroComunicacaoException { // [cite: 175]
+    public void enviarMensagem(Comunicavel destinatario, String mensagem, CentralComunicacao central) throws RoboDesligadoException, ErroComunicacaoException { 
         if (this.estado == EstadoRobo.DESLIGADO) throw new RoboDesligadoException(nome + " (Vigilância) está desligado para enviar msg.");
         if (this.estado == EstadoRobo.AVARIADO) throw new ErroComunicacaoException(nome + " (Vigilância) está avariado demais para comunicar.");
         if (destinatario == null) throw new ErroComunicacaoException("Destinatário da mensagem não pode ser nulo.");
@@ -119,8 +145,10 @@ public class RoboDroneDeVigilancia extends RoboAereo implements Sensoreavel, Com
         }
     }
 
+    /* ################################################################################################################################### */
+
     @Override
-    public void receberMensagem(String remetenteIdComunicacao, String mensagem) throws RoboDesligadoException { // [cite: 176]
+    public void receberMensagem(String remetenteIdComunicacao, String mensagem) throws RoboDesligadoException {
          if (this.estado == EstadoRobo.DESLIGADO && this.estado != EstadoRobo.AVARIADO) { // Avariado pode estar funcional para receber
              throw new RoboDesligadoException(nome + " (Vigilância) está desligado e não pode receber mensagens.");
          }
@@ -128,12 +156,18 @@ public class RoboDroneDeVigilancia extends RoboAereo implements Sensoreavel, Com
         // Poderia adicionar a mensagem recebida a um log interno do robô, se necessário.
     }
     
+
+    /* ################################################################################################################################### */
+
+
     @Override
     public String getIdComunicacao() { return "DroneV-" + this.getId(); }
 
+    /* ################################################################################################################################### */
+
     // Implementação de InterExplorador
     @Override
-    public String explorarArea(Ambiente ambiente) throws RoboDesligadoException, AcaoNaoPermitidaException { // [cite: 186]
+    public String explorarArea(Ambiente ambiente) throws RoboDesligadoException, AcaoNaoPermitidaException { 
         if (this.estado == EstadoRobo.DESLIGADO) throw new RoboDesligadoException(nome + " está desligado e não pode explorar.");
         if (this.estado == EstadoRobo.AVARIADO) throw new AcaoNaoPermitidaException(nome + " está avariado e não pode explorar.");
         if (this.estado == EstadoRobo.EXECUTANDO_TAREFA && !gravando) { // Se já está executando outra tarefa não relacionada a gravação
