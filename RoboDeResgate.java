@@ -114,8 +114,13 @@ class RoboDeResgate extends RoboTerrestre implements InterCarregador {
     /*permite que o robô de resgate execute uma tarefa específica, verificando se o robô está ligado e em bom estado. Ele processa comandos como "buscar_vitima" e "erguer_obstaculo", realizando as ações correspondentes. Caso a tarefa seja bem-sucedida, retorna uma mensagem indicando o resultado da execução. Se não houver tarefas específicas, exibe o status dos sensores e itens carregados. */
 
 
+    // *************** IMPLEMENTAR OUTRAS EXCEÇÕES AQUI !!!!!!!!!
+
+    /*public String executarTarefa(Ambiente ambiente, CentralComunicacao central, String[] args) throws RoboDesligadoException, AcaoNaoPermitidaException, ForaDosLimitesException, ColisaoException */
+
+
     @Override
-    public String executarTarefa(Ambiente ambiente, CentralComunicacao central, String[] args) throws RoboDesligadoException, AcaoNaoPermitidaException, ForaDosLimitesException, ColisaoException {
+    public String executarTarefa(Ambiente ambiente, CentralComunicacao central, String[] args) throws RoboDesligadoException, AcaoNaoPermitidaException{
         if (this.estado == EstadoRobo.DESLIGADO) throw new RoboDesligadoException(nome + " está desligado.");
         if (this.estado == EstadoRobo.AVARIADO) throw new AcaoNaoPermitidaException(nome + " está avariado.");
 

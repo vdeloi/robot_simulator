@@ -100,8 +100,10 @@ public abstract class Robo implements Entidade {
     /* ################################################################################################################################### */
 
     // Método abstrato para ações específicas de cada robô 
-    public abstract String executarTarefa(Ambiente ambiente, CentralComunicacao central, String[] args) throws RoboDesligadoException, AcaoNaoPermitidaException, ForaDosLimitesException, ColisaoException;
 
+    public abstract String executarTarefa(Ambiente ambiente, CentralComunicacao central, String[] args)
+    throws RoboDesligadoException, AcaoNaoPermitidaException, ForaDosLimitesException, ColisaoException, ErroComunicacaoException, EntidadeNaoEncontradaException;
+    
 
     /* ################################################################################################################################### */
 

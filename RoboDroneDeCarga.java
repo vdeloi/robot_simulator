@@ -3,7 +3,7 @@
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
+//import java.util.stream.Collectors;
 
 /* ################################################################################################################################### */
 
@@ -95,10 +95,11 @@ class RoboDroneDeCarga extends RoboAereo implements InterCarregador {
 
     /*permite que o drone de carga execute uma tarefa, verificando se o robô está ligado e em bom estado. Caso a tarefa seja executada com sucesso, uma mensagem é exibida indicando o progresso da tarefa. */
 
+    // *************** IMPLEMENTAR OUTRAS EXCEÇÕES AQUI !!!!!!!!!
 
     // Implementação de executarTarefa
     @Override
-    public String executarTarefa(Ambiente ambiente, CentralComunicacao central, String[] args) throws RoboDesligadoException, AcaoNaoPermitidaException, ForaDosLimitesException, ColisaoException {
+    public String executarTarefa(Ambiente ambiente, CentralComunicacao central, String[] args) throws RoboDesligadoException, AcaoNaoPermitidaException {
         if (this.estado == EstadoRobo.DESLIGADO) throw new RoboDesligadoException(nome + " está desligado.");
         if (this.estado == EstadoRobo.AVARIADO) throw new AcaoNaoPermitidaException(nome + " está avariado.");
 

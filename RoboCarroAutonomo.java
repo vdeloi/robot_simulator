@@ -111,8 +111,11 @@ class RoboCarroAutonomo extends RoboTerrestre implements InterDefensiva {
 
     /* permite que o robô carro autônomo execute tarefas específicas, como transportar passageiros ou recarregar a bateria, verificando se o robô está ligado e em bom estado. Ele trata exceções como desligamento, avaria, colisões e limites excedidos. */
 
+
+    // *************** IMPLEMENTAR OUTRAS EXCEÇÕES AQUI !!!!!!!!! como ForaDosLimitesException, ColisaoException
+
     @Override
-    public String executarTarefa(Ambiente ambiente, CentralComunicacao central, String[] args) throws RoboDesligadoException, AcaoNaoPermitidaException, ForaDosLimitesException, ColisaoException {
+    public String executarTarefa(Ambiente ambiente, CentralComunicacao central, String[] args) throws RoboDesligadoException, AcaoNaoPermitidaException  {
         if (this.estado == EstadoRobo.DESLIGADO) throw new RoboDesligadoException(nome + " está desligado.");
         if (this.estado == EstadoRobo.AVARIADO) throw new AcaoNaoPermitidaException(nome + " está avariado.");
         if (modoDefesaAtivo) throw new AcaoNaoPermitidaException(nome + " está com modo de defesa ativo e não pode executar tarefas de transporte ou recarga no momento.");

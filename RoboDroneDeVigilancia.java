@@ -96,8 +96,10 @@ public class RoboDroneDeVigilancia extends RoboAereo implements Sensoreavel, Com
 
     /* permite que o robô drone de vigilância execute uma tarefa específica, como gravar vídeo, parar a gravação ou explorar uma área, verificando se o robô está ligado e em bom estado. Ele altera o estado do robô para "executando tarefa" durante a execução e retorna uma mensagem indicando o progresso da tarefa.*/
 
+    // *************** IMPLEMENTAR OUTRAS EXCEÇÕES AQUI !!!!!!!!!
+
     @Override
-    public String executarTarefa(Ambiente ambiente, CentralComunicacao central, String[] args) throws RoboDesligadoException, AcaoNaoPermitidaException, ForaDosLimitesException, ColisaoException {
+    public String executarTarefa(Ambiente ambiente, CentralComunicacao central, String[] args) throws RoboDesligadoException, AcaoNaoPermitidaException{
         if (this.estado == EstadoRobo.DESLIGADO) throw new RoboDesligadoException(nome + " está desligado.");
         if (this.estado == EstadoRobo.AVARIADO) throw new AcaoNaoPermitidaException(nome + " está avariado.");
 
