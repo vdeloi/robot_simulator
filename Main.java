@@ -1,688 +1,811 @@
-// Main 
-
-
-/* ################################################################################################################################### */
-
+// Main.java
 import java.util.ArrayList;
 import java.util.InputMismatchException;
 import java.util.List;
 import java.util.Scanner;
 import java.util.stream.Collectors;
 
-/* ################################################################################################################################### */
-
+/**
+ * Classe principal que inicia e gerencia a simulação de robôs.
+ * Contém o método `main` para executar o programa, inicializa o ambiente,
+ * os robôs, os obstáculos e fornece um menu interativo para o usuário.
+ */
 public class Main {
+    private static Ambiente ambiente; // O ambiente de simulação compartilhado
+    private static CentralComunicacao centralComunicacao; // A central para registrar mensagens
+    private static Scanner scanner = new Scanner(System.in); // Scanner para entrada do usuário
 
-    private static Ambiente ambiente;
-    private static CentralComunicacao centralComunicacao;
-    private static Scanner scanner = new Scanner(System.in);
-
-
-    /* ################################################################################################################################### */
+    /**
+     * Ponto de entrada do programa.
+     * Inicializa o ambiente, as entidades e o menu interativo.
+     * @param args Argumentos da linha de comando (não utilizados).
+     */
     public static void main(String[] args) {
-        inicializarSimulacao(); 
-        rodarMenuInterativo();
-        scanner.close();
-        System.out.println("Simulação encerrada. Obrigado!");
-    }
-
-
-    /* ################################################################################################################################### */
-
-    /**Inicializa o ambiente e os robôs para a simulação.*/
-
-     /*configura o ambiente inicial da simulação, criando um ambiente tridimensional e adicionando entidades como obstáculos e robôs com diferentes características e funcionalidades. Ele também trata possíveis exceções relacionadas a colisões ou limites do ambiente, garantindo que a simulação seja inicializada corretamente. Ao final, exibe o estado inicial do ambiente. */
-
-
-    private static void inicializarSimulacao() {
-        System.out.println("Inicializando Simulador de Robôs MC322 - Lab 04...");
-        ambiente = new Ambiente(15, 15, 5); // Largura, Profundidade, Altura do Ambiente (ex: 0 a 4)
-        centralComunicacao = new CentralComunicacao();
-
         try {
-            // Adicionar Obstáculos
-            ambiente.adicionarEntidade(new Obstaculo("Muro Leste", 14, 0, 14, 14, 0, TipoObstaculo.PAREDE)); 
-            ambiente.adicionarEntidade(new Obstaculo("Plataforma Central", 5, 5, 8, 8, 0, TipoObstaculo.PREDIO)); 
-            ambiente.adicionarEntidade(new Obstaculo("Rocha Alta", 2, 8, 0, TipoObstaculo.ROCHA)); 
-            ambiente.adicionarEntidade(new Obstaculo("Lagoa", 1, 1, 3, 3, 0, TipoObstaculo.AGUA)); 
-
-            // Adicionar Robôs
-            RoboTerrestre terrestre1 = new RoboTerrestre("RT001", "T-800", 1, 1, "Norte", 3);
-            terrestre1.adicionarSensor(new SensorTemperatura(2.0));
-            ambiente.adicionarEntidade(terrestre1);
-
-            RoboDroneDeVigilancia drone1 = new RoboDroneDeVigilancia("DV001", "SkyEye", 3, 3, 2, "Leste", 4, 12, 30,300);
-            drone1.adicionarSensor(new SensorUmidade(10.0));
-            drone1.adicionarSensor(new SensorTemperatura(10.0));
-            ambiente.adicionarEntidade(drone1);
-
-            RoboAereo genericoAereo = new RoboAereo("RA001", "Aguia1", 0, 2, 1, "Sul", 3);
-            genericoAereo.adicionarSensor(new SensorTemperatura(5.0));
-            ambiente.adicionarEntidade(genericoAereo);
-
-            RoboDroneDeCarga droneCarga1 = new RoboDroneDeCarga("DC001", "MulaVoadoora", 7, 7, 1, "Norte", 4, 5);
-            ambiente.adicionarEntidade(droneCarga1);
-
-            RoboDeResgate roboResgate1 = new RoboDeResgate("RR001", "Salvador", 10, 1, "Oeste", 2, 50, true, true);
-            ambiente.adicionarEntidade(roboResgate1);
-
-            RoboCarroAutonomo carro1 = new RoboCarroAutonomo("CA001", "UberBot", 0, 0, "Leste", 5, 4, 0.9);
-            ambiente.adicionarEntidade(carro1);
-
-        } catch (ColisaoException | ForaDosLimitesException e) {
-            System.err.println("Erro crítico na inicialização do ambiente: " + e.getMessage());
-            System.err.println("A simulação pode não funcionar como esperado.");
+            // Cria um novo ambiente com dimensões 20 (largura), 15 (profundidade), 5 (altura)
+            ambiente = new Ambiente(20, 15, 5);
+            centralComunicacao = new CentralComunicacao(); // Inicializa a central de comunicação
+            inicializarEntidades(); // Adiciona robôs e obstáculos ao ambiente
+            menuInterativo(); // Inicia o loop do menu para interação com o usuário
+        } catch (Exception e) {
+            // Captura qualquer erro fatal durante a inicialização ou execução
+            System.err.println("Erro fatal na inicialização ou execução: " + e.getMessage());
+            e.printStackTrace(); // Imprime o stack trace para depuração
+        } finally {
+            // Garante que o scanner seja fechado ao final da execução
+            if (scanner != null) {
+                scanner.close();
+            }
         }
-        System.out.println("Simulação inicializada com sucesso.");
-        ambiente.visualizarAmbiente();
     }
 
+    /**
+     * Inicializa as entidades (robôs e obstáculos) no ambiente.
+     * Cria instâncias de diferentes tipos de robôs e obstáculos e os adiciona ao ambiente.
+     */
+    private static void inicializarEntidades() {
+        System.out.println("Inicializando entidades...");
+        try {
+            // Criação e configuração do RoboTerrestre T-800
+            RoboTerrestre rterrestre1 = new RoboTerrestre("T-800", 2, 2, "NORTE", 10);
+            rterrestre1.adicionarSensor(new SensorProximidade("Prox-T800", 5.0));
+            rterrestre1.ligar();
 
-    /* ################################################################################################################################### */
+            // Criação e configuração do RoboAereo DroneV1
+            RoboAereo rAereoBasico1 = new RoboAereo("DroneV1", 5, 5, 2, "LESTE", 4, 2);
+            rAereoBasico1.adicionarSensor(new SensorAltitude("Alt-DroneV1", 0));
+            rAereoBasico1.adicionarSensor(new SensorProximidade("Prox-DroneV1", 8.0));
+            rAereoBasico1.ligar();
 
-    /*Executa o menu interativo principal da simulação, permitindo ao usuário interagir com os robôs, visualizar o ambiente e gerenciar a simulação.*/
+            // Criação e configuração do RoboDroneDeCarga Wall-E
+            RoboDroneDeCarga rDroneCarga1 = new RoboDroneDeCarga("Wall-E", 1, 1, 1, "NORTE", 3, 4, 0, 10);
+            rDroneCarga1.adicionarSensor(new SensorAltitude("Alt-WallE", 0));
+            rDroneCarga1.ligar();
+            
+            // Criação e configuração do RoboComunicador Tagarela1
+            RoboComunicador roboTagarela = new RoboComunicador("Tagarela1", 3, 3, "SUL", 5);
+            roboTagarela.ligar();
 
-    /*implementa o menu principal da simulação, permitindo ao usuário interagir com o sistema. Ele apresenta opções como listar robôs, selecionar um robô para interação, visualizar o mapa do ambiente, verificar colisões, avançar o tempo da simulação e sair. O método utiliza um loop para manter o menu ativo até que o usuário escolha sair, tratando entradas inválidas e exceções para garantir a robustez da interação. */
+            // Adicionando os robôs ao ambiente
+            ambiente.adicionarEntidade(rterrestre1);
+            ambiente.adicionarEntidade(rAereoBasico1);
+            ambiente.adicionarEntidade(rDroneCarga1);
+            ambiente.adicionarEntidade(roboTagarela);
 
+            // Criação de obstáculos
+            Obstaculo parede1 = new Obstaculo(0, 7, 5, 7, TipoObstaculo.PAREDE, 0, 2); // Uma parede no nível Z=0 a Z=1
+            Obstaculo arvore1 = new Obstaculo(8, 8, 8, 8, TipoObstaculo.ARVORE, 0, 3); // Uma árvore do nível Z=0 a Z=2
+            Obstaculo predio1 = new Obstaculo(10,0, 12,3, TipoObstaculo.PREDIO,0,4);  // Um prédio do nível Z=0 a Z=3
 
-    private static void rodarMenuInterativo() { 
-        boolean sair = false;
-        while (!sair) {
-            System.out.println("\n========= Menu Principal Simulador =========");
-            System.out.println("1. Listar Robôs (com filtros)");
-            System.out.println("2. Selecionar Robô para Interagir");
-            System.out.println("3. Visualizar Mapa do Ambiente"); 
-            System.out.println("4. Visualizar Histórico de Comunicações"); 
-            System.out.println("5. Avançar tempo (simular gravação de drones, etc.)");
-            System.out.println("6. Verificar Colisões Gerais no Ambiente");
-            System.out.println("0. Sair da Simulação");
+            // Adicionando os obstáculos ao ambiente
+            ambiente.adicionarEntidade(parede1);
+            ambiente.adicionarEntidade(arvore1);
+            ambiente.adicionarEntidade(predio1);
+
+            System.out.println("Entidades inicializadas.");
+            ambiente.visualizarAmbiente(); // Mostra o estado inicial do ambiente
+
+        } catch (ColisaoException | ForaDosLimitesException | IllegalArgumentException e) { // Captura exceções específicas da inicialização
+            System.err.println("Erro ao inicializar entidades: " + e.getMessage());
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * Apresenta o menu principal interativo para o usuário controlar a simulação.
+     * Permite listar robôs, interagir com eles, visualizar o ambiente, etc.
+     */
+    private static void menuInterativo() {
+        int opcao = -1; // Variável para armazenar a escolha do usuário
+        do {
+            System.out.println("\n--- Menu Principal Simulador de Robôs ---");
+            System.out.println("1. Listar robôs (por tipo ou estado)");
+            System.out.println("2. Escolher robô para interagir");
+            System.out.println("3. Visualizar status do ambiente e robôs");
+            System.out.println("4. Visualizar mapa do ambiente");
+            System.out.println("5. Listar mensagens trocadas");
+            System.out.println("6. Acionar todos os sensores (teste global)");
+            System.out.println("0. Sair");
             System.out.print("Escolha uma opção: ");
 
-            try {
-                int escolha = scanner.nextInt();
-                scanner.nextLine(); // Consumir nova linha
 
-                switch (escolha) {
-                    case 1:
-                        listarRobos();
-                        break;
-                    case 2:
-                        selecionarRoboParaInteragir();
-                        break;
-                    case 3:
-                        ambiente.visualizarAmbiente();
-                        break;
-                    case 4:
-                        centralComunicacao.exibirMensagens();
-                        break;
-                    case 5:
-                        avancarTempoSimulacao();
-                        break;
-                    case 6:
-                        ambiente.verificarColisoes();
-                        break;
-                    case 0:
-                        sair = true;
-                        break;
-                    default:
-                        System.out.println("Opção inválida. Tente novamente.");
+            try {
+                // Lê a entrada do usuário
+                if (scanner.hasNextInt()) {
+                    opcao = scanner.nextInt();
+                } else {
+                    System.out.println("Entrada inválida. Por favor, digite um número.");
+                    scanner.next(); // Limpa a entrada inválida
+                    opcao = -1; // Reseta a opção para continuar no loop
+                    continue; // Volta ao início do loop
                 }
-            } catch (InputMismatchException e) {
-                System.out.println("Entrada inválida. Por favor, insira um número.");
-                scanner.nextLine(); // Limpar buffer do scanner
-            } catch (Exception e) {
-                System.err.println("Ocorreu um erro inesperado no menu principal: " + e.getMessage());
-                e.printStackTrace(); // Para debug
+                scanner.nextLine(); // Consome a nova linha restante após nextInt()
+
+                // Executa a ação com base na opção escolhida
+                switch (opcao) {
+                    case 1: listarRobos(); break;
+                    case 2: escolherRoboParaInteragir(); break;
+                    case 3: visualizarStatusGeral(); break;
+                    case 4: ambiente.visualizarAmbiente(); break;
+                    case 5: centralComunicacao.exibirMensagens(); break;
+                    case 6: ambiente.executarSensoresGlobais(); break;
+                    case 0: System.out.println("Saindo do simulador..."); break;
+                    default: System.out.println("Opção inválida.");
+                }
+            } catch (InputMismatchException e) { // Se o usuário não digitar um número
+                System.out.println("Entrada inválida. Por favor, digite um número.");
+                if (scanner.hasNextLine()) scanner.nextLine(); // Limpa a entrada inválida
+                opcao = -1; // Reseta a opção
+            } catch (Exception e) { // Captura qualquer outra exceção que possa ocorrer
+                 System.err.println("Ocorreu um erro no menu: " + e.getMessage());
+                 e.printStackTrace();
+                 opcao = -1; // Reseta a opção para evitar loop infinito em caso de erro
             }
-        }
+        } while (opcao != 0); // Continua o loop até o usuário escolher sair (opção 0)
     }
 
-    /* ################################################################################################################################### */
-
-    /*Lista os robôs no ambiente, permitindo ao usuário filtrar por tipo ou estado.*/
-
-    /* exibe uma lista de robôs presentes no ambiente, permitindo ao usuário aplicar filtros opcionais por tipo de robô ou estado. Ele utiliza um loop para verificar os critérios de exibição e apresenta informações detalhadas sobre cada robô, como ID, nome, tipo, estado e posição. Caso nenhum robô atenda aos filtros, uma mensagem informativa é exibida.*/
-
-
-    private static void listarRobos() { 
-        System.out.println("\n--- Lista de Robôs no Ambiente ---");
-        List<Robo> robos = new ArrayList<>();
-        for (Entidade e : ambiente.getEntidades()) {
-            if (e instanceof Robo) {
-                robos.add((Robo) e);
-            }
+    /**
+     * Lista os robôs presentes no ambiente, permitindo filtrar por tipo ou estado.
+     */
+    private static void listarRobos() {
+        System.out.println("\n--- Listar Robôs ---");
+        System.out.println("Listar por: 1. Tipo | 2. Estado (Ligado/Desligado)");
+        System.out.print("Sua escolha: ");
+        int criterio = -1;
+        // Lê o critério de listagem
+        if (scanner.hasNextInt()){
+            criterio = scanner.nextInt();
+        } else {
+            System.out.println("Entrada inválida para critério.");
+            if(scanner.hasNext()) scanner.next(); // Limpa entrada inválida
+            return; // Retorna ao menu anterior
         }
+        scanner.nextLine(); // Consome a nova linha
+
+        // Obtém todos os robôs do ambiente
+        List<Robo> robos = ambiente.getEntidades().stream()
+                                .filter(e -> e instanceof Robo) // Filtra apenas entidades que são Robôs
+                                .map(e -> (Robo) e)           // Converte Entidade para Robo
+                                .collect(Collectors.toList()); // Coleta em uma lista
         if (robos.isEmpty()) {
             System.out.println("Nenhum robô no ambiente.");
             return;
         }
 
-        System.out.println(
-                "Filtrar por: (1) Todos (2) Tipo de Robô (ex: RoboTerrestre) (3) Estado do Robô (Padrão: Todos)");
-        System.out.print("Opção de filtro (deixe em branco para todos): ");
-        String filtroTipo = "";
-        EstadoRobo filtroEstado = null;
-        String linhaFiltro = scanner.nextLine().trim();
-
-        if (!linhaFiltro.isEmpty()) {
-            try {
-                int escolhaFiltro = Integer.parseInt(linhaFiltro);
-                if (escolhaFiltro == 2) {
-                    System.out.print(
-                            "Digite o nome da classe do tipo de robô (ex: RoboTerrestre, RoboDroneDeVigilancia): ");
-                    filtroTipo = scanner.nextLine().trim();
-                } else if (escolhaFiltro == 3) {
-                    System.out.println("Estados disponíveis:");
-                    for (EstadoRobo es : EstadoRobo.values()) {
-                        System.out.println("- " + es.name() + " (" + es.getDescricao() + ")");
-                    }
-                    System.out.print("Digite o nome do estado (ex: EM_ESPERA): ");
-                    try {
-                        filtroEstado = EstadoRobo.valueOf(scanner.nextLine().trim().toUpperCase());
-                    } catch (IllegalArgumentException e) {
-                        System.out.println("Estado inválido. Mostrando todos os robôs.");
-                    }
-                } else if (escolhaFiltro != 1) {
-                    System.out.println("Opção de filtro inválida. Mostrando todos os robôs.");
-                }
-            } catch (NumberFormatException e) {
-                System.out.println("Opção de filtro inválida. Mostrando todos os robôs.");
-            }
+        if (criterio == 1) { // Listar por tipo
+            robos.stream()
+                 .collect(Collectors.groupingBy(r -> r.getClass().getSimpleName())) // Agrupa robôs pelo nome da classe (tipo)
+                 .forEach((tipo, lista) -> {
+                     System.out.println("\nTipo: " + tipo);
+                     lista.forEach(r -> System.out.println("  - " + r.getDescricao())); // Imprime descrição de cada robô do tipo
+                 });
+        } else if (criterio == 2) { // Listar por estado
+            robos.stream()
+                 .collect(Collectors.groupingBy(Robo::getEstado)) // Agrupa robôs pelo estado (LIGADO, DESLIGADO, etc.)
+                 .forEach((estado, lista) -> {
+                     System.out.println("\nEstado: " + estado);
+                     lista.forEach(r -> System.out.println("  - " + r.getDescricao())); // Imprime descrição de cada robô no estado
+                 });
+        } else {
+            System.out.println("Critério inválido.");
         }
+    }
 
-        int contadorExibidos = 0;
+    /**
+     * Exibe o status geral do ambiente, incluindo dimensões, número de entidades,
+     * e uma lista dos robôs presentes. Também visualiza o mapa do ambiente.
+     * @throws ForaDosLimitesException se `visualizarAmbiente` lançar (improvável aqui).
+     */
+    private static void visualizarStatusGeral() throws ForaDosLimitesException { // Adicionado throws para cobrir visualizarAmbiente
+        System.out.println("\n--- Status do Ambiente ---");
+        System.out.println("Dimensões: " + ambiente.getLargura() + "x" + ambiente.getProfundidade() + "x" + ambiente.getAltura());
+        System.out.println("Total de Entidades: " + ambiente.getEntidades().size());
+        // Conta o número de robôs e obstáculos
+        long numRobos = ambiente.getEntidades().stream().filter(e -> e instanceof Robo).count();
+        long numObstaculos = ambiente.getEntidades().stream().filter(e -> e instanceof Obstaculo).count();
+        System.out.println("Robôs: " + numRobos + " | Obstáculos: " + numObstaculos);
+
+        System.out.println("\n--- Status dos Robôs ---");
+        if (numRobos == 0) {
+            System.out.println("Nenhum robô no ambiente.");
+        } else {
+            // Imprime a descrição de cada robô
+            ambiente.getEntidades().stream()
+                .filter(e -> e instanceof Robo)
+                .map(e -> (Robo) e)
+                .forEach(r -> System.out.println(r.getDescricao()));
+        }
+        ambiente.visualizarAmbiente(); // Mostra o mapa atual do ambiente
+    }
+
+    /**
+     * Permite ao usuário selecionar um robô da lista de robôs disponíveis no ambiente.
+     * @return O objeto {@link Robo} selecionado, ou `null` se nenhum robô for selecionado ou se a seleção for inválida.
+     */
+    private static Robo selecionarRobo() {
+        // Obtém a lista de robôs do ambiente
+        List<Robo> robos = ambiente.getEntidades().stream()
+                                .filter(e -> e instanceof Robo)
+                                .map(e -> (Robo) e)
+                                .collect(Collectors.toList());
+        if (robos.isEmpty()) {
+            System.out.println("Nenhum robô disponível.");
+            return null;
+        }
+        System.out.println("\nSelecione o Robô:");
+        // Lista os robôs disponíveis para seleção
         for (int i = 0; i < robos.size(); i++) {
-            Robo robo = robos.get(i);
-            boolean exibir = true;
-            if (!filtroTipo.isEmpty() && !robo.getClass().getSimpleName().equalsIgnoreCase(filtroTipo)) {
-                exibir = false;
-            }
-            if (filtroEstado != null && robo.getEstado() != filtroEstado) {
-                exibir = false;
-            }
-
-            if (exibir) {
-                System.out.println((i + 1) + ". ID: " + robo.getId() + " | Nome: " + robo.getNome() +
-                        " | Tipo: " + robo.getClass().getSimpleName() +
-                        " | Estado: " + robo.getEstado().getDescricao() +
-                        " | Posição: " + robo.exibirPosicao() +
-                        (robo instanceof RoboAereo ? " | Alt Max Voo: " + ((RoboAereo) robo).getAltitudeMaximaVoo()
-                                : "")
-                        +
-                        (robo instanceof RoboTerrestre ? " | Vel Max: " + ((RoboTerrestre) robo).getVelocidadeMaxima()
-                                : ""));
-                contadorExibidos++;
-            }
+            System.out.println((i + 1) + ". " + robos.get(i).getId() + " (" + robos.get(i).getClass().getSimpleName() + ")");
         }
-        if (contadorExibidos == 0) {
-            System.out.println("Nenhum robô corresponde aos critérios de filtro.");
+        System.out.print("Número do robô: ");
+        int escolha = -1;
+        // Lê a escolha do usuário
+        if (scanner.hasNextInt()){
+            escolha = scanner.nextInt() - 1; // Ajusta para índice baseado em zero
+        } else {
+            System.out.println("Entrada inválida para seleção.");
+            if(scanner.hasNext()) scanner.next(); // Limpa entrada inválida
+            return null; // Retorna null se a entrada não for um número
         }
-        System.out.println("------------------------------------");
+        scanner.nextLine(); // Consome a nova linha
+        // Verifica se a escolha é válida
+        if (escolha >= 0 && escolha < robos.size()) {
+            return robos.get(escolha); // Retorna o robô selecionado
+        }
+        System.out.println("Seleção inválida.");
+        return null; // Retorna null se a seleção for inválida
     }
 
-    /* ################################################################################################################################### */
+    /**
+     * Permite ao usuário escolher um robô e, em seguida, interagir com ele
+     * através de um submenu de ações específicas para o robô selecionado.
+     */
+    private static void escolherRoboParaInteragir() { 
+        Robo roboSelecionado = selecionarRobo(); // Pede ao usuário para selecionar um robô
+        if (roboSelecionado == null) return; // Se nenhum robô foi selecionado, retorna
 
-    /*busca um robô no ambiente com base em seu ID ou nome. Ele percorre a lista de entidades do ambiente, verifica se a entidade é um robô e compara o identificador fornecido com o ID ou nome do robô. Caso encontre uma correspondência, retorna o robô; caso contrário, retorna null. */
-
-    private static Robo encontrarRoboPorIdOuNome(String identificador) {
-        for (Entidade e : ambiente.getEntidades()) {
-            if (e instanceof Robo) {
-                Robo robo = (Robo) e;
-                if (robo.getId().equalsIgnoreCase(identificador) || robo.getNome().equalsIgnoreCase(identificador)) {
-                    return robo;
-                }
-            }
-        }
-        return null; // Não encontrado
-    }
-
-    /* ################################################################################################################################### */
-
-    /* permite ao usuário selecionar um robô para interação, utilizando o ID ou nome do robô. Caso o usuário não saiba o identificador, ele pode listar os robôs disponíveis. Se o robô correspondente for encontrado, o método encaminha para o menu de interação com o robô; caso contrário, exibe uma mensagem informando que o robô não foi encontrado.*/
-
-    private static void selecionarRoboParaInteragir() { 
-        System.out.print("Digite o ID ou Nome do robô para interagir (ou 'listar' para ver os robôs): ");
-        String idRobo = scanner.nextLine().trim();
-        if ("listar".equalsIgnoreCase(idRobo)) {
-            listarRobos();
-            System.out.print("Digite o ID ou Nome do robô para interagir: ");
-            idRobo = scanner.nextLine().trim();
-        }
-
-        Robo roboSelecionado = encontrarRoboPorIdOuNome(idRobo);
-
-        if (roboSelecionado == null) {
-            System.out.println("Robô com ID/Nome '" + idRobo + "' não encontrado.");
-            return;
-        }
-        menuInteracaoRobo(roboSelecionado);
-    }
-
-
-    /* ################################################################################################################################### */
-
-    /*permite ao usuário interagir diretamente com um robô selecionado, exibindo um menu de ações disponíveis com base nas capacidades do robô (como mover, ligar/desligar, acionar sensores, executar tarefas específicas, entre outras). Ele trata entradas inválidas e exceções para garantir a robustez da interação, além de adaptar as opções dinamicamente conforme as interfaces implementadas pelo robô. */
-
-    
-    private static void menuInteracaoRobo(Robo robo) { 
-        boolean voltar = false;
-        while (!voltar) {
-            System.out.println("\n--- Interagindo com: " + robo.getNome() + " (ID: " + robo.getId() + ", Tipo: " + robo.getClass().getSimpleName() + ") ---");
-            System.out.println("Estado Atual: " + robo.getEstado().getDescricao() + " | Posição: " + robo.exibirPosicao() + " | Direção: " + robo.getDirecao());
-            
-            List<String> opcoesMenu = new ArrayList<>();
-            opcoesMenu.add("Mover Robô"); // 1 
-            opcoesMenu.add("Ligar Robô");   // 2 
-            opcoesMenu.add("Desligar Robô"); // 3 
-            opcoesMenu.add("Acionar Sensores do Robô"); // 4 
-            opcoesMenu.add("Executar Tarefa Específica do Robô"); // 5
-            
-            if (robo instanceof Comunicavel) opcoesMenu.add("Enviar Mensagem"); 
-            if (robo instanceof InterExplorador) opcoesMenu.add("Iniciar Exploração de Área");
-            if (robo instanceof RoboDroneDeVigilancia) {
-                opcoesMenu.add(((RoboDroneDeVigilancia) robo).isGravando() ? "Parar Gravação de Vídeo" : "Iniciar Gravação de Vídeo");
-            }
-            if (robo instanceof InterCarregador) {
-                opcoesMenu.add("Carregar Item/Carga");
-                opcoesMenu.add("Descarregar Item/Carga");
-                opcoesMenu.add("Ver Itens/Carga");
-            }
-            if (robo instanceof InterDefensiva) {
-                opcoesMenu.add("Ativar Defesa");
-                opcoesMenu.add("Desativar Defesa");
-            }
-            // Adicionar mais opções para outras interfaces aqui
-
-            System.out.println("Ações disponíveis:");
-            for(int i=0; i < opcoesMenu.size(); i++) {
-                System.out.println((i+1) + ". " + opcoesMenu.get(i));
-            }
-            System.out.println("0. Voltar ao Menu Principal");
-            System.out.print("Escolha uma ação para " + robo.getNome() + ": ");
+        System.out.println("Interagindo com: " + roboSelecionado.getDescricao());
+        int subOpcao = -1;
+        do {
+            System.out.println("\n--- Ações para " + roboSelecionado.getId() + " (" + roboSelecionado.getEstado() + ") ---");
+            System.out.println("1. Mover (Relativo: dx, dy, dz)");
+            System.out.println("2. Ligar/Desligar Robô");
+            System.out.println("3. Executar Tarefa Específica");
+            // Opções condicionais baseadas nas capacidades do robô (interfaces implementadas)
+            if (roboSelecionado instanceof Sensoreavel) System.out.println("4. Acionar Sensores");
+            if (roboSelecionado instanceof Comunicavel) System.out.println("5. Enviar Mensagem");
+            if (roboSelecionado instanceof Autonomo) System.out.println("6. Executar Ação Autônoma");
+            System.out.println("0. Voltar ao menu principal");
+            System.out.print("Escolha uma ação: ");
 
             try {
-                int escolhaAcao = scanner.nextInt();
-                scanner.nextLine(); // Consumir nova linha
-                
-                if (escolhaAcao == 0) {
-                    voltar = true;
-                    continue;
+                // Lê a sub-opção do usuário
+                if (scanner.hasNextInt()){
+                    subOpcao = scanner.nextInt();
+                } else {
+                    System.out.println("Entrada inválida para ação.");
+                    if(scanner.hasNext()) scanner.next(); // Limpa entrada inválida
+                    subOpcao = -1; // Reseta a sub-opção
+                    continue; // Volta ao início do loop de sub-menu
                 }
-                if (escolhaAcao < 1 || escolhaAcao > opcoesMenu.size()) {
-                    System.out.println("Opção de ação inválida.");
-                    continue;
-                }
+                scanner.nextLine(); // Consome a nova linha
 
-                String acaoSelecionada = opcoesMenu.get(escolhaAcao - 1);
-
-                // Mapeamento direto de ações
-                if (acaoSelecionada.equals("Mover Robô")) moverRoboInterativo(robo);
-                else if (acaoSelecionada.equals("Ligar Robô")) {
-                    try { robo.ligar(); } catch (AcaoNaoPermitidaException e) { System.err.println("Erro ao ligar: " + e.getMessage());}
-                } else if (acaoSelecionada.equals("Desligar Robô")) robo.desligar();
-              
-                else if (acaoSelecionada.equals("Acionar Sensores do Robô")) {
-                    try {
-                        if (robo instanceof Sensoreavel) {
-                            // Chama o método da interface Sensoreavel se implementado
-                            System.out.println("--- Leituras via Interface Sensoreavel ---");
-                            System.out.println(((Sensoreavel) robo).acionarSensores(ambiente));
+                // Executa a ação do robô com base na sub-opção
+                switch (subOpcao) {
+                    case 1: controlarMovimentacaoRelativa(roboSelecionado); break;
+                    case 2: ligarDesligarRobo(roboSelecionado); break;
+                    case 3: roboSelecionado.executarTarefa(ambiente); break; // Chamada polimórfica da tarefa específica do robô
+                    case 4: 
+                        if (roboSelecionado instanceof Sensoreavel) {
+                            ((Sensoreavel)roboSelecionado).acionarSensores(ambiente);
                         } else {
-                            // Se não implementa Sensoreavel, ou como um fallback,
-                            // chama o método genérico da classe Robo (se houver sensores básicos)
-                            System.out.println("--- Leituras via Método Genérico do Robô ---");
-                            System.out.println(robo.ativarSensoresRobo(ambiente));
+                            System.out.println("Robô não possui sensores.");
                         }
-                    } catch (RoboDesligadoException e) {
-                        System.err.println("Erro ao acionar sensores: " + e.getMessage());
-                    }
-                }
-                } else if (acaoSelecionada.equals("Executar Tarefa Específica do Robô")) {
-                    System.out.print("Argumentos para a tarefa (opcional, separados por espaço, ex: 'arg1 arg2'): ");
-                    String[] argsTarefa = scanner.nextLine().split(" ");
-                    if(argsTarefa.length == 1 && argsTarefa[0].isEmpty()) argsTarefa = null; // Sem argumentos se entrada vazia
-                    try { 
-                        System.out.println(robo.executarTarefa(ambiente, centralComunicacao, argsTarefa)); 
-                    } catch (RoboDesligadoException | AcaoNaoPermitidaException | ForaDosLimitesException | ColisaoException e) { 
-                        System.err.println("Erro na execução da tarefa: " + e.getMessage());
-                    }
-                } 
-                // Ações de Interfaces
-                else if (robo instanceof Comunicavel && acaoSelecionada.equals("Enviar Mensagem")) comunicarComRobo((Comunicavel) robo);
-                else if (robo instanceof InterExplorador && acaoSelecionada.equals("Iniciar Exploração de Área")) {
-                    try { System.out.println(((InterExplorador) robo).explorarArea(ambiente)); }
-                    catch (RoboDesligadoException | AcaoNaoPermitidaException e) { System.err.println("Erro ao explorar: " + e.getMessage());}
-                } else if (robo instanceof RoboDroneDeVigilancia) {
-                    RoboDroneDeVigilancia drone = (RoboDroneDeVigilancia) robo;
-                    if (acaoSelecionada.equals("Iniciar Gravação de Vídeo") && !drone.isGravando()) {
-                        try { System.out.println(drone.iniciarGravacao());} 
-                        catch (RoboDesligadoException | AcaoNaoPermitidaException e) { System.err.println("Erro na gravação: " + e.getMessage());}
-                    } else if (acaoSelecionada.equals("Parar Gravação de Vídeo") && drone.isGravando()) {
-                        try { System.out.println(drone.pararGravacao());}
-                        catch (RoboDesligadoException e) { System.err.println("Erro na gravação: " + e.getMessage());}
-                    }
-                } else if (robo instanceof InterCarregador) {
-                    InterCarregador carregador = (InterCarregador) robo;
-                    if (acaoSelecionada.equals("Carregar Item/Carga")) {
-                        System.out.print("Digite o nome/descrição do item a carregar: ");
-                        String item = scanner.nextLine();
-                        try { carregador.carregarItem(item); } 
-                        catch (RoboDesligadoException | AcaoNaoPermitidaException e) { System.err.println("Erro ao carregar: " + e.getMessage());}
-                    } else if (acaoSelecionada.equals("Descarregar Item/Carga")) {
-                         try { carregador.descarregarItem(); } // Pode adicionar opção para item específico
-                        catch (RoboDesligadoException | AcaoNaoPermitidaException e) { System.err.println("Erro ao descarregar: " + e.getMessage());}
-                    } else if (acaoSelecionada.equals("Ver Itens/Carga")) {
-                        try { System.out.println(carregador.verItensCarregados()); }
-                        catch (RoboDesligadoException e) { System.err.println("Erro: " + e.getMessage());}
-                    }
-                }
-
-                else if (robo instanceof InterDefensiva) {
-                    InterDefensiva defensivel = (InterDefensiva) robo;
-                    // Verifica se a ação selecionada corresponde à ativação ou desativação
-                    if (acaoSelecionada.equals("Ativar Defesa")) {
-                        try {
-                            System.out.println(defensivel.ativarDefesa());
-                        } catch (RoboDesligadoException | AcaoNaoPermitidaException e) {
-                            System.err.println("Erro ao ativar defesa: " + e.getMessage());
+                        break;
+                    case 5: 
+                        if (roboSelecionado instanceof Comunicavel) {
+                            enviarMensagemComRobo((Comunicavel)roboSelecionado);
+                        } else {
+                            System.out.println("Robô não é comunicável.");
                         }
-                    } else if (acaoSelecionada.equals("Desativar Defesa")) {
-                        try {
-                            System.out.println(defensivel.desativarDefesa());
-                        } catch (RoboDesligadoException | AcaoNaoPermitidaException e) {
-                            System.err.println("Erro ao desativar defesa: " + e.getMessage());
+                        break;
+                    case 6: 
+                        if (roboSelecionado instanceof Autonomo) {
+                            ((Autonomo)roboSelecionado).executarProximaAcaoAutonoma(ambiente);
+                        } else {
+                            System.out.println("Robô não é Autônomo");
                         }
-                    }
+                        break;
+                    case 0: break; // Volta ao menu principal
+                    default: System.out.println("Opção inválida.");
                 }
-                // Adicionar mais 'else if' para outras interfaces e suas ações aqui
-
-            } catch (InputMismatchException e) {
-                System.out.println("Entrada inválida. Por favor, insira um número correspondente à opção.");
-                scanner.nextLine(); // Limpar buffer
-            } catch (Exception e) {
-                 System.err.println("Ocorreu um erro inesperado na interação com o robô: " + e.getMessage());
-                 e.printStackTrace();
+            // Captura exceções que podem ser lançadas pelas ações do robô
+            } catch (RoboDesligadoException | ColisaoException | ForaDosLimitesException | AcaoNaoPermitidaException | ErroComunicacaoException | RecursoInsuficienteException e) {
+                System.err.println("Erro na ação do robô: " + e.getMessage());
+            } catch (InputMismatchException e) { // Se o usuário não digitar um número para a ação
+                System.out.println("Entrada inválida. Por favor, digite um número para a ação.");
+                if (scanner.hasNextLine()) scanner.nextLine(); // Limpa entrada inválida
+                subOpcao = -1; // Reseta a sub-opção
+            } catch (Exception e) { // Captura qualquer outra exceção inesperada
+                System.err.println("Erro inesperado na interação com robô: " + e.getMessage());
+                e.printStackTrace();
+                subOpcao = -1; // Reseta a sub-opção
             }
-        }
-
+        } while (subOpcao != 0); // Continua no sub-menu até o usuário escolher voltar
     }
 
+    /**
+     * Controla a movimentação relativa de um robô.
+     * Pede ao usuário os deslocamentos deltaX, deltaY e deltaZ.
+     * @param robo O robô a ser movido.
+     * @throws ColisaoException Se o movimento causar uma colisão.
+     * @throws ForaDosLimitesException Se o movimento levar o robô para fora dos limites.
+     * @throws RoboDesligadoException Se o robô estiver desligado.
+     * @throws AcaoNaoPermitidaException Se o tipo de movimento não for permitido para o robô.
+     */
+    private static void controlarMovimentacaoRelativa(Robo robo) throws ColisaoException, ForaDosLimitesException, RoboDesligadoException, AcaoNaoPermitidaException {
+        System.out.print("Digite o deslocamento em X (deltaX): "); int deltaX = scanner.nextInt();
+        System.out.print("Digite o deslocamento em Y (deltaY): "); int deltaY = scanner.nextInt();
+        System.out.print("Digite o deslocamento em Z (deltaZ): "); int deltaZ = scanner.nextInt();
+        scanner.nextLine(); // Consome a nova linha
 
-    /* ################################################################################################################################### */
-
-    /* permite ao usuário comandar o movimento de um robô no ambiente, oferecendo opções como mover para frente, trás, esquerda, direita, mudar direção, ou definir coordenadas específicas. Ele também trata movimentos verticais para robôs aéreos. O método valida os comandos, verifica limites do ambiente e trata exceções como colisões, limites excedidos ou ações não permitidas, garantindo robustez na interação.*/
-
-
-    private static void moverRoboInterativo(Robo robo) { 
-        System.out.println("Posição Atual: " + robo.exibirPosicao() + " | Direção Atual: " + robo.getDirecao());
-        System.out.println("Comandos de Movimento:");
-        System.out.println("  (F)rente, (T)rás, (E)squerda, (D)ireita");
-        if (robo instanceof RoboAereo) {
-            System.out.println("  (C)ima, (B)aixo");
-        }
-        System.out.println("  (XYZ) para coordenadas diretas (ex: '3 4 0')");
-        System.out.println("  (M)udar direção (N, S, L, O)");
-        System.out.print("Comando de movimento: ");
-        String comandoStr = scanner.nextLine().toUpperCase();
-
-        try {
-            int novoX = robo.getX();
-            int novoY = robo.getY();
-            int novoZ = robo.getZ();
-            int passo = 1; // Movimento de 1 unidade por padrão para F/T/E/D/C/B
-
-            String[] partesComando = comandoStr.split(" ");
-            String comandoPrincipal = partesComando[0];
-
-            switch (comandoPrincipal) {
-                case "F": // Frente
-                    switch (robo.getDirecao().toUpperCase()) {
-                        case "NORTE":
-                            novoY += passo;
-                            break;
-                        case "SUL":
-                            novoY -= passo;
-                            break;
-                        case "LESTE":
-                            novoX += passo;
-                            break;
-                        case "OESTE":
-                            novoX -= passo;
-                            break;
-                        default:
-                            System.out.println("Direção desconhecida para mover para frente: " + robo.getDirecao());
-                            return;
-                    }
-                    break;
-                case "T": // Trás
-                    switch (robo.getDirecao().toUpperCase()) {
-                        case "NORTE":
-                            novoY -= passo;
-                            break;
-                        case "SUL":
-                            novoY += passo;
-                            break;
-                        case "LESTE":
-                            novoX -= passo;
-                            break;
-                        case "OESTE":
-                            novoX += passo;
-                            break;
-                        default:
-                            System.out.println("Direção desconhecida para mover para trás: " + robo.getDirecao());
-                            return;
-                    }
-                    break;
-                case "E": // Esquerda
-                    switch (robo.getDirecao().toUpperCase()) {
-                        case "NORTE":
-                            novoX -= passo;
-                            break;
-                        case "SUL":
-                            novoX += passo;
-                            break;
-                        case "LESTE":
-                            novoY += passo;
-                            break; // Virado para Leste, esquerda é Y+
-                        case "OESTE":
-                            novoY -= passo;
-                            break; // Virado para Oeste, esquerda é Y-
-                        default:
-                            System.out.println("Direção desconhecida para virar à esquerda: " + robo.getDirecao());
-                            return;
-                    }
-                    break;
-                case "D": // Direita
-                    switch (robo.getDirecao().toUpperCase()) {
-                        case "NORTE":
-                            novoX += passo;
-                            break;
-                        case "SUL":
-                            novoX -= passo;
-                            break;
-                        case "LESTE":
-                            novoY -= passo;
-                            break; // Virado para Leste, direita é Y-
-                        case "OESTE":
-                            novoY += passo;
-                            break; // Virado para Oeste, direita é Y+
-                        default:
-                            System.out.println("Direção desconhecida para virar à direita: " + robo.getDirecao());
-                            return;
-                    }
-                    break;
-                case "C": // Cima
-                    if (robo instanceof RoboAereo)
-                        ((RoboAereo) robo).subir(passo, ambiente);
-                    else
-                        System.out.println(robo.getNome()
-                                + " não é um robô aéreo e não pode mover para cima/baixo explicitamente dessa forma.");
-                    return; // Subir/descer já chamam o moverPara internamente.
-                case "B": // Baixo
-                    if (robo instanceof RoboAereo)
-                        ((RoboAereo) robo).descer(passo, ambiente);
-                    else
-                        System.out.println(robo.getNome()
-                                + " não é um robô aéreo e não pode mover para cima/baixo explicitamente dessa forma.");
-                    return; // Subir/descer já chamam o moverPara internamente.
-                case "M": // Mudar direção
-                    System.out.print("Nova direção (Norte, Sul, Leste, Oeste): ");
-                    String novaDir = scanner.nextLine().trim();
-                    // Validar novaDir aqui se necessário (ex: garantir que é uma das 4 válidas)
-                    if (novaDir.equalsIgnoreCase("Norte") || novaDir.equalsIgnoreCase("Sul") ||
-                            novaDir.equalsIgnoreCase("Leste") || novaDir.equalsIgnoreCase("Oeste")) {
-                        robo.setDirecao(novaDir.substring(0, 1).toUpperCase() + novaDir.substring(1).toLowerCase()); 
-                        System.out.println(robo.getNome() + " agora está virado para " + robo.getDirecao());
-                    } else {
-                        System.out.println("Direção inválida. Escolha entre Norte, Sul, Leste, Oeste.");
-                    }
-                    return; // Apenas mudou direção, não moveu.
-                default: // Coordenadas diretas X Y Z
-                    try {
-                        if (partesComando.length == 3) { // Espera X Y Z
-                            novoX = Integer.parseInt(partesComando[0]);
-                            novoY = Integer.parseInt(partesComando[1]);
-                            novoZ = Integer.parseInt(partesComando[2]);
-                        } else if (partesComando.length == 2 && !(robo instanceof RoboAereo)) { 
-                            novoX = Integer.parseInt(partesComando[0]);
-                            novoY = Integer.parseInt(partesComando[1]);
-                            novoZ = 0; // Robôs terrestres ficam em Z=0
-                        } else {
-                            System.out.println(
-                                    "Comando de coordenadas inválido. Use 'X Y Z' (ex: '3 4 0') ou 'X Y' para terrestres.");
-                            return;
-                        }
-                    } catch (NumberFormatException e) {
-                        System.out.println("Coordenadas numéricas inválidas. Tente 'X Y Z' ou 'X Y'.");
-                        return;
-                    }
-            }
-
-            // Validação de altitude para RoboAereo antes de chamar moverPara (se não foi C ou B)
-            //C e B já tratam isso em seus próprios métodos subir/descer.
-            if (!comandoPrincipal.equals("C") && !comandoPrincipal.equals("B")) {
-                if (robo instanceof RoboAereo) {
-                    RoboAereo ra = (RoboAereo) robo;
-                    if (novoZ > ra.getAltitudeMaximaVoo()) {
-                        System.out.println("Altitude " + novoZ + "m excede o máximo de voo do robô ("
-                                + ra.getAltitudeMaximaVoo() + "m). Movimento cancelado.");
-                        return;
-                    }
-                    if (novoZ < 0) {
-                        System.out.println("Altitude não pode ser negativa. Movimento cancelado.");
-                        return;
-                    }
-                } else { // Se for terrestre
-                    if (novoZ != 0) {
-                        System.out.println("Robôs terrestres devem permanecer na altitude Z=0. Movimento para Z="
-                                + novoZ + " cancelado.");
-                        return;
-                    }
-                }
-                robo.moverPara(novoX, novoY, novoZ, ambiente);
-                System.out.println(robo.getNome() + " movido para " + robo.exibirPosicao());
-            }
-
-        } catch (RoboDesligadoException | ColisaoException | ForaDosLimitesException | AcaoNaoPermitidaException e) {
-            System.err.println("Erro ao mover " + robo.getNome() + ": " + e.getMessage());
-        } catch (InputMismatchException e) { // Embora o scanner principal seja tratado, um scanner local poderia dar erro
-            System.out.println("Entrada de movimento inválida.");
-        } catch (Exception e) { // Captura geral para erros inesperados no movimento
-            System.err.println("Erro inesperado durante o comando de movimento: " + e.getMessage());
-            e.printStackTrace();
-        }
+        // Chama o método de mover relativamente do robô
+        robo.moverRelativamente(ambiente, deltaX, deltaY, deltaZ);
+        ambiente.visualizarAmbiente(); // Mostra o ambiente após o movimento
     }
 
-    /* ################################################################################################################################### */
+    /**
+     * Liga ou desliga um robô, alternando seu estado atual.
+     * @param robo O robô a ter seu estado alterado.
+     */
+    private static void ligarDesligarRobo(Robo robo) {
+        if (robo.getEstado() == EstadoRobo.LIGADO) {
+            robo.desligar(); // Se estiver ligado, desliga
+        } else {
+            robo.ligar(); // Se estiver desligado, liga
+        }
+        System.out.println("Novo estado de " + robo.getId() + ": " + robo.getEstado());
+    }
 
-    /* permite que um robô com capacidade de comunicação envie mensagens para outros robôs comunicáveis no ambiente. Ele exibe uma lista de robôs disponíveis para comunicação, valida a seleção do destinatário e envia a mensagem, tratando possíveis erros como entrada inválida, robô desligado ou falhas de comunicação.*/
-
-    private static void comunicarComRobo(Comunicavel comunicador) { //
-        if (!(comunicador instanceof Robo)) {
-            System.out.println("A entidade selecionada não é um robô com capacidade de comunicação ativa.");
+    /**
+     * Permite que um robô (remetente) envie uma mensagem para outro robô (destinatário).
+     * @param remetente O robô comunicável que enviará a mensagem.
+     * @throws RoboDesligadoException Se o remetente estiver desligado.
+     * @throws ErroComunicacaoException Se houver um erro na comunicação (ex: destinatário inválido ou desligado).
+     */
+    private static void enviarMensagemComRobo(Comunicavel remetente) throws RoboDesligadoException, ErroComunicacaoException { 
+        // Verifica se o remetente é de fato um Robô (já que Comunicavel é uma interface)
+        if (!(remetente instanceof Robo)) {
+             System.out.println("Remetente selecionado não é um robô.");
+             return;
+        }
+        System.out.println("Selecione o destinatário para " + ((Robo)remetente).getId() + ":");
+        // Lista todos os robôs que também são Comunicavel e não são o próprio remetente
+        List<Robo> potenciaisDestinatarios = ambiente.getEntidades().stream()
+                                .filter(e -> e instanceof Robo && e instanceof Comunicavel && e != remetente)
+                                .map(e -> (Robo) e)
+                                .collect(Collectors.toList());
+        if (potenciaisDestinatarios.isEmpty()) {
+            System.out.println("Nenhum outro robô comunicável disponível.");
             return;
         }
-        Robo roboComunicador = (Robo) comunicador;
+        // Mostra os destinatários disponíveis
+        for (int i = 0; i < potenciaisDestinatarios.size(); i++) {
+            System.out.println((i + 1) + ". " + potenciaisDestinatarios.get(i).getId());
+        }
+        System.out.print("Número do destinatário: ");
+        int escolha = scanner.nextInt() - 1; // Ajusta para índice baseado em zero
+        scanner.nextLine(); // Consome a nova linha
 
-        System.out.println("\n--- Comunicando com " + roboComunicador.getNome() + " (ID Com: "
-                + comunicador.getIdComunicacao() + ") ---");
-        System.out.println("Robôs comunicáveis disponíveis no ambiente (exceto ele mesmo):");
-        List<Comunicavel> comunicaveis = ambiente.getEntidades().stream()
-                .filter(e -> e instanceof Comunicavel && e != comunicador)
-                .map(e -> (Comunicavel) e)
+        if (escolha >= 0 && escolha < potenciaisDestinatarios.size()) {
+            Comunicavel destinatario = (Comunicavel) potenciaisDestinatarios.get(escolha);
+            System.out.print("Digite a mensagem: ");
+            String msg = scanner.nextLine();
+            // Envia a mensagem através da interface Comunicavel do remetente
+            remetente.enviarMensagem(centralComunicacao, destinatario, msg);
+        } else {
+            System.out.println("Seleção de destinatário inválida.");
+        }
+    }
+
+    // --- Implementações de Exemplo de Robôs (Classes Internas Estáticas) ---
+
+    /**
+     * Representa um robô aéreo genérico.
+     * Pode se mover no espaço 3D até uma altitude máxima.
+     * Implementa {@link Sensoreavel} para interagir com sensores.
+     */
+    public static class RoboAereo extends Robo implements Sensoreavel {
+        protected final int altitudeMaxima; // Altitude máxima que o robô aéreo pode atingir
+        protected int numHelices;           // Número de hélices do robô aéreo
+
+        /**
+         * Construtor para RoboAereo.
+         * @param id Identificador do robô.
+         * @param x Posição inicial X.
+         * @param y Posição inicial Y.
+         * @param z Posição inicial Z (altitude).
+         * @param direcao Direção inicial.
+         * @param altitudeMaxima Altitude máxima de voo.
+         * @param numHelices Número de hélices.
+         */
+        public RoboAereo(String id, int x, int y, int z, String direcao, int altitudeMaxima, int numHelices) {
+            super(id, x, y, z, direcao);
+            this.altitudeMaxima = Math.max(0, altitudeMaxima); // Garante que a altitude máxima não seja negativa
+            this.numHelices = numHelices;
+            // Ajusta a altitude inicial se estiver fora dos limites permitidos
+            if (z > this.altitudeMaxima) {
+                 System.out.println("Aviso: Alt inicial ("+z+") do RoboAereo "+id+" excede max ("+this.altitudeMaxima+"). Ajustando.");
+                 this.z = this.altitudeMaxima; // Define para altitude máxima se exceder
+            }
+            if (z < 0) {
+                 System.out.println("Aviso: Alt inicial ("+z+") do RoboAereo "+id+" negativa. Ajustando para 0.");
+                 this.z = 0; // Define para 0 se for negativa
+            }
+        }
+        
+        /**
+         * Faz o robô aéreo subir uma determinada quantidade de metros.
+         * @param metros Quantidade de metros para subir (deve ser positivo).
+         * @throws RoboDesligadoException Se o robô estiver desligado.
+         * @throws AcaoNaoPermitidaException Se `metros` não for positivo ou se exceder a altitude máxima.
+         * @throws ColisaoException Se houver colisão ao subir.
+         * @throws ForaDosLimitesException Se o movimento levar para fora dos limites do ambiente.
+         */
+        public void subir(int metros) throws RoboDesligadoException, AcaoNaoPermitidaException, ColisaoException, ForaDosLimitesException {
+            if (getEstado() == EstadoRobo.DESLIGADO) throw new RoboDesligadoException(getId() + " desligado.");
+            if (metros <=0) throw new AcaoNaoPermitidaException("Metros para subir deve ser positivo.");
+            // Chama moverRelativamente da superclasse (Robo) para efetuar o movimento vertical
+            super.moverRelativamente(ambiente, 0,0, metros); 
+        }
+
+        /**
+         * Faz o robô aéreo descer uma determinada quantidade de metros.
+         * @param metros Quantidade de metros para descer (deve ser positivo).
+         * @throws RoboDesligadoException Se o robô estiver desligado.
+         * @throws AcaoNaoPermitidaException Se `metros` não for positivo ou se tentar descer abaixo de 0.
+         * @throws ColisaoException Se houver colisão ao descer.
+         * @throws ForaDosLimitesException Se o movimento levar para fora dos limites do ambiente.
+         */
+        public void descer(int metros) throws RoboDesligadoException, AcaoNaoPermitidaException, ColisaoException, ForaDosLimitesException {
+            if (getEstado() == EstadoRobo.DESLIGADO) throw new RoboDesligadoException(getId() + " desligado.");
+            if (metros <=0) throw new AcaoNaoPermitidaException("Metros para descer deve ser positivo.");
+            // Chama moverRelativamente da superclasse (Robo) para efetuar o movimento vertical negativo
+            super.moverRelativamente(ambiente, 0,0, -metros);
+        }
+
+        /**
+         * Sobrescreve o método para mover o robô aéreo relativamente.
+         * Adiciona verificações específicas para altitude máxima e mínima (0).
+         * @param ambiente O ambiente de simulação.
+         * @param dx Deslocamento em X.
+         * @param dy Deslocamento em Y.
+         * @param dz Deslocamento em Z.
+         * @throws ColisaoException Se o movimento causar colisão.
+         * @throws ForaDosLimitesException Se o movimento for para fora dos limites do ambiente.
+         * @throws RoboDesligadoException Se o robô estiver desligado.
+         * @throws AcaoNaoPermitidaException Se o movimento violar restrições de altitude.
+         */
+        @Override
+        public void moverRelativamente(Ambiente ambiente, int dx, int dy, int dz) throws ColisaoException, ForaDosLimitesException, RoboDesligadoException, AcaoNaoPermitidaException {
+            if (this.getEstado() == EstadoRobo.DESLIGADO) {
+                throw new RoboDesligadoException("Robô " + getId() + " está desligado.");
+            }
+            int futuroZ = this.getZ() + dz; // Calcula a altitude futura
+            // Verifica se a altitude futura excede a máxima permitida
+            if (futuroZ > altitudeMaxima) {
+                throw new AcaoNaoPermitidaException(getId() + " não pode se mover para Z=" + futuroZ + " (acima da alt max: "+altitudeMaxima+").");
+            }
+            // Verifica se a altitude futura é menor que zero
+            if (futuroZ < 0) {
+                throw new AcaoNaoPermitidaException(getId() + " não pode se mover para Z=" + futuroZ + " (abaixo de 0).");
+            }
+            // Chama o método da superclasse para realizar o movimento se as verificações passarem
+            super.moverRelativamente(ambiente, dx, dy, dz); 
+        }
+
+        /**
+         * Executa a tarefa específica de um robô aéreo: patrulha aérea.
+         * O robô tenta mover-se um passo na direção atual e depois muda sua direção para SUL.
+         * @param ambiente O ambiente de simulação.
+         * @throws RoboDesligadoException Se o robô estiver desligado.
+         * @throws AcaoNaoPermitidaException Se a ação não for permitida.
+         * @throws ColisaoException Se houver colisão.
+         * @throws ForaDosLimitesException Se sair dos limites.
+         * @throws RecursoInsuficienteException (Declarada para compatibilidade com a superclasse, não usada diretamente aqui).
+         * @throws ErroComunicacaoException (Declarada para compatibilidade com a superclasse, não usada diretamente aqui).
+         */
+        @Override
+        // CORRIGIDO: Adicionadas todas as exceções de Robo.executarTarefa para segurança ao sobrescrever
+        public void executarTarefa(Ambiente ambiente) throws RoboDesligadoException, AcaoNaoPermitidaException, ColisaoException, ForaDosLimitesException, RecursoInsuficienteException, ErroComunicacaoException {
+            if (getEstado() == EstadoRobo.DESLIGADO) throw new RoboDesligadoException(getId() + " desligado.");
+            System.out.println("Robô Aéreo " + getId() + " está realizando patrulha aérea em Z=" + getZ() + ".");
+            
+            int dx_patrulha = 0, dy_patrulha = 0;
+            // Determina o deslocamento com base na direção atual
+            switch (getDirecao().toUpperCase()) {
+                case "NORTE": dy_patrulha = 1; break;
+                case "SUL": dy_patrulha = -1; break;
+                case "LESTE": dx_patrulha = 1; break;
+                case "OESTE": dx_patrulha = -1; break;
+            }
+            // Tenta mover um passo na direção calculada
+            if (dx_patrulha != 0 || dy_patrulha != 0) {
+                 System.out.println(getId() + " (Aereo) tentando mover 1 passo para " + getDirecao());
+                 // Esta chamada deve ser compatível com sua própria cláusula throws
+                 moverRelativamente(ambiente, dx_patrulha, dy_patrulha, 0); // Movimento apenas no plano XY
+            }
+            setDirecao("SUL"); // Muda a direção para SUL após a patrulha
+        }
+
+        /**
+         * Aciona todos os sensores acoplados a este robô aéreo.
+         * @param ambiente O ambiente para os sensores monitorarem.
+         * @throws RoboDesligadoException Se o robô estiver desligado.
+         */
+        @Override
+        public void acionarSensores(Ambiente ambiente) throws RoboDesligadoException {
+            if (getEstado() == EstadoRobo.DESLIGADO) throw new RoboDesligadoException(getId() + " desligado.");
+            System.out.println("\n--- Sensores do Robô Aéreo " + getId() + " ---");
+            if (getSensores().isEmpty()) {
+                System.out.println(getId() + " não possui sensores."); return;
+            }
+            // Itera sobre os sensores e chama o método monitorar de cada um
+            for (Sensor s : getSensores()) {
+                System.out.println(s.monitorar(ambiente, this));
+            }
+        }
+        /**
+         * Retorna a representação visual do robô aéreo.
+         * @return 'V' para Robô Aéreo (Voador).
+         */
+        @Override
+        public char getRepresentacao() { return 'V';} 
+    }
+
+    /**
+     * Representa um drone de carga, um tipo especializado de {@link RoboAereo}.
+     * Possui capacidade de carga e pode executar ações autônomas.
+     * Implementa {@link Autonomo}.
+     */
+    public static class RoboDroneDeCarga extends RoboAereo implements Autonomo {
+        private int carga; // Carga atual do drone
+        private final int cargaMaxima; // Capacidade máxima de carga
+
+        /**
+         * Construtor para RoboDroneDeCarga.
+         * @param id Identificador do robô.
+         * @param x Posição inicial X.
+         * @param y Posição inicial Y.
+         * @param z Posição inicial Z (altitude).
+         * @param direcao Direção inicial.
+         * @param altitudeMaxima Altitude máxima de voo.
+         * @param numHelices Número de hélices.
+         * @param cargaInicial Carga inicial do drone.
+         * @param cargaMaxima Capacidade máxima de carga.
+         */
+        public RoboDroneDeCarga(String id, int x, int y, int z, String direcao, int altitudeMaxima,
+                                int numHelices, int cargaInicial, int cargaMaxima) {
+            super(id, x, y, z, direcao, altitudeMaxima, numHelices);
+            this.cargaMaxima = Math.max(0, cargaMaxima); // Garante que a carga máxima não seja negativa
+            // Garante que a carga inicial esteja entre 0 e a carga máxima
+            this.carga = Math.max(0, Math.min(cargaInicial, this.cargaMaxima));
+        }
+        
+        // Getters para carga
+        public int getCarga() { return carga; }
+        public int getCargaMaxima() { return cargaMaxima; }
+
+        /**
+         * Carrega o drone com uma determinada quantidade.
+         * @param quantidade A quantidade a ser carregada (deve ser positiva).
+         * @throws AcaoNaoPermitidaException Se a quantidade for inválida ou exceder a capacidade máxima.
+         * @throws RoboDesligadoException Se o robô estiver desligado.
+         */
+        public void carregar(int quantidade) throws AcaoNaoPermitidaException, RoboDesligadoException {
+            if (getEstado() == EstadoRobo.DESLIGADO) throw new RoboDesligadoException(getId() + " desligado.");
+            if (quantidade <= 0) throw new AcaoNaoPermitidaException("Quantidade para carregar deve ser positiva.");
+            // Verifica se carregar a quantidade excederá a carga máxima
+            if (this.carga + quantidade > this.cargaMaxima) {
+                throw new AcaoNaoPermitidaException("Excederia carga máxima. Carga atual: " + this.carga + ", tentando: " + quantidade + ", Max: " + this.cargaMaxima);
+            }
+            this.carga += quantidade; // Aumenta a carga
+            System.out.println(getId() + " carregou " + quantidade + ". Carga atual: " + this.carga + "/" + this.cargaMaxima);
+        }
+        
+        /**
+         * Descarrega uma determinada quantidade do drone.
+         * @param quantidade A quantidade a ser descarregada (deve ser positiva).
+         * @throws AcaoNaoPermitidaException Se a quantidade for inválida ou não houver carga suficiente.
+         * @throws RoboDesligadoException Se o robô estiver desligado.
+         */
+        public void descarregar(int quantidade) throws AcaoNaoPermitidaException, RoboDesligadoException {
+            if (getEstado() == EstadoRobo.DESLIGADO) throw new RoboDesligadoException(getId() + " desligado.");
+            if (quantidade <= 0) throw new AcaoNaoPermitidaException("Quantidade para descarregar deve ser positiva.");
+            // Verifica se há carga suficiente para descarregar
+            if (quantidade > this.carga) {
+                throw new AcaoNaoPermitidaException("Não pode descarregar " + quantidade + ". Carga atual: " + this.carga);
+            }
+            this.carga -= quantidade; // Diminui a carga
+            System.out.println(getId() + " descarregou " + quantidade + ". Carga atual: " + this.carga + "/" + this.cargaMaxima);
+        }
+
+        /**
+         * Executa a tarefa específica do drone de carga.
+         * Lógica simples: se vazio na base (0,0), tenta carregar. Se com carga e fora da base, move para a base. Se com carga na base, descarrega.
+         * @param ambiente O ambiente de simulação.
+         * @throws RoboDesligadoException Se o robô estiver desligado.
+         * @throws AcaoNaoPermitidaException Se a ação de carregar/descarregar/mover não for permitida.
+         * @throws ColisaoException Se houver colisão ao mover.
+         * @throws ForaDosLimitesException Se mover para fora dos limites.
+         * @throws RecursoInsuficienteException (Pode ser lançada por `carregar` se fosse implementado para pegar de um local, mas aqui `carregar` apenas aumenta o contador).
+         * @throws ErroComunicacaoException (Declarada para compatibilidade, não usada aqui).
+         */
+        @Override
+        // A assinatura corresponde a RoboAereo.executarTarefa (que agora inclui RecursoInsuficienteException implicitamente de Robo.java)
+        public void executarTarefa(Ambiente ambiente) throws RoboDesligadoException, AcaoNaoPermitidaException, ColisaoException, ForaDosLimitesException, RecursoInsuficienteException, ErroComunicacaoException {
+            if (getEstado() == EstadoRobo.DESLIGADO) throw new RoboDesligadoException(getId() + " desligado.");
+            System.out.println(getId() + " (Drone Carga) status: Carga " + carga + "/" + cargaMaxima);
+            
+            // Lógica de decisão para a tarefa do drone
+            if (carga == 0 && getX() == 0 && getY() == 0) { // Se está na base (0,0) e vazio
+                System.out.println(getId() + " na base e vazio, tentando carregar...");
+                if (cargaMaxima > 0) { // Só tenta carregar se tiver capacidade
+                    carregar(1); // Tenta carregar 1 unidade (exemplo)
+                } else {
+                    System.out.println(getId() + " não pode carregar (capacidade máxima é 0).");
+                }
+            } else if (carga > 0 && (getX() != 0 || getY() != 0)) { // Se tem carga e não está na base
+                System.out.println(getId() + " tem carga, tentando mover para base (0,0) para descarregar.");
+                int targetX = 0; int targetY = 0; // Coordenadas da base
+                // Calcula o deslocamento para chegar à base
+                int dx = Integer.compare(targetX, getX()); // Retorna -1, 0, ou 1
+                int dy = Integer.compare(targetY, getY());
+                if (dx !=0 || dy !=0) moverRelativamente(ambiente, dx, dy, 0); // Move um passo em direção à base
+            } else if (carga > 0 && getX() == 0 && getY() == 0) { // Se tem carga e está na base
+                 System.out.println(getId() + " na base com carga, descarregando...");
+                 descarregar(carga); // Descarrega toda a carga
+            } else {
+                 System.out.println(getId() + " aguardando instruções ou em condição não prevista pela tarefa simples.");
+            }
+        }
+        
+        /**
+         * Executa a próxima ação autônoma do drone de carga.
+         * Lógica: Se tem carga e não está na base, move para a base. Se descarregado, move para um ponto de coleta e carrega.
+         * @param ambiente O ambiente de simulação.
+         * @throws RoboDesligadoException Se o robô estiver desligado.
+         * @throws AcaoNaoPermitidaException Se a ação não for permitida.
+         * @throws ColisaoException Se houver colisão.
+         * @throws ForaDosLimitesException Se sair dos limites.
+         */
+        @Override
+        public void executarProximaAcaoAutonoma(Ambiente ambiente) throws RoboDesligadoException, AcaoNaoPermitidaException, ColisaoException, ForaDosLimitesException {
+            if (getEstado() == EstadoRobo.DESLIGADO) throw new RoboDesligadoException(getId() + " desligado.");
+            System.out.println(getId() + " (Drone Carga Autônomo) executando...");
+
+            if (carga > 0 && (getX() != 0 || getY() != 0)) { // Se tem carga e não está na base (0,0)
+                int targetX = 0; int targetY = 0; // Ponto de descarga (base)
+                // Calcula o movimento para a base
+                int dx = Integer.compare(targetX, getX());
+                int dy = Integer.compare(targetY, getY());
+                if (dx !=0 || dy !=0) { // Se não está na base
+                    System.out.println("Autônomo: Movendo para base (" + dx + "," + dy + ")");
+                    moverRelativamente(ambiente, dx, dy, 0); // Move um passo em direção à base
+                } else { // Se chegou na base e ainda tem carga (caso raro, pois deveria descarregar)
+                     try { if (carga > 0) descarregar(carga); }
+                     catch (RoboDesligadoException | AcaoNaoPermitidaException e) { System.err.println("Autônomo: Falha ao descarregar - " + e.getMessage());}
+                }
+            } else if (carga < cargaMaxima) { // Se não está com carga máxima (prioriza carregar)
+                // Define um ponto de coleta (ex: canto oposto do ambiente)
+                int targetX = ambiente.getLargura() -1; 
+                int targetY = ambiente.getProfundidade() -1; 
+                // Calcula o movimento para o ponto de coleta
+                int dx = Integer.compare(targetX, getX());
+                int dy = Integer.compare(targetY, getY());
+                if (dx !=0 || dy !=0) { // Se não está no ponto de coleta
+                    System.out.println("Autônomo: Movendo para coleta (" + dx + "," + dy + ")");
+                    moverRelativamente(ambiente, dx, dy, 0); // Move um passo em direção ao ponto de coleta
+                } else { // Se chegou no ponto de coleta
+                    try { if (cargaMaxima - carga > 0) carregar(cargaMaxima - carga); } // Carrega até a capacidade máxima
+                    catch (RoboDesligadoException | AcaoNaoPermitidaException e) { System.err.println("Autônomo: Falha ao carregar - " + e.getMessage());}
+                }
+            } else { // Se está com carga máxima e na base (ou outra condição não tratada)
+                 System.out.println(getId() + " (Autônomo) - Carga máxima e na base, ou outra condição.");
+            }
+        }
+        /**
+         * Retorna a representação visual do drone de carga.
+         * @return 'D' para Drone de Carga.
+         */
+         @Override
+        public char getRepresentacao() { return 'D';} 
+    }
+    
+    /**
+     * Representa um robô terrestre com capacidade de comunicação.
+     * Estende {@link RoboTerrestre} e implementa {@link Comunicavel}.
+     */
+    public static class RoboComunicador extends RoboTerrestre implements Comunicavel {
+        /**
+         * Construtor para RoboComunicador.
+         * @param id Identificador do robô.
+         * @param x Posição inicial X.
+         * @param y Posição inicial Y.
+         * @param direcao Direção inicial.
+         * @param velocidadeMaxima Velocidade máxima do robô terrestre.
+         */
+        public RoboComunicador(String id, int x, int y, String direcao, int velocidadeMaxima) {
+            super(id, x, y, direcao, velocidadeMaxima);
+        }
+
+        /**
+         * Envia uma mensagem para outro robô comunicável.
+         * @param central A {@link CentralComunicacao} para registrar a mensagem.
+         * @param destinatario O {@link Comunicavel} que receberá a mensagem.
+         * @param mensagem O conteúdo da mensagem.
+         * @throws RoboDesligadoException Se o remetente ou o destinatário estiverem desligados.
+         * @throws ErroComunicacaoException Se o destinatário não for um robô válido ou houver outro erro.
+         */
+        @Override
+        public void enviarMensagem(CentralComunicacao central, Comunicavel destinatario, String mensagem) throws RoboDesligadoException, ErroComunicacaoException {
+            if (getEstado() == EstadoRobo.DESLIGADO) throw new RoboDesligadoException(getId() + " desligado.");
+            // Verifica se o destinatário é um Robô (necessário para checar estado)
+            if (!(destinatario instanceof Robo)) throw new ErroComunicacaoException("Destinatário não é um robô válido.");
+            // Verifica se o robô destinatário está desligado
+            if (((Robo)destinatario).getEstado() == EstadoRobo.DESLIGADO) throw new ErroComunicacaoException("Destinatário " + ((Robo)destinatario).getId() + " está desligado.");
+            
+            System.out.println(getId() + " (Comunicador) enviando para " + ((Robo)destinatario).getId() + ": " + mensagem);
+            central.registrarMensagem(this.getId(), ((Robo)destinatario).getId(), mensagem); // Registra na central
+            destinatario.receberMensagem(this.getId(), mensagem); // Entrega a mensagem ao destinatário
+        }
+
+        /**
+         * Recebe uma mensagem de outro robô.
+         * @param remetenteId O ID do robô que enviou a mensagem.
+         * @param mensagem O conteúdo da mensagem recebida.
+         * @throws RoboDesligadoException Se este robô (receptor) estiver desligado.
+         */
+        @Override
+        public void receberMensagem(String remetenteId, String mensagem) throws RoboDesligadoException {
+            if (getEstado() == EstadoRobo.DESLIGADO) throw new RoboDesligadoException(getId() + " desligado.");
+            System.out.println(getId() + " (Comunicador) recebeu de " + remetenteId + ": " + mensagem);
+        }
+        
+        /**
+         * Executa a tarefa específica do robô comunicador: procurar outro robô comunicável e enviar uma saudação.
+         * @param ambiente O ambiente de simulação.
+         * @throws RoboDesligadoException Se o robô estiver desligado.
+         * @throws AcaoNaoPermitidaException (Declarada para compatibilidade).
+         * @throws ColisaoException (Declarada para compatibilidade).
+         * @throws ForaDosLimitesException (Declarada para compatibilidade).
+         * @throws RecursoInsuficienteException (Declarada para compatibilidade).
+         * @throws ErroComunicacaoException Se falhar ao enviar a mensagem.
+         */
+        @Override 
+        // A assinatura corresponde a RoboTerrestre.executarTarefa (que agora inclui ErroComunicacaoException de Robo.java)
+        public void executarTarefa(Ambiente ambiente) throws RoboDesligadoException, AcaoNaoPermitidaException, ColisaoException, ForaDosLimitesException, RecursoInsuficienteException, ErroComunicacaoException {
+            if (getEstado() == EstadoRobo.DESLIGADO) throw new RoboDesligadoException(getId() + " desligado.");
+            System.out.println(getId() + " (Comunicador) está ocioso, procurando alguém para conversar...");
+            
+            // Procura por outros robôs que são Comunicavel, estão ligados e não são ele mesmo
+            List<Robo> outrosComunicaveis = ambiente.getEntidades().stream()
+                .filter(e -> e instanceof Robo && e instanceof Comunicavel && e != this && ((Robo)e).getEstado() == EstadoRobo.LIGADO)
+                .map(e -> (Robo)e)
                 .collect(Collectors.toList());
-        if (comunicaveis.isEmpty()) {
-            System.out.println("Nenhum outro robô comunicável no ambiente para interagir.");
-            return;
-        }
-        for (int i = 0; i < comunicaveis.size(); i++) {
-            // Assume-se que Comunicavel é implementado por Robos, então podemos pegar o
-            // nome.
-            Robo rDest = (Robo) comunicaveis.get(i); // Casting seguro se Comunicavel só é implementado por Robo
-            System.out.println(
-                    (i + 1) + ". " + rDest.getNome() + " (ID Com: " + comunicaveis.get(i).getIdComunicacao() + ")");
-        }
-        System.out.print("Escolha o número do robô destinatário: ");
-        try {
-            int escolhaDest = scanner.nextInt();
-            scanner.nextLine(); // Consumir nova linha
 
-            if (escolhaDest < 1 || escolhaDest > comunicaveis.size()) {
-                System.out.println("Seleção de destinatário inválida.");
-                return;
+            if (!outrosComunicaveis.isEmpty()) { // Se encontrou alguém
+                Comunicavel destinatario = (Comunicavel) outrosComunicaveis.get(0); // Pega o primeiro da lista
+                enviarMensagem(centralComunicacao, destinatario, "Olá de " + getId() + "!"); // Envia uma saudação
+            } else {
+                System.out.println(getId() + " não encontrou ninguém para conversar agora.");
             }
-            Comunicavel destinatario = comunicaveis.get(escolhaDest - 1);
-
-            System.out.print("Digite a mensagem para " + ((Robo) destinatario).getNome() + ": ");
-            String mensagem = scanner.nextLine();
-
-            comunicador.enviarMensagem(destinatario, mensagem, centralComunicacao);
-            // A mensagem de sucesso/status já é impressa dentro do
-            // enviarMensagem/receberMensagem
-
-        } catch (InputMismatchException e) {
-            System.out.println("Entrada inválida. Por favor, insira um número.");
-            scanner.nextLine(); // Limpar buffer
-        } catch (RoboDesligadoException | ErroComunicacaoException e) {
-            System.err.println("Erro de comunicação: " + e.getMessage());
-        } catch (Exception e) {
-            System.err.println("Erro inesperado na comunicação: " + e.getMessage());
-            e.printStackTrace();
         }
-    }
-    /* ################################################################################################################################### */
-
-    /* permite avançar o tempo da simulação em segundos, afetando funcionalidades dependentes do tempo, como gravação de drones ou consumo de bateria. Ele valida a entrada do usuário, aplica as mudanças às entidades do ambiente e trata possíveis erros, garantindo robustez na execução. */
-
-    private static void avancarTempoSimulacao() {
-        System.out.print("Quantos segundos de simulação avançar (para gravação de drones, consumo de bateria, etc.)? ");
-        try {
-            int segundos = scanner.nextInt();
-            scanner.nextLine(); // Consumir nova linha
-            if (segundos <= 0) {
-                System.out.println("O tempo a avançar deve ser um valor positivo.");
-                return;
-            }
-
-            System.out.println("\nAvançando simulação em " + segundos + " segundos...");
-            for (Entidade e : ambiente.getEntidades()) {
-                if (e instanceof RoboDroneDeVigilancia) {
-                    ((RoboDroneDeVigilancia) e).simularTempoGravacao(segundos);
-                }
-                // Adicionar aqui outras lógicas que dependem do tempo:
-                // Ex: consumo de bateria passivo para robôs ligados, etc.
-                // if (e instanceof RoboCarroAutonomo) {
-                // ((RoboCarroAutonomo)e).consumirBateriaPassivamente(segundos);
-                // }
-            }
-            System.out.println(segundos + " segundos de simulação avançados.");
-
-        } catch (InputMismatchException e) {
-            System.out.println("Entrada inválida. Por favor, insira um número de segundos.");
-            scanner.nextLine(); // Limpar buffer
-        } catch (Exception e) {
-            System.err.println("Erro inesperado ao avançar o tempo: " + e.getMessage());
-            e.printStackTrace();
-        }
+        /**
+         * Retorna a representação visual do robô comunicador.
+         * @return 'C' para Comunicador.
+         */
+        @Override
+        public char getRepresentacao() { return 'C';} 
     }
 }

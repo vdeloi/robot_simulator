@@ -1,29 +1,19 @@
-// Enumeração TipoEntidade
+// TipoEntidade.java
 
+/**
+ * Enumeração que define os tipos básicos de entidades que podem ocupar
+ * uma célula no mapa do {@link Ambiente}.
+ * Isso ajuda o ambiente a rastrear de forma geral o que está em cada coordenada.
+ */
 public enum TipoEntidade {
-
-
-    // valores para os tipos de entidades
-
-    VAZIO('.', "Espaço Vazio"), 
-    ROBO('R', "Robô"),
-    OBSTACULO('X', "Obstáculo"),
-    DESCONHECIDO('?', "Desconhecido");
-
-    private final String descricao;
-    private final char representacao;
-
-    TipoEntidade(char representacao, String descricao) {
-        this.representacao = representacao;
-        this.descricao = descricao;
-    }
-
-    public String getDescricao() {
-        return descricao;
-    }
-
-    public char getRepresentacao() {
-        return representacao;
-    }
-
+    /** Representa uma célula vazia no ambiente, sem nenhuma entidade ocupando-a. */
+    VAZIO,
+    /** Representa uma célula ocupada por um {@link Robo}. */
+    ROBO,
+    /** Representa uma célula ocupada por um {@link Obstaculo}. */
+    OBSTACULO,
+    /** * Representa um tipo de entidade desconhecido ou não especificado.
+     * Pode ser útil para extensões futuras ou para lidar com estados imprevistos.
+     */
+    DESCONHECIDO // Pode adicionar mais tipos se necessário
 }
