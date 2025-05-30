@@ -1,6 +1,6 @@
 // Ambiente.java
 import java.util.ArrayList;
-import java.util.List;
+//import java.util.List;
 
 /**
  * Representa o mundo tridimensional onde as entidades (robôs, obstáculos) existem e interagem.
