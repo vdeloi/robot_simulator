@@ -1,4 +1,7 @@
+package src.br.unicamp.ic.mc322.lab05.comunicacao;
 // Comunicavel.java
+
+import src.br.unicamp.ic.mc322.lab05.excecoes.ErroComunicacaoException;
 
 /**
  * Interface para entidades que têm a capacidade de enviar e receber mensagens.

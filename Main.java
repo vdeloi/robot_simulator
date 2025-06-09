@@ -5,6 +5,16 @@ import java.util.List;
 import java.util.Scanner;
 import java.util.stream.Collectors;
 
+import src.br.unicamp.ic.mc322.lab05.ambiente.Ambiente;
+import src.br.unicamp.ic.mc322.lab05.ambiente.Autonomo;
+import src.br.unicamp.ic.mc322.lab05.ambiente.TipoObstaculo;
+import src.br.unicamp.ic.mc322.lab05.comunicacao.CentralComunicacao;
+import src.br.unicamp.ic.mc322.lab05.comunicacao.Comunicavel;
+import src.br.unicamp.ic.mc322.lab05.excecoes.ErroComunicacaoException;
+import src.br.unicamp.ic.mc322.lab05.excecoes.RecursoInsuficienteException;
+import src.br.unicamp.ic.mc322.lab05.sensores.SensorAltitude;
+import src.br.unicamp.ic.mc322.lab05.sensores.SensorProximidade;
+
 /**
  * Classe principal que inicia e gerencia a simulação de robôs.
  * Contém o método `main` para executar o programa, inicializa o ambiente,

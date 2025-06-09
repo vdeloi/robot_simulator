@@ -1,5 +1,7 @@
 // Sensor.java
 
+import src.br.unicamp.ic.mc322.lab05.ambiente.Ambiente;
+
 /**
  * Classe abstrata base para todos os tipos de sensores.
  * Um sensor possui um nome e um raio de alcance (que pode ou não ser

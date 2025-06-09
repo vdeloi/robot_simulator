@@ -1,3 +1,4 @@
+package src.br.unicamp.ic.mc322.lab05.excecoes;
 // ErroComunicacaoException.java
 
 /**

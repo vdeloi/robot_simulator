@@ -1,5 +1,9 @@
 // RoboTerrestre.java
 
+import src.br.unicamp.ic.mc322.lab05.ambiente.Ambiente;
+import src.br.unicamp.ic.mc322.lab05.excecoes.ErroComunicacaoException;
+import src.br.unicamp.ic.mc322.lab05.excecoes.RecursoInsuficienteException;
+
 /**
  * Representa um robô terrestre, um tipo específico de {@link Robo}.
  * Robôs terrestres operam no nível Z=0 (chão) e possuem uma velocidade máxima

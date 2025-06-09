@@ -2,6 +2,10 @@
 import java.util.ArrayList;
 import java.util.List;
 
+import src.br.unicamp.ic.mc322.lab05.ambiente.Ambiente;
+import src.br.unicamp.ic.mc322.lab05.ambiente.Entidade;
+import src.br.unicamp.ic.mc322.lab05.ambiente.TipoEntidade;
+
 /**
  * Classe abstrata que representa um robô genérico no ambiente.
  * Todos os tipos específicos de robôs (terrestre, aéreo, etc.) devem herdar desta classe.

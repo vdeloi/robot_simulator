@@ -1,6 +1,16 @@
+package src.br.unicamp.ic.mc322.lab05.ambiente;
 // Ambiente.java
 import java.util.ArrayList;
 //import java.util.List;
+
+import AcaoNaoPermitidaException;
+import ColisaoException;
+import EstadoRobo;
+import ForaDosLimitesException;
+import Obstaculo;
+import Robo;
+import RoboDesligadoException;
+import Sensoreavel;
 
 /**
  * Representa o mundo tridimensional onde as entidades (robôs, obstáculos) existem e interagem.
