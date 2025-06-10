@@ -1,4 +1,8 @@
 package ambiente;
+import java.util.ArrayList;
+import robo.Robo;
+import robo.EstadoRobo;
+import sensores.Sensoreavel;
 
 
 /**

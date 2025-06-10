@@ -6,6 +6,7 @@ import ambiente.Obstaculo;
 import robo.Robo;
 import ambiente.Ambiente;
 
+
 /**
  * Um tipo específico de {@link Sensor} que detecta outras entidades (robôs e obstáculos)
  * dentro de um determinado raio de alcance ao redor do robô.

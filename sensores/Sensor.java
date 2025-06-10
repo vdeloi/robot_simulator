@@ -2,6 +2,7 @@ package sensores;
 // Sensor.java
 
 import ambiente.Ambiente;
+import robo.Robo;
 
 /**
  * Classe abstrata base para todos os tipos de sensores.
