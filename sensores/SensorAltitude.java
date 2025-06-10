@@ -1,6 +1,7 @@
 package sensores;
-import br.unicamp.ic.mc322.lab05.robos.Robo;
-import br.unicamp.ic.mc322.lab05.ambiente.Ambiente;
+
+import robo.Robo;
+import ambiente.Ambiente;
 
 /**
  * Um tipo específico de {@link Sensor} que mede a altitude (coordenada Z)

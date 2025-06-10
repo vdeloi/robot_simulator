@@ -1,7 +1,7 @@
 package sensores;
 // Sensor.java
 
-import br.unicamp.ic.mc322.lab05.ambiente.Ambiente;
+import ambiente.Ambiente;
 
 /**
  * Classe abstrata base para todos os tipos de sensores.

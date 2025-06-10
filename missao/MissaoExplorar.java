@@ -1,5 +1,9 @@
 package missao;
 
+import ambiente.Ambiente;
+import robo.Robo;
+import util.Log;
+
 import java.util.Random;
 
 

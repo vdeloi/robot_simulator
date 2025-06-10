@@ -1,6 +1,7 @@
 package comunicacao;
-// Comunicavel.java
 
+import ambiente.RoboDesligadoException;
+import ambiente.ErroComunicacaoException;
 
 /**
  * Interface para entidades que têm a capacidade de enviar e receber mensagens.

@@ -1,7 +1,8 @@
 package sensores;
 // Sensoreavel.java
 
-import br.unicamp.ic.mc322.lab05.ambiente.Ambiente;
+import ambiente.Ambiente;
+import ambiente.RoboDesligadoException;
 
 /**
  * Interface para entidades que podem ter sensores e acioná-los.

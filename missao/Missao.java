@@ -1,5 +1,8 @@
 package missao;
 
+import ambiente.Ambiente;
+import robo.Robo;
+
 /**
  * Interface que define um contrato genérico para tarefas autônomas
  * que um robô pode executar no ambiente. 

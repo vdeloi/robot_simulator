@@ -6,11 +6,10 @@ import java.util.Scanner;
 import java.util.stream.Collectors;
 
 // Importando pacotes inteiros com o curinga *
-import br.unicamp.ic.mc322.lab05.ambiente.*;
-import br.unicamp.ic.mc322.lab05.comunicacao.*;
-import br.unicamp.ic.mc322.lab05.excecoes.*;
-import br.unicamp.ic.mc322.lab05.robos.*;
-import br.unicamp.ic.mc322.lab05.sensores.*;
+import ambiente.*;
+import comunicacao.*;
+import robo.*;
+import sensores.*;
 
 /**
  * Classe principal que inicia e gerencia a simulação de robôs.
