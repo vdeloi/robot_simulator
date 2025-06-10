@@ -162,5 +162,25 @@ import missao.Missao;
          */
          @Override
         public char getRepresentacao() { return 'D';} 
+
+            /**
+         * Executa a missão atribuída ao drone.
+         * Sobrescreve o método de RoboAereo para usar a lógica de missão.
+         * @param ambiente O ambiente de execução.
+         */
+        @Override
+        public void executarMissao(Ambiente ambiente) {
+            if (temMissao()) {
+                System.out.println("Drone de Carga " + getId() + " iniciando sua missão.");
+                missao.executar(this, ambiente); // Executa a missão específica
+            } else {
+                System.out.println(getId() + " (Drone de Carga) não possui missão. Executando tarefa padrão.");
+                try {
+                    executarTarefa(ambiente); // Comportamento padrão se não houver missão
+                } catch (Exception e) {
+                    System.err.println("Falha ao executar tarefa padrão para " + getId() + ": " + e.getMessage());
+                }
+            }
+        }
     }
     

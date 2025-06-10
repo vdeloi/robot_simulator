@@ -57,7 +57,7 @@ public class Main {
             rDroneCarga1.adicionarSensor(new SensorAltitude("Alt-WallE", 0));
             rDroneCarga1.ligar();
             
-            RoboComunicador roboTagarela = new RoboComunicador("Tagarela1", 3, 3, "SUL", 5);
+            RoboComunicador roboTagarela = new RoboComunicador("Tagarela1", 3, 3, "SUL", 5, centralComunicacao);
             roboTagarela.ligar();
 
             ambiente.adicionarEntidade(rterrestre1);
