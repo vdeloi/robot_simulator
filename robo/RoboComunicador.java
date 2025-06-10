@@ -11,7 +11,7 @@ import java.util.stream.Collectors;
      * Representa um robô terrestre com capacidade de comunicação.
      * Estende {@link RoboTerrestre} e implementa {@link Comunicavel}.
      */
-    public static class RoboComunicador extends RoboTerrestre implements Comunicavel {
+    public class RoboComunicador extends RoboTerrestre implements Comunicavel {
         /**
          * Construtor para RoboComunicador.
          * @param id Identificador do robô.

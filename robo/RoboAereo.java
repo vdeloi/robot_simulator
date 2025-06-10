@@ -9,7 +9,7 @@ import sensores.Sensoreavel;
      * Pode se mover no espaço 3D até uma altitude máxima.
      * Implementa {@link Sensoreavel} para interagir com sensores.
      */
-    public static class RoboAereo extends Robo implements Sensoreavel {
+    public class RoboAereo extends Robo implements Sensoreavel {
         protected final int altitudeMaxima; // Altitude máxima que o robô aéreo pode atingir
         protected int numHelices;           // Número de hélices do robô aéreo
 

@@ -10,7 +10,7 @@ import missao.Missao;
      * Possui capacidade de carga e pode executar ações autônomas.
      * Implementa {@link Autonomo}.
      */
-    public static class RoboDroneDeCarga extends RoboAereo implements Autonomo {
+    public class RoboDroneDeCarga extends RoboAereo implements Autonomo {
         private int carga; // Carga atual do drone
         private final int cargaMaxima; // Capacidade máxima de carga
 
