@@ -1,4 +1,4 @@
-package br.unicamp.ic.mc322.lab05.robos;
+package br.unicamp.ic.mc322.lab05.excecoes;
 // ColisaoException.java
 
 /**

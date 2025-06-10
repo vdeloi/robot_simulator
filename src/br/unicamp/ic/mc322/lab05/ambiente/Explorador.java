@@ -1,7 +1,5 @@
 package br.unicamp.ic.mc322.lab05.ambiente;
-// Explorador.java
-
-import RoboDesligadoException;
+import br.unicamp.ic.mc322.lab05.excecoes.RoboDesligadoException;
 
 /**
  * Interface funcional para entidades que podem explorar o ambiente.

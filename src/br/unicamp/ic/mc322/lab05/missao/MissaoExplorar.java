@@ -1,8 +1,10 @@
-package src.br.unicamp.ic.mc322.lab05.missao;
+package br.unicamp.ic.mc322.lab05.missao;
 
 import java.util.Random;
 
-import src.br.unicamp.ic.mc322.lab05.robos.Robo;
+import br.unicamp.ic.mc322.lab05.robos.Robo;
+import br.unicamp.ic.mc322.lab05.ambiente.Ambiente;
+import br.unicamp.ic.mc322.lab05.util.Log;
 
 public class MissaoExplorar implements Missao {
      private Random random = new Random();

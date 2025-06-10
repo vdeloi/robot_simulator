@@ -1,7 +1,5 @@
 package br.unicamp.ic.mc322.lab05.sensores;
-// SensorAltitude.java
-
-import Robo;
+import br.unicamp.ic.mc322.lab05.robos.Robo;
 import br.unicamp.ic.mc322.lab05.ambiente.Ambiente;
 
 /**

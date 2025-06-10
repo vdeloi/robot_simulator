@@ -1,9 +1,6 @@
-package src.br.unicamp.ic.mc322.lab05.missao;
-
-
-import src.br.unicamp.ic.mc322.lab05.ambiente.Ambiente;
-import src.br.unicamp.ic.mc322.lab05.robo.Robo;
-
+package br.unicamp.ic.mc322.lab05.missao;
+import br.unicamp.ic.mc322.lab05.ambiente.Ambiente;
+import br.unicamp.ic.mc322.lab05.robos.Robo;
 /**
  * Interface que define um contrato genérico para tarefas autônomas
  * que um robô pode executar no ambiente. 

@@ -1,4 +1,9 @@
-package br.unicamp.ic.mc322.lab05.robos;
+package br.unicamp.ic.mc322.lab05.ambiente; 
+
+
+import br.unicamp.ic.mc322.lab05.ambiente.Entidade;
+import br.unicamp.ic.mc322.lab05.ambiente.TipoEntidade;
+import br.unicamp.ic.mc322.lab05.ambiente.TipoObstaculo;
 
 // Obstaculo.java
 
