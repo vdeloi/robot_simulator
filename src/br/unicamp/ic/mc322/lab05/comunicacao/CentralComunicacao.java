@@ -1,4 +1,4 @@
-package src.br.unicamp.ic.mc322.lab05.comunicacao;
+package br.unicamp.ic.mc322.lab05.comunicacao;
 // CentralComunicacao.java
 import java.util.ArrayList;
 import java.util.List;

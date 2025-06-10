@@ -1,16 +1,13 @@
-package src.br.unicamp.ic.mc322.lab05.ambiente;
-// Ambiente.java
-import java.util.ArrayList;
-//import java.util.List;
+package br.unicamp.ic.mc322.lab05.ambiente;
 
-import AcaoNaoPermitidaException;
-import ColisaoException;
-import EstadoRobo;
-import ForaDosLimitesException;
-import Obstaculo;
-import Robo;
-import RoboDesligadoException;
-import Sensoreavel;
+import java.util.ArrayList;
+import br.unicamp.ic.mc322.lab05.excecoes.AcaoNaoPermitidaException;
+import br.unicamp.ic.mc322.lab05.excecoes.ColisaoException;
+import br.unicamp.ic.mc322.lab05.excecoes.ForaDosLimitesException;
+import br.unicamp.ic.mc322.lab05.excecoes.RoboDesligadoException;
+import br.unicamp.ic.mc322.lab05.robos.EstadoRobo;
+import br.unicamp.ic.mc322.lab05.robos.Robo;
+import br.unicamp.ic.mc322.lab05.sensores.Sensoreavel;
 
 /**
  * Representa o mundo tridimensional onde as entidades (robôs, obstáculos) existem e interagem.

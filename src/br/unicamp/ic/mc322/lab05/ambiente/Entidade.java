@@ -1,4 +1,4 @@
-package src.br.unicamp.ic.mc322.lab05.ambiente;
+package br.unicamp.ic.mc322.lab05.ambiente;
 // Entidade.java
 
 /**

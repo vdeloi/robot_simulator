@@ -1,4 +1,4 @@
-package src.br.unicamp.ic.mc322.lab05.util;
+package br.unicamp.ic.mc322.lab05.util;
 
 import java.io.FileWriter;
 import java.io.IOException;

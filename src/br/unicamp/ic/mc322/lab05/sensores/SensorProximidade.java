@@ -1,10 +1,10 @@
-package src.br.unicamp.ic.mc322.lab05.sensores;
+package br.unicamp.ic.mc322.lab05.sensores;
 // SensorProximidade.java
 import java.util.stream.Collectors; // Garante que esta importação esteja presente
 
-import Obstaculo;
-import Robo;
-import src.br.unicamp.ic.mc322.lab05.ambiente.Ambiente;
+import br.unicamp.ic.mc322.lab05.ambiente.Obstaculo;
+import br.unicamp.ic.mc322.lab05.robos.Robo;
+import br.unicamp.ic.mc322.lab05.ambiente.Ambiente;
 
 /**
  * Um tipo específico de {@link Sensor} que detecta outras entidades (robôs e obstáculos)

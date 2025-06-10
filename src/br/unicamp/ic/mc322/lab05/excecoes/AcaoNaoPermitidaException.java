@@ -1,3 +1,4 @@
+package br.unicamp.ic.mc322.lab05.excecoes;
 // AcaoNaoPermitidaException.java
 
 /**

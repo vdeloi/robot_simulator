@@ -1,3 +1,5 @@
+package br.unicamp.ic.mc322.lab05.robos;
+
 // Obstaculo.java
 
 /**

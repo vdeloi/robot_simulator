@@ -1,8 +1,8 @@
-package src.br.unicamp.ic.mc322.lab05.ambiente;
+package br.unicamp.ic.mc322.lab05.ambiente;
 // Coletor.java
 
 import RoboDesligadoException;
-import src.br.unicamp.ic.mc322.lab05.excecoes.RecursoInsuficienteException;
+import br.unicamp.ic.mc322.lab05.excecoes.RecursoInsuficienteException;
 
 /**
  * Interface funcional para entidades capazes de coletar recursos do ambiente.

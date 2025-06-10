@@ -1,6 +1,7 @@
+package br.unicamp.ic.mc322.lab05.sensores;
 // Sensoreavel.java
 
-import src.br.unicamp.ic.mc322.lab05.ambiente.Ambiente;
+import br.unicamp.ic.mc322.lab05.ambiente.Ambiente;
 
 /**
  * Interface para entidades que podem ter sensores e acioná-los.

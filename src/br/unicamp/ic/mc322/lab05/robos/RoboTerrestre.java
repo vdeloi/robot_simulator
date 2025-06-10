@@ -1,8 +1,9 @@
-// RoboTerrestre.java
+package br.unicamp.ic.mc322.lab05.robos;
 
-import src.br.unicamp.ic.mc322.lab05.ambiente.Ambiente;
-import src.br.unicamp.ic.mc322.lab05.excecoes.ErroComunicacaoException;
-import src.br.unicamp.ic.mc322.lab05.excecoes.RecursoInsuficienteException;
+import br.unicamp.ic.mc322.lab05.ambiente.Ambiente;
+import br.unicamp.ic.mc322.lab05.excecoes.*;
+import br.unicamp.ic.mc322.lab05.sensores.Sensor;
+import br.unicamp.ic.mc322.lab05.sensores.Sensoreavel;
 
 /**
  * Representa um robô terrestre, um tipo específico de {@link Robo}.

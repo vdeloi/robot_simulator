@@ -1,10 +1,18 @@
-// Robo.java
+package br.unicamp.ic.mc322.lab05.robos;
+
 import java.util.ArrayList;
 import java.util.List;
 
-import src.br.unicamp.ic.mc322.lab05.ambiente.Ambiente;
-import src.br.unicamp.ic.mc322.lab05.ambiente.Entidade;
-import src.br.unicamp.ic.mc322.lab05.ambiente.TipoEntidade;
+import br.unicamp.ic.mc322.lab05.ambiente.Ambiente;
+import br.unicamp.ic.mc322.lab05.ambiente.Entidade;
+import br.unicamp.ic.mc322.lab05.ambiente.TipoEntidade;
+import br.unicamp.ic.mc322.lab05.excecoes.AcaoNaoPermitidaException;
+import br.unicamp.ic.mc322.lab05.excecoes.ColisaoException;
+import br.unicamp.ic.mc322.lab05.excecoes.ErroComunicacaoException;
+import br.unicamp.ic.mc322.lab05.excecoes.ForaDosLimitesException;
+import br.unicamp.ic.mc322.lab05.excecoes.RecursoInsuficienteException;
+import br.unicamp.ic.mc322.lab05.excecoes.RoboDesligadoException;
+import br.unicamp.ic.mc322.lab05.sensores.Sensor;
 
 /**
  * Classe abstrata que representa um robô genérico no ambiente.
