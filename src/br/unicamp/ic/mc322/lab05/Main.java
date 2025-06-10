@@ -1,3 +1,4 @@
+package br.unicamp.ic.mc322.lab05;
 // Main.java
 
 import java.util.InputMismatchException;
