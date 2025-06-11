@@ -29,11 +29,11 @@ Nesta versão, o foco foi a introdução de um **sistema de missões autônomas*
 
 ## 🧠 Conceitos Aplicados
 
-* [cite_start]**Abstração e Herança**: A hierarquia `Robo` → `AgenteInteligente` → `RoboTerrestre` define contratos e especializa comportamentos.  [cite_start]A classe `AgenteInteligente` é abstrata, pois sabe que *deve* executar uma missão, mas não define *como*. 
+* **Abstração e Herança**: A hierarquia `Robo` → `AgenteInteligente` → `RoboTerrestre` define contratos e especializa comportamentos.  A classe `AgenteInteligente` é abstrata, pois sabe que *deve* executar uma missão, mas não define *como*. 
 
-* [cite_start]**Composição**: Robôs **têm** um `ControleMovimento` e um `GerenciadorSensores`.  Essa abordagem favorece a flexibilidade sobre uma herança rígida, permitindo montar robôs com diferentes capacidades.
+* **Composição**: Robôs **têm** um `ControleMovimento` e um `GerenciadorSensores`.  Essa abordagem favorece a flexibilidade sobre uma herança rígida, permitindo montar robôs com diferentes capacidades.
 
-* [cite_start]**Polimorfismo**: A interface `Missao` permite que um `AgenteInteligente` execute qualquer tipo de tarefa (`MissaoExplorar`, `MissaoPatrulhar`) através de uma única chamada: `missao.executar()`.  Isso desacopla o robô da implementação específica da missão.
+* **Polimorfismo**: A interface `Missao` permite que um `AgenteInteligente` execute qualquer tipo de tarefa (`MissaoExplorar`, `MissaoPatrulhar`) através de uma única chamada: `missao.executar()`.  Isso desacopla o robô da implementação específica da missão.
 
 ***
 
