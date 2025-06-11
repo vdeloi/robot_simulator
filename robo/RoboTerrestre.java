@@ -26,7 +26,12 @@ public class RoboTerrestre extends Robo implements Sensoreavel {
     public RoboTerrestre(String id, int x, int y, String direcao, int velocidadeMaxima) {
         super(id, x, y, 0, direcao); // Robôs terrestres sempre começam em z=0
         this.velocidadeMaxima = Math.max(1, velocidadeMaxima); // Garante que a velocidade máxima seja pelo menos 1
+
+        // Inicializa o módulo de movimento específico para robôs terrestres
+        this.controleMovimento = new robo.modulos.ControleMovimentoTerrestre(this);
+
     }
+
 
     /**
      * Retorna a velocidade máxima do robô terrestre.

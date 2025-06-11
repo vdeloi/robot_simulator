@@ -13,6 +13,10 @@ import robo.*;
 import sensores.*;
 import util.Log; // Importar a classe de Log
 
+import robo.modulos.ControleMovimento;
+import robo.modulos.GerenciadorSensores;
+import robo.modulos.ModuloComunicacao;
+
 /**
  * Classe principal que inicia e gerencia a simulação de robôs.
  * Contém o método `main` para executar o programa, inicializa o ambiente,
@@ -434,23 +438,47 @@ public class Main {
             return;
         }
 
+        // Lista os agentes disponíveis
         for (int i = 0; i < agentes.size(); i++) {
             System.out.println((i + 1) + ". " + agentes.get(i).getId());
         }
         System.out.print("Número do agente: ");
-        int escolha = scanner.nextInt() - 1;
+        int escolhaAgente = scanner.nextInt() - 1;
         scanner.nextLine();
 
-        if (escolha >= 0 && escolha < agentes.size()) {
-            AgenteInteligente agenteSelecionado = agentes.get(escolha);
-            
-            // Por enquanto, só temos a MissaoExplorar como opção
-            System.out.println("Atribuindo MissaoExplorar para " + agenteSelecionado.getId());
-            Missao missao = new MissaoExplorar();
+        if (escolhaAgente >= 0 && escolhaAgente < agentes.size()) {
+            AgenteInteligente agenteSelecionado = agentes.get(escolhaAgente);
+
+            // Menu para escolher a missão
+            System.out.println("\nEscolha a missão para " + agenteSelecionado.getId() + ":");
+            System.out.println("1. Explorar (movimento aleatório)");
+            System.out.println("2. Patrulhar (seguir rota pré-definida)");
+            System.out.println("3. Monitorar (usar sensores)");
+            System.out.print("Sua escolha: ");
+            int escolhaMissao = scanner.nextInt();
+            scanner.nextLine();
+
+            Missao missao = null;
+            switch (escolhaMissao) {
+                case 1:
+                    missao = new MissaoExplorar();
+                    break;
+                case 2:
+                    missao = new missao.MissaoPatrulhar(); // Usando o nome completo para evitar ambiguidade se houver outra classe com o mesmo nome
+                    break;
+                case 3:
+                    missao = new missao.MissaoMonitorar(); // Usando o nome completo
+                    break;
+                default:
+                    System.out.println("Opção de missão inválida.");
+                    return;
+            }
+
             agenteSelecionado.definirMissao(missao);
             Log.registrar("Missão " + missao.getClass().getSimpleName() + " atribuída a " + agenteSelecionado.getId());
+
         } else {
-            System.out.println("Seleção inválida.");
+            System.out.println("Seleção de agente inválida.");
         }
     }
 

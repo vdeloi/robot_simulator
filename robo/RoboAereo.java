@@ -19,6 +19,10 @@ public class RoboAereo extends AgenteInteligente implements Sensoreavel { // COR
         super(id, x, y, z, direcao); // Chama o construtor do AgenteInteligente (que chama o de Robo)
         this.altitudeMaxima = Math.max(0, altitudeMaxima);
         this.numHelices = numHelices;
+
+        // Inicializa o módulo de movimento específico para robôs aéreos
+        this.controleMovimento = new robo.modulos.ControleMovimentoAereo(this);
+
         if (z > this.altitudeMaxima) {
              System.out.println("Aviso: Alt inicial ("+z+") do RoboAereo "+id+" excede max ("+this.altitudeMaxima+"). Ajustando.");
              this.z = this.altitudeMaxima;
