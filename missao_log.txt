@@ -1,0 +1,10 @@
+2025/06/11 00:49:27 - SIMULADOR INICIADO: Ambiente e entidades sendo criados.
+2025/06/11 00:49:27 - Entidades inicializadas com sucesso.
+2025/06/11 12:16:00 - Missão MissaoExplorar atribuída a Drone-01
+2025/06/11 12:16:46 - MISSAO EXPLORAR: Iniciada por Drone-01
+2025/06/11 12:16:46 - MISSAO EXPLORAR: Drone-01 moveu-se para (6, 6, 2)
+2025/06/11 12:17:13 - Missão MissaoPatrulhar atribuída a Cargueiro-Alfa
+2025/06/11 12:17:21 - MISSAO PATRULHAR: Cargueiro-Alfa indo para o ponto 1/4
+2025/06/11 12:17:49 - Missão MissaoMonitorar atribuída a T-Scout
+2025/06/11 12:17:57 - MISSAO MONITORAR: Iniciada por T-Scout
+2025/06/11 12:17:57 - MISSAO MONITORAR: Sensores de T-Scout foram acionados.

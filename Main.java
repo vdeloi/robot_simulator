@@ -46,30 +46,28 @@ private static void inicializarEntidades() {
     System.out.println("Inicializando entidades...");
     Log.registrar("SIMULADOR INICIADO: Ambiente e entidades sendo criados.");
     try {
-        // --- Robôs Aéreos (já eram Agentes Inteligentes) ---
-        RoboAereo rAereoAgente = new RoboAereo("Drone-01", 5, 5, 2, "LESTE", 10, 4);
-        rAereoAgente.adicionarSensor(new SensorAltitude("Alt-Drone", 0));
+     
+        RoboAereo rAereoAgente = new RoboAereo("Drone-Vortex", 5, 5, 2, "LESTE", 10, 4);
+        rAereoAgente.adicionarSensor(new SensorAltitude("Altura-Drone", 0));
         rAereoAgente.adicionarSensor(new SensorProximidade("Prox-Drone", 8.0));
         rAereoAgente.ligar();
         // Atribuindo uma missão de exploração ao drone
         rAereoAgente.definirMissao(new MissaoExplorar());
 
-        RoboDroneDeCarga rDroneCarga1 = new RoboDroneDeCarga("Cargueiro-Alfa", 1, 1, 1, "NORTE", 8, 4, 0, 10);
-        rDroneCarga1.adicionarSensor(new SensorAltitude("Alt-Carga", 0));
+        RoboDroneDeCarga rDroneCarga1 = new RoboDroneDeCarga("Cargueiro-Atlas", 1, 1, 1, "NORTE", 8, 4, 0, 10);
+        rDroneCarga1.adicionarSensor(new SensorAltitude("Altura-Carga", 0));
         rDroneCarga1.ligar();
         // O drone de carga já tem seu próprio comportamento autônomo, mas também poderia receber uma missão
 
         
-        RoboTerrestre roboPatrulha = new RoboTerrestre("T-Scout", 8, 10, "OESTE", 8);
-        roboPatrulha.adicionarSensor(new SensorProximidade("Prox-Scout", 6.0));
+        RoboTerrestre roboPatrulha = new RoboTerrestre("Patrulheiro-Cerberus", 8, 10, "OESTE", 8);
+        roboPatrulha.adicionarSensor(new SensorProximidade("Prox-Patrulheiro", 6.0));
         roboPatrulha.ligar();
-        // Atribuindo uma missão de patrulha para o nosso novo robô terrestre!
         roboPatrulha.definirMissao(new MissaoPatrulhar());
 
        
-        RoboComunicador roboTagarela = new RoboComunicador("Tagarela-1", 3, 3, "SUL", 5, centralComunicacao);
+        RoboComunicador roboTagarela = new RoboComunicador("Tagarela-Hermes", 3, 3, "SUL", 5, centralComunicacao);
         roboTagarela.ligar();
-        // Vamos dar a ele uma missão de monitorar a área onde ele está.
         roboTagarela.definirMissao(new MissaoMonitorar());
 
 
@@ -81,7 +79,7 @@ private static void inicializarEntidades() {
         ambiente.adicionarEntidade(roboTagarela);
 
         // --- Obstáculos para um cenário mais desafiador ---
-        Obstaculo parede1 = new Obstaculo(0, 7, 0, 12, TipoObstaculo.PAREDE, 0, 2); // Parede mais longa
+        Obstaculo parede1 = new Obstaculo(0, 7, 0, 12, TipoObstaculo.PAREDE, 0, 2); 
         Obstaculo arvore1 = new Obstaculo(15, 8, 15, 8, TipoObstaculo.ARVORE, 0, 3);
         Obstaculo predio1 = new Obstaculo(10, 0, 12, 3, TipoObstaculo.PREDIO, 0, 4);
         // Adicionando um novo tipo de obstáculo para teste: um buraco no chão (nível Z=0)
@@ -90,7 +88,7 @@ private static void inicializarEntidades() {
         ambiente.adicionarEntidade(parede1);
         ambiente.adicionarEntidade(arvore1);
         ambiente.adicionarEntidade(predio1);
-        ambiente.adicionarEntidade(buraco1); // Adicionando o buraco
+        ambiente.adicionarEntidade(buraco1); 
 
         System.out.println("Entidades inicializadas com sucesso.");
         Log.registrar("Entidades inicializadas com sucesso.");
