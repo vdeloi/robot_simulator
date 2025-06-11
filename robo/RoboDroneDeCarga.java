@@ -157,30 +157,28 @@ import missao.Missao;
             }
         }
         /**
-         * Retorna a representação visual do drone de carga.
-         * @return 'D' para Drone de Carga.
-         */
-         @Override
-        public char getRepresentacao() { return 'D';} 
-
-            /**
          * Executa a missão atribuída ao drone.
          * Sobrescreve o método de RoboAereo para usar a lógica de missão.
+         * Se não houver missão, ele executa sua ação autônoma como padrão.
          * @param ambiente O ambiente de execução.
          */
         @Override
         public void executarMissao(Ambiente ambiente) {
             if (temMissao()) {
-                System.out.println("Drone de Carga " + getId() + " iniciando sua missão.");
+                System.out.println("Drone de Carga " + getId() + " iniciando sua missão: " + missao.getClass().getSimpleName());
                 missao.executar(this, ambiente); // Executa a missão específica
             } else {
-                System.out.println(getId() + " (Drone de Carga) não possui missão. Executando tarefa padrão.");
+                System.out.println(getId() + " (Drone de Carga) não possui missão. Executando ação autônoma padrão.");
                 try {
-                    executarTarefa(ambiente); // Comportamento padrão se não houver missão
+                    // Se não há missão, o comportamento padrão é sua ação autônoma
+                    executarProximaAcaoAutonoma(ambiente);
                 } catch (Exception e) {
-                    System.err.println("Falha ao executar tarefa padrão para " + getId() + ": " + e.getMessage());
+                    System.err.println("Falha ao executar ação autônoma para " + getId() + ": " + e.getMessage());
                 }
             }
         }
+        
+        @Override
+        public char getRepresentacao() { return 'D';}
     }
     

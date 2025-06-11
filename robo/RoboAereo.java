@@ -11,24 +11,24 @@ import sensores.Sensoreavel;
  * Implementa {@link Sensoreavel} para interagir com sensores.
  * CORREÇÃO: Herda de AgenteInteligente para que seus subtipos possam usar missões.
  */
-public class RoboAereo extends AgenteInteligente implements Sensoreavel { // CORRIGIDO: Herda de AgenteInteligente
+public class RoboAereo extends AgenteInteligente implements Sensoreavel {
     protected final int altitudeMaxima;
     protected int numHelices;
 
     public RoboAereo(String id, int x, int y, int z, String direcao, int altitudeMaxima, int numHelices) {
-        super(id, x, y, z, direcao); // Chama o construtor do AgenteInteligente (que chama o de Robo)
+        super(id, x, y, z, direcao); // Chama o construtor do AgenteInteligente
         this.altitudeMaxima = Math.max(0, altitudeMaxima);
         this.numHelices = numHelices;
 
         // Inicializa o módulo de movimento específico para robôs aéreos
         this.controleMovimento = new robo.modulos.ControleMovimentoAereo(this);
 
-        if (z > this.altitudeMaxima) {
-             System.out.println("Aviso: Alt inicial ("+z+") do RoboAereo "+id+" excede max ("+this.altitudeMaxima+"). Ajustando.");
+        if (getZ() > this.altitudeMaxima) {
+             System.out.println("Aviso: Altitude inicial ("+getZ()+") do RoboAereo "+getId()+" excede a máxima ("+this.altitudeMaxima+"). Ajustando.");
              this.z = this.altitudeMaxima;
         }
-        if (z < 0) {
-             System.out.println("Aviso: Alt inicial ("+z+") do RoboAereo "+id+" negativa. Ajustando para 0.");
+        if (getZ() < 0) {
+             System.out.println("Aviso: Altitude inicial ("+getZ()+") do RoboAereo "+getId()+" é negativa. Ajustando para 0.");
              this.z = 0;
         }
     }
@@ -99,14 +99,16 @@ public class RoboAereo extends AgenteInteligente implements Sensoreavel { // COR
         }
     }
 
+
     /**
-     * NOVO: Implementação do método abstrato de AgenteInteligente.
+     * Implementação do método abstrato de AgenteInteligente.
      * Permite que o robô execute sua missão.
      * @param ambiente O ambiente de execução.
      */
     @Override
     public void executarMissao(Ambiente ambiente) {
         if (temMissao()) {
+            System.out.println("Robô Aéreo " + getId() + " executando missão: " + missao.getClass().getSimpleName());
             missao.executar(this, ambiente);
         } else {
             System.out.println(getId() + " não possui missão para executar. Executando tarefa padrão.");
@@ -117,7 +119,7 @@ public class RoboAereo extends AgenteInteligente implements Sensoreavel { // COR
             }
         }
     }
-
+    
     @Override
     public char getRepresentacao() { return 'V';} 
 }

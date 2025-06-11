@@ -44,49 +44,52 @@ public class Main {
     }
 
     private static void inicializarEntidades() {
-        System.out.println("Inicializando entidades...");
-        Log.registrar("SIMULADOR INICIADO: Ambiente e entidades sendo criados.");
-        try {
-            RoboTerrestre rterrestre1 = new RoboTerrestre("T-800", 2, 2, "NORTE", 10);
-            rterrestre1.adicionarSensor(new SensorProximidade("Prox-T800", 5.0));
-            rterrestre1.ligar();
+    System.out.println("Inicializando entidades...");
+    Log.registrar("SIMULADOR INICIADO: Ambiente e entidades sendo criados.");
+    try {
+        // Robô terrestre simples (não é um agente inteligente)
+        RoboTerrestre rterrestre1 = new RoboTerrestre("T-800", 2, 2, "NORTE", 10);
+        rterrestre1.adicionarSensor(new SensorProximidade("Prox-T800", 5.0));
+        rterrestre1.ligar();
 
-            RoboAereo rAereoBasico1 = new RoboAereo("DroneV1", 5, 5, 2, "LESTE", 4, 2);
-            rAereoBasico1.adicionarSensor(new SensorAltitude("Alt-DroneV1", 0));
-            rAereoBasico1.adicionarSensor(new SensorProximidade("Prox-DroneV1", 8.0));
-            rAereoBasico1.ligar();
+        // Robô aéreo que É um agente inteligente
+        RoboAereo rAereoAgente = new RoboAereo("DroneInteligente-01", 5, 5, 2, "LESTE", 10, 4);
+        rAereoAgente.adicionarSensor(new SensorAltitude("Alt-Drone", 0));
+        rAereoAgente.adicionarSensor(new SensorProximidade("Prox-Drone", 8.0));
+        rAereoAgente.ligar();
 
-            // Wall-E agora é um AgenteInteligente
-            RoboDroneDeCarga rDroneCarga1 = new RoboDroneDeCarga("Wall-E", 1, 1, 1, "NORTE", 3, 4, 0, 10);
-            rDroneCarga1.adicionarSensor(new SensorAltitude("Alt-WallE", 0));
-            rDroneCarga1.ligar();
-            
-            RoboComunicador roboTagarela = new RoboComunicador("Tagarela1", 3, 3, "SUL", 5, centralComunicacao);
-            roboTagarela.ligar();
+        // Drone de Carga que já era um agente inteligente
+        RoboDroneDeCarga rDroneCarga1 = new RoboDroneDeCarga("Wall-E", 1, 1, 1, "NORTE", 8, 4, 0, 10);
+        rDroneCarga1.adicionarSensor(new SensorAltitude("Alt-WallE", 0));
+        rDroneCarga1.ligar();
+        
+        // Robô comunicador (não é agente inteligente)
+        RoboComunicador roboTagarela = new RoboComunicador("Tagarela1", 3, 3, "SUL", 5, centralComunicacao);
+        roboTagarela.ligar();
 
-            ambiente.adicionarEntidade(rterrestre1);
-            ambiente.adicionarEntidade(rAereoBasico1);
-            ambiente.adicionarEntidade(rDroneCarga1);
-            ambiente.adicionarEntidade(roboTagarela);
+        ambiente.adicionarEntidade(rterrestre1);
+        ambiente.adicionarEntidade(rAereoAgente); // Adiciona o novo agente
+        ambiente.adicionarEntidade(rDroneCarga1);
+        ambiente.adicionarEntidade(roboTagarela);
 
-            Obstaculo parede1 = new Obstaculo(0, 7, 5, 7, TipoObstaculo.PAREDE, 0, 2);
-            Obstaculo arvore1 = new Obstaculo(8, 8, 8, 8, TipoObstaculo.ARVORE, 0, 3);
-            Obstaculo predio1 = new Obstaculo(10,0, 12,3, TipoObstaculo.PREDIO,0,4);
+        Obstaculo parede1 = new Obstaculo(0, 7, 0, 7, TipoObstaculo.PAREDE, 0, 2);
+        Obstaculo arvore1 = new Obstaculo(8, 8, 8, 8, TipoObstaculo.ARVORE, 0, 3);
+        Obstaculo predio1 = new Obstaculo(10,0, 12,3, TipoObstaculo.PREDIO,0,4);
 
-            ambiente.adicionarEntidade(parede1);
-            ambiente.adicionarEntidade(arvore1);
-            ambiente.adicionarEntidade(predio1);
+        ambiente.adicionarEntidade(parede1);
+        ambiente.adicionarEntidade(arvore1);
+        ambiente.adicionarEntidade(predio1);
 
-            System.out.println("Entidades inicializadas.");
-            Log.registrar("Entidades inicializadas com sucesso.");
-            ambiente.visualizarAmbiente();
+        System.out.println("Entidades inicializadas.");
+        Log.registrar("Entidades inicializadas com sucesso.");
+        ambiente.visualizarAmbiente();
 
-        } catch (ColisaoException | ForaDosLimitesException | IllegalArgumentException e) {
-            System.err.println("Erro ao inicializar entidades: " + e.getMessage());
-            Log.registrar("ERRO INICIALIZACAO: " + e.getMessage());
-            e.printStackTrace();
-        }
+    } catch (ColisaoException | ForaDosLimitesException | IllegalArgumentException e) {
+        System.err.println("Erro ao inicializar entidades: " + e.getMessage());
+        Log.registrar("ERRO INICIALIZACAO: " + e.getMessage());
+        e.printStackTrace();
     }
+}
 
     private static void menuInterativo() {
         int opcao = -1;
