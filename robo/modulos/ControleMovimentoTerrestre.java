@@ -1,6 +1,7 @@
 package robo.modulos;
 
 import ambiente.*;
+import robo.EstadoRobo;
 import robo.RoboTerrestre;
 
 /**
@@ -17,7 +18,7 @@ public class ControleMovimentoTerrestre extends ControleMovimento {
     public void moverRelativamente(Ambiente ambiente, int dx, int dy, int dz) 
             throws ColisaoException, ForaDosLimitesException, RoboDesligadoException, AcaoNaoPermitidaException {
 
-        if (robo.getEstado() == robo.EstadoRobo.DESLIGADO) {
+        if (robo.getEstado() == EstadoRobo.DESLIGADO) {
             throw new RoboDesligadoException(robo.getId() + " está desligado.");
         }
 

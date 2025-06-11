@@ -2,6 +2,7 @@ package robo.modulos; // Crie este novo pacote
 
 import ambiente.Ambiente;
 import ambiente.RoboDesligadoException;
+import robo.EstadoRobo;
 import robo.Robo;
 import sensores.Sensor;
 import java.util.List;
@@ -17,7 +18,7 @@ public class GerenciadorSensores {
     }
 
     public void acionarSensores(Ambiente ambiente) throws RoboDesligadoException {
-        if (robo.getEstado() == robo.EstadoRobo.DESLIGADO) {
+        if (robo.getEstado() == EstadoRobo.DESLIGADO) {
             throw new RoboDesligadoException(robo.getId() + " desligado, não pode acionar sensores.");
         }
         System.out.println("\n--- Módulo de Sensores do Robô " + robo.getId() + " ---");

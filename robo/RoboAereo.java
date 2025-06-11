@@ -32,6 +32,10 @@ public class RoboAereo extends AgenteInteligente implements Sensoreavel {
         }
     }
     
+    public int getAltitudeMaxima() {
+        return this.altitudeMaxima;
+    }
+    
     /**
      * Faz o robô aéreo subir uma determinada quantidade de metros.
      * CORREÇÃO: Adicionado o parâmetro 'ambiente'.

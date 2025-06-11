@@ -18,11 +18,11 @@ public class ModuloComunicacao {
     }
 
     public void enviarMensagem(Comunicavel destinatario, String mensagem) throws RoboDesligadoException, ErroComunicacaoException {
-        if (robo.getEstado() == robo.EstadoRobo.DESLIGADO) throw new RoboDesligadoException(robo.getId() + " desligado.");
+        if (robo.getEstado() == EstadoRobo.DESLIGADO) throw new RoboDesligadoException(robo.getId() + " desligado.");
         if (!(destinatario instanceof Robo)) throw new ErroComunicacaoException("Destinatário inválido.");
         
         Robo roboDestinatario = (Robo) destinatario;
-        if (roboDestinatario.getEstado() == robo.EstadoRobo.DESLIGADO) throw new ErroComunicacaoException("Destinatário " + roboDestinatario.getId() + " está desligado.");
+        if (roboDestinatario.getEstado() == EstadoRobo.DESLIGADO) throw new ErroComunicacaoException("Destinatário " + roboDestinatario.getId() + " está desligado.");
 
         System.out.println(robo.getId() + " (via Módulo) enviando para " + roboDestinatario.getId() + ": " + mensagem);
         central.registrarMensagem(robo.getId(), roboDestinatario.getId(), mensagem);
