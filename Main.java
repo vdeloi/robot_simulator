@@ -9,6 +9,8 @@ import ambiente.*;
 import comunicacao.*;
 import missao.Missao;
 import missao.MissaoExplorar;
+import missao.MissaoMonitorar;
+import missao.MissaoPatrulhar;
 import robo.*;
 import sensores.*;
 import util.Log;
@@ -40,44 +42,57 @@ public class Main {
         }
     }
 
-    private static void inicializarEntidades() {
+private static void inicializarEntidades() {
     System.out.println("Inicializando entidades...");
     Log.registrar("SIMULADOR INICIADO: Ambiente e entidades sendo criados.");
     try {
-        // Robô terrestre simples (não é um agente inteligente)
-        RoboTerrestre rterrestre1 = new RoboTerrestre("T-800", 2, 2, "NORTE", 10);
-        rterrestre1.adicionarSensor(new SensorProximidade("Prox-T800", 5.0));
-        rterrestre1.ligar();
-
-        // Robô aéreo que É um agente inteligente
-        RoboAereo rAereoAgente = new RoboAereo("DroneInteligente-01", 5, 5, 2, "LESTE", 10, 4);
+        // --- Robôs Aéreos (já eram Agentes Inteligentes) ---
+        RoboAereo rAereoAgente = new RoboAereo("Drone-01", 5, 5, 2, "LESTE", 10, 4);
         rAereoAgente.adicionarSensor(new SensorAltitude("Alt-Drone", 0));
         rAereoAgente.adicionarSensor(new SensorProximidade("Prox-Drone", 8.0));
         rAereoAgente.ligar();
+        // Atribuindo uma missão de exploração ao drone
+        rAereoAgente.definirMissao(new MissaoExplorar());
 
-        // Drone de Carga que já era um agente inteligente
-        RoboDroneDeCarga rDroneCarga1 = new RoboDroneDeCarga("Wall-E", 1, 1, 1, "NORTE", 8, 4, 0, 10);
-        rDroneCarga1.adicionarSensor(new SensorAltitude("Alt-WallE", 0));
+        RoboDroneDeCarga rDroneCarga1 = new RoboDroneDeCarga("Cargueiro-Alfa", 1, 1, 1, "NORTE", 8, 4, 0, 10);
+        rDroneCarga1.adicionarSensor(new SensorAltitude("Alt-Carga", 0));
         rDroneCarga1.ligar();
-        
-        // Robô comunicador (não é agente inteligente)
-        RoboComunicador roboTagarela = new RoboComunicador("Tagarela1", 3, 3, "SUL", 5, centralComunicacao);
-        roboTagarela.ligar();
+        // O drone de carga já tem seu próprio comportamento autônomo, mas também poderia receber uma missão
 
-        ambiente.adicionarEntidade(rterrestre1);
-        ambiente.adicionarEntidade(rAereoAgente); // Adiciona o novo agente
+        
+        RoboTerrestre roboPatrulha = new RoboTerrestre("T-Scout", 8, 10, "OESTE", 8);
+        roboPatrulha.adicionarSensor(new SensorProximidade("Prox-Scout", 6.0));
+        roboPatrulha.ligar();
+        // Atribuindo uma missão de patrulha para o nosso novo robô terrestre!
+        roboPatrulha.definirMissao(new MissaoPatrulhar());
+
+       
+        RoboComunicador roboTagarela = new RoboComunicador("Tagarela-1", 3, 3, "SUL", 5, centralComunicacao);
+        roboTagarela.ligar();
+        // Vamos dar a ele uma missão de monitorar a área onde ele está.
+        roboTagarela.definirMissao(new MissaoMonitorar());
+
+
+        // --- Adicionando todos os robôs ao ambiente ---
+        ambiente.adicionarEntidade(rAereoAgente);
         ambiente.adicionarEntidade(rDroneCarga1);
+        ambiente.adicionarEntidade(roboPatrulha); 
+
         ambiente.adicionarEntidade(roboTagarela);
 
-        Obstaculo parede1 = new Obstaculo(0, 7, 0, 7, TipoObstaculo.PAREDE, 0, 2);
-        Obstaculo arvore1 = new Obstaculo(8, 8, 8, 8, TipoObstaculo.ARVORE, 0, 3);
-        Obstaculo predio1 = new Obstaculo(10,0, 12,3, TipoObstaculo.PREDIO,0,4);
+        // --- Obstáculos para um cenário mais desafiador ---
+        Obstaculo parede1 = new Obstaculo(0, 7, 0, 12, TipoObstaculo.PAREDE, 0, 2); // Parede mais longa
+        Obstaculo arvore1 = new Obstaculo(15, 8, 15, 8, TipoObstaculo.ARVORE, 0, 3);
+        Obstaculo predio1 = new Obstaculo(10, 0, 12, 3, TipoObstaculo.PREDIO, 0, 4);
+        // Adicionando um novo tipo de obstáculo para teste: um buraco no chão (nível Z=0)
+        Obstaculo buraco1 = new Obstaculo(5, 2, 6, 3, TipoObstaculo.BURACO, 0, 1);
 
         ambiente.adicionarEntidade(parede1);
         ambiente.adicionarEntidade(arvore1);
         ambiente.adicionarEntidade(predio1);
+        ambiente.adicionarEntidade(buraco1); // Adicionando o buraco
 
-        System.out.println("Entidades inicializadas.");
+        System.out.println("Entidades inicializadas com sucesso.");
         Log.registrar("Entidades inicializadas com sucesso.");
         ambiente.visualizarAmbiente();
 
