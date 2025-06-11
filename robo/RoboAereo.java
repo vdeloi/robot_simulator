@@ -1,7 +1,6 @@
 package robo;
 
 import ambiente.*;
-import missao.Missao; // Import necessário
 import sensores.Sensor;
 import sensores.Sensoreavel;
 

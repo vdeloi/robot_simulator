@@ -1,9 +1,6 @@
 package robo;
 
 import ambiente.*;
-import comunicacao.CentralComunicacao;
-import comunicacao.Comunicavel;
-import missao.Missao;
 
 /**
      * Representa um drone de carga, um tipo especializado de {@link RoboAereo}.

@@ -11,11 +11,8 @@ import missao.Missao;
 import missao.MissaoExplorar;
 import robo.*;
 import sensores.*;
-import util.Log; // Importar a classe de Log
+import util.Log;
 
-import robo.modulos.ControleMovimento;
-import robo.modulos.GerenciadorSensores;
-import robo.modulos.ModuloComunicacao;
 
 /**
  * Classe principal que inicia e gerencia a simulação de robôs.
