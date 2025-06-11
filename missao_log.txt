@@ -8,3 +8,9 @@
 2025/06/11 12:17:49 - Missão MissaoMonitorar atribuída a T-Scout
 2025/06/11 12:17:57 - MISSAO MONITORAR: Iniciada por T-Scout
 2025/06/11 12:17:57 - MISSAO MONITORAR: Sensores de T-Scout foram acionados.
+2025/06/11 12:30:10 - SIMULADOR INICIADO: Ambiente e entidades sendo criados.
+2025/06/11 12:30:10 - Entidades inicializadas com sucesso.
+2025/06/11 12:33:34 - SIMULADOR FINALIZADO.
+2025/06/11 12:36:08 - SIMULADOR INICIADO: Ambiente e entidades sendo criados.
+2025/06/11 12:36:08 - Entidades inicializadas com sucesso.
+2025/06/11 12:37:53 - SIMULADOR FINALIZADO.

@@ -84,8 +84,8 @@ public class SensorProximidade extends Sensor {
             // Se a distância à superfície for menor ou igual ao raio do sensor, detectou
             if (distanceToObstacleSurface <= getRaio()) {
                 detections.append("  - Obstáculo ").append(obstaculo.getTipoObstaculo())
-                          .append(" (").append(obstaculo.getRepresentacao()).append(") from (").append(obstaculo.getX1()).append(",").append(obstaculo.getY1()).append(",").append(obstaculo.getZ1())
-                          .append(") to (").append(obstaculo.getX2()).append(",").append(obstaculo.getY2()).append(",").append(obstaculo.getZ2()).append(")")
+                          .append(" (").append(obstaculo.getRepresentacao()).append(") de (").append(obstaculo.getX1()).append(",").append(obstaculo.getY1()).append(",").append(obstaculo.getZ1())
+                          .append(") para (").append(obstaculo.getX2()).append(",").append(obstaculo.getY2()).append(",").append(obstaculo.getZ2()).append(")")
                           .append(" a aprox. ").append(String.format("%.2f", distanceToObstacleSurface)).append(" unidades.\n");
                 detected = true;
             }
