@@ -1,95 +1,72 @@
 # 🤖 Simulador de Robôs - Laboratório 5
 
-📖 Descrição Geral
-Bem-vindo ao Simulador de Robôs! Este projeto, desenvolvido para a disciplina de Programação Orientada a Objetos (MC322), é um laboratório virtual onde robôs inteligentes se movem, interagem e executam tarefas em um ambiente 3D.
+> Este projeto é a continuação do desenvolvimento de um simulador de robôs em um ambiente tridimensional, como parte da disciplina MC322. O objetivo é criar um laboratório de robótica virtual onde diversos robôs inteligentes podem interagir, mover-se e realizar tarefas complexas e cooperativas.
 
-O foco deste laboratório é a aplicação de conceitos avançados de POO, como abstração, composição e polimorfismo, para criar um sistema modular e flexível. Os robôs agora são capazes de executar missões de forma autônoma, utilizando subsistemas internos para movimento, sensores e comunicação, com todas as ações importantes registradas em um arquivo de log. 
+Nesta versão, o foco foi a introdução de um **sistema de missões autônomas**, a refatoração da arquitetura dos robôs para usar o princípio de **composição sobre herança** e a criação de **agentes inteligentes** capazes de executar tarefas dinamicamente atribuídas.
 
-✨ Principais Funcionalidades
-Ambiente Tridimensional: Um grid 3D onde robôs e obstáculos coexistem e interagem.
-Hierarquia de Robôs: Diversos tipos de robôs (terrestres e aéreos) que herdam de classes base como Robo e AgenteInteligente. 
-Composição de Módulos: Robôs são construídos com subsistemas especializados para movimento, sensores e comunicação, promovendo alta coesão e baixo acoplamento. 
-Missões Autônomas: Robôs inteligentes podem receber e executar missões como explorar, patrulhar ou monitorar, de forma independente da interação do usuário. 
+***
 
-Sistema de Sensores: Robôs equipados com sensores de proximidade e altitude para perceber o ambiente.
-Comunicação: Robôs comunicadores podem trocar mensagens através de uma central de comunicação.
-Tratamento de Exceções: Um sistema robusto de exceções personalizadas garante o tratamento de erros como colisões, movimentos inválidos e ações em robôs desligados.
-Registro de Atividades (Logging): Todas as ações e eventos importantes da simulação são registrados com data e hora no arquivo missao_log.txt. 
-Menu Interativo: Uma interface de console completa para gerenciar e interagir com a simulação.
-🚀 Como Executar
-Pré-requisitos:
+## ✨ Principais Novidades e Mudanças
 
-Java Development Kit (JDK) instalado.
-Compilação:
-Navegue até o diretório src do projeto e compile todos os arquivos .java:
+* ### Sistema de Missões
+    * Foi introduzida a interface `Missao`, que define um contrato para as tarefas que os robôs podem executar.
+    * Foram criadas implementações concretas como `MissaoExplorar` (movimento aleatório), `MissaoPatrulhar` (segue uma rota pré-definida) e `MissaoMonitorar` (aciona os sensores).
+    * A classe utilitária `Log` foi implementada para registrar eventos importantes da simulação, como o início e o resultado das missões, no arquivo `missao_log.txt`.
 
-Bash
+* ### Agentes Inteligentes
+    * Foi criada a classe abstrata `AgenteInteligente`, que herda de `Robo` e adiciona a capacidade de receber e executar missões através do método `definirMissao()`.
+    * As classes `RoboTerrestre` e `RoboAereo` foram refatoradas para herdarem de `AgenteInteligente`, permitindo que qualquer robô desses tipos possa agora executar missões complexas.
 
-javac */*.java */*/*.java
-Execução:
-A partir do diretório src, execute a classe Main:
+* ### Composição com Módulos Especializados
+    * A lógica de movimentação foi extraída dos robôs e delegada a módulos de controle de movimento, como `ControleMovimentoTerrestre` e `ControleMovimentoAereo`. Cada robô agora *tem um* controle de movimento, aplicando o princípio de composição.
+    * A lógica de comunicação foi delegada a um `ModuloComunicacao` dentro do `RoboComunicador`.
+    * A gestão e o acionamento dos sensores também foram encapsulados no módulo `GerenciadorSensores`.
 
-Bash
+* ### Menu Interativo Aprimorado
+    * O menu principal na classe `Main` foi atualizado com a opção **"7. Gerenciar Missões"**, permitindo ao usuário atribuir e executar missões nos agentes inteligentes de forma interativa.
 
-java Main
-Isso iniciará o menu interativo, onde você poderá controlar a simulação.
+***
 
-📂 Estrutura do Projeto
-O código-fonte está organizado em pacotes para garantir a modularidade e a clareza. 
+## 🧠 Conceitos Aplicados
 
-src/
-├── Main.java              # Classe principal que inicia a simulação
-├── ambiente/              # Classes relacionadas ao ambiente (Ambiente, Entidade, Obstaculo, Exceções)
-├── comunicacao/           # Classes para comunicação entre robôs (CentralComunicacao, Comunicavel)
-├── missao/                # Define a interface Missao e suas implementações concretas (MissaoExplorar, etc.)
-├── robo/                  # Classes base dos robôs (Robo, AgenteInteligente) e suas especializações
-│   └── modulos/           # Módulos de comportamento (ControleMovimento, GerenciadorSensores)
-├── sensores/              # Classes de sensores (Sensor, SensorProximidade, etc.)
-└── util/                  # Classes utilitárias (Log)
-🧠 Conceitos e Padrões de Projeto
-Este simulador foi projetado com base em princípios fundamentais de Orientação a Objetos.
+* [cite_start]**Abstração e Herança**: A hierarquia `Robo` → `AgenteInteligente` → `RoboTerrestre` define contratos e especializa comportamentos.  [cite_start]A classe `AgenteInteligente` é abstrata, pois sabe que *deve* executar uma missão, mas não define *como*. 
 
-1. Herança e Abstração
-A hierarquia de classes permite reutilizar código e definir contratos claros.
+* [cite_start]**Composição**: Robôs **têm** um `ControleMovimento` e um `GerenciadorSensores`.  Essa abordagem favorece a flexibilidade sobre uma herança rígida, permitindo montar robôs com diferentes capacidades.
 
-Robo: Classe abstrata base para todos os robôs, definindo atributos e comportamentos comuns.
-AgenteInteligente: Uma especialização abstrata de Robo para aqueles capazes de executar missões.  Isso separa os robôs com capacidade de autonomia dos mais simples.
+* [cite_start]**Polimorfismo**: A interface `Missao` permite que um `AgenteInteligente` execute qualquer tipo de tarefa (`MissaoExplorar`, `MissaoPatrulhar`) através de uma única chamada: `missao.executar()`.  Isso desacopla o robô da implementação específica da missão.
 
-Classes Concretas: RoboTerrestre e RoboAereo herdam as funcionalidades e as especializam.
-2. Composição sobre Herança
-Para evitar uma hierarquia de classes rígida e complexa, os robôs são compostos por módulos de comportamento.  Isso permite que as funcionalidades de movimento, sensores e comunicação sejam encapsuladas em suas próprias classes e reutilizadas.
+***
 
-ControleMovimento: Define a lógica de como um robô se move. Existem implementações para ControleMovimentoTerrestre e ControleMovimentoAereo.
-GerenciadorSensores: Centraliza a lógica de acionamento de todos os sensores de um robô.
-ModuloComunicacao: Encapsula a lógica de envio e recebimento de mensagens.
-3. Polimorfismo com Interfaces
-Interfaces são usadas para definir "contratos" de comportamento, permitindo que diferentes classes interajam de maneira uniforme.
+## 🔌 Lista das Interfaces Criadas
 
-Entidade: Contrato implementado por Robo e Obstaculo, garantindo que qualquer objeto no ambiente tenha uma posição e representação.
-Missao: Define o método executar(), permitindo que qualquer AgenteInteligente execute diferentes tipos de missões (explorar, patrulhar) sem conhecer os detalhes de cada uma. 
-Sensoreavel e Comunicavel: Interfaces que "adicionam" as capacidades de usar sensores e de se comunicar a um robô.
-🎯 Missões Autônomas
-O sistema de missões é um dos principais recursos do simulador.
+1.  **`Entidade`**
+    * **Implementada por**: `Robo` (classe abstrata) e `Obstaculo`. Define a base para qualquer objeto no ambiente.
 
-A interface Missao define um contrato único: void executar(Robo robo, Ambiente ambiente);. 
-Classes como MissaoExplorar, MissaoPatrulhar e MissaoMonitorar implementam essa interface, cada uma com uma lógica de comportamento específica. 
-Qualquer AgenteInteligente pode receber uma instância de Missao e executá-la, aplicando o polimorfismo. 
-⚠️ Exceções Personalizadas
-Para um controle de erros mais claro e robusto, o projeto utiliza um conjunto de exceções personalizadas:
+2.  **`Missao`**
+    * **Implementada por**: `MissaoExplorar`, `MissaoMonitorar`, `MissaoPatrulhar`. Contrato para tarefas autônomas.
 
-AcaoNaoPermitidaException: Lançada quando uma ação viola uma regra (ex: um robô terrestre tentando voar).
-ColisaoException: Ocorre quando uma entidade tenta se mover para uma célula já ocupada.
-ForaDosLimitesException: Lançada se uma ação ocorre fora das dimensões do ambiente.
-RoboDesligadoException: Impede que ações sejam executadas por robôs que estão desligados.
-ErroComunicacaoException: Sinaliza falhas no envio ou recebimento de mensagens.
-RecursoInsuficienteException: Usada para ações que consomem um recurso indisponível.
-📝 Registro de Logs (Logging)
-A classe Log no pacote util é responsável por registrar eventos importantes em um arquivo de texto.
+3.  **`Sensoreavel`**
+    * **Implementada por**: `RoboTerrestre` e `RoboAereo`. Permite que um robô utilize sensores.
 
-Arquivo: missao_log.txt
-Formato: Cada linha contém um timestamp (data e hora) e a descrição do evento.
-Exemplo:
-2025/06/11 12:16:00 - Missão MissaoExplorar atribuída a Drone-01
-2025/06/11 12:16:46 - MISSAO EXPLORAR: Iniciada por Drone-01
-2025/06/11 12:16:46 - MISSAO EXPLORAR: Drone-01 moveu-se para (6, 6, 2)
-Isso é fundamental para depurar o comportamento dos robôs e analisar o resultado de uma simulação.
+4.  **`Comunicavel`**
+    * **Implementada por**: `RoboComunicador`. Define a capacidade de enviar e receber mensagens.
+
+5.  **`Autonomo`** (Interface Funcional)
+    * **Implementada por**: `RoboDroneDeCarga`. Para robôs com ciclos de ações autônomas.
+
+6.  **`Explorador`** e **`Coletor<T>`** (Interfaces Funcionais)
+    * Definidas e disponíveis para uso futuro.
+
+***
+
+## ⚠️ Sistema de Exceções
+
+O tratamento de erros continua robusto, utilizando exceções personalizadas para garantir a integridade da simulação:
+
+* `AcaoNaoPermitidaException`: Lançada quando uma ação viola uma regra (ex: mover um robô terrestre na vertical).
+* `ColisaoException`: Lançada ao tentar mover ou adicionar uma entidade a uma célula já ocupada.
+* `ErroComunicacaoException`: Para falhas no envio de mensagens entre robôs.
+* `ForaDosLimitesException`: Ao tentar acessar ou mover uma entidade para fora do mapa do ambiente.
+* `RecursoInsuficienteException`: Quando uma ação requer um recurso não disponível (ex: descarregar um drone que já está vazio).
+* `RoboDesligadoException`: Lançada ao tentar executar uma ação em um robô que está desligado.
+
